@@ -23,7 +23,7 @@ public class Hooks extends BaseUtil {
     //Initialization of Chrome driver
     @Before
     public void InitializeTest() {
-        System.setProperty("webdriver.chrome.driver", "C:\\Users\\Renuka G\\chromedriver.exe");
+        System.setProperty("webdriver.chrome.driver", "C:\\Users\\Lakshmi.Lavanya\\chromedriver.exe");
         System.out.println("Opening Chrome browser");
         base.driver = new ChromeDriver();
     }

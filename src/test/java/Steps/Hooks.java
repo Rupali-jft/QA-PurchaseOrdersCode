@@ -7,9 +7,13 @@ import org.apache.commons.io.FileUtils;
 import org.openqa.selenium.OutputType;
 import org.openqa.selenium.TakesScreenshot;
 import org.openqa.selenium.chrome.ChromeDriver;
+import org.openqa.selenium.logging.LogType;
+import org.openqa.selenium.logging.LoggingPreferences;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.concurrent.TimeUnit;
+import java.util.logging.Level;
 
 
 public class Hooks extends BaseUtil {
@@ -23,9 +27,10 @@ public class Hooks extends BaseUtil {
     //Initialization of Chrome driver
     @Before
     public void InitializeTest() {
-        System.setProperty("webdriver.chrome.driver", "C:\\Users\\Lakshmi.Lavanya\\chromedriver.exe");
+        System.setProperty("webdriver.chrome.driver", driverLocation);
         System.out.println("Opening Chrome browser");
         base.driver = new ChromeDriver();
+        base.driver.manage().timeouts().implicitlyWait(30, TimeUnit.SECONDS);
     }
     @After
 
@@ -39,10 +44,12 @@ public class Hooks extends BaseUtil {
 //// Prints the screenshot in your local drive mentioned
             File scrFile = ((TakesScreenshot) base.driver).getScreenshotAs(OutputType.FILE);
             try {
-                FileUtils.copyFile(scrFile, new File("C:/selenium/"+System.currentTimeMillis()+".png"));
+                FileUtils.copyFile(scrFile, new File(filePath + "\\screenshots\\" + System.currentTimeMillis() + ".png"));
             } catch (IOException e) {
                 e.printStackTrace();
             }
+
+            base.driver.quit();
         }
 
 }

@@ -2,7 +2,9 @@ package Steps;
 
 import Pages.BaseUtil;
 import Pages.Loginpage;
+import Pages.PurchaseOrderPage;
 import cucumber.api.DataTable;
+import cucumber.api.PendingException;
 import cucumber.api.java.en.And;
 import cucumber.api.java.en.Given;
 import cucumber.api.java.en.Then;
@@ -15,12 +17,21 @@ import java.util.List;
 import java.util.Set;
 
 public class MyStepdefs extends BaseUtil {
+    private BaseUtil base;
+    private String currentLogin;
+    private String targetTab;
+    private int kpiStore = -1;
 
     public MyStepdefs(BaseUtil base) {
         this.base = base;
     }
 
-    private BaseUtil base;
+    private Loginpage loginPage = new Loginpage(base.driver);
+    private PurchaseOrderPage pOPage = new PurchaseOrderPage(base.driver);
+
+
+
+
 
     @Given("^I navigate to login page of PO app$")
     public void iNavigateToLoginPageOfPOApp() {
@@ -29,70 +40,178 @@ public class MyStepdefs extends BaseUtil {
         base.driver.manage().window().maximize();
     }
 
-    @And("^I enter login credentials$")
-    public void iEnterLoginCredentials(DataTable table) throws Throwable {
-        System.out.println("Entering email address and password\n");
-        List<SignIn> users = new ArrayList<SignIn>();
-        users = table.asList(SignIn.class);
-        Loginpage page = new Loginpage(base.driver);
-        for (SignIn user : users) {
-            page.Login(user.email, user.password);
-        }
+    @And("^I enter login credentials for \"([^\"]*)\" role$")
+    public void iEnterLoginCredentialsForRole(String user) throws Throwable {
+        currentLogin = user;
+
+        loginPage.Login(user);
     }
 
-    public class SignIn {
-        public String email;
-        public String password;
-
-        public SignIn(String Email, String Password) {
-            email = Email;
-            password = Password;
-        }
+    @Then("^I am taken to the Purchase Order page$")
+    public void iAmTakenToThePurchaseOrderPage() {
+        // TODO possibly put something here. This was created to fill a gap
     }
+
+    @And("^I \"([^\"]*)\" the request from the grid$")
+    public void iApproveTheRequestFromTheGrid(String status) throws Exception {
+        pOPage.ChangeStatusFromGrid(status);
+    }
+
 
     @And("^I click on Sign In button$")
     public void iClickOnSignInButton() throws Throwable {
         System.out.println("Clicking on Sign In button\n");
-        Loginpage page = new Loginpage(base.driver);
-        page.SignInButton();
+
+        loginPage.SignInButton();
         Thread.sleep(5000);
-        page.POLink();
+        loginPage.POLink();
         Thread.sleep(10000);
         String parentWindow = base.driver.getWindowHandle();
         Set<String> handles = base.driver.getWindowHandles();
         for (String windowHandle : handles) {
             if (!windowHandle.equals(parentWindow)) {
+                base.driver.close();
                 base.driver.switchTo().window(windowHandle);
             }
         }
-        Thread.sleep(6000);
+        //Thread.sleep(6000);
     }
 
     @And("^Get the Initiator KPI Count$")
     public void getTheInitiatorKpiCOunt() throws Throwable {
         Thread.sleep(5000);
-        Loginpage page = new Loginpage(base.driver);
-        page.InitiatorKPIValue();
+
+        pOPage.InitiatorKPIValue();
     }
 
     @And("^Get the Procurement KPI Count$")
     public void getTheProcurementKpiCOunt() throws Throwable {
         Thread.sleep(5000);
-        Loginpage page = new Loginpage(base.driver);
-        page.ProcurementKPIValue();
+
+        pOPage.ProcurementKPIValue();
     }
 
     @And("^Pagination value")
     public void paginationValue(DataTable table) throws Throwable {
         List<pagin> pages = new ArrayList<pagin>();
         pages = table.asList(pagin.class);
-        Loginpage page = new Loginpage(base.driver);
+
         for (pagin page1 : pages) {
-            page.pagin(page1.pagevalue);
+            pOPage.pagin(page1.pagevalue);
         }
         Thread.sleep(5000);
-        page.pagin1();
+        pOPage.pagin1();
     }
+
+    @And("^I verify the status is \"([^\"]*)\" from Requests tab$")
+    public void iVerifyTheStatusIsFromRequestsTab(String status) throws Throwable {
+        pOPage.NavigateToRequestsTab();
+
+        pOPage.RequestsTabStatusCheck(status);
+    }
+
+    @And("^I close Request Details screen$")
+    public void iCloseRequestDetailsScreen() throws Throwable {
+        pOPage.CloseRequestDetail();
+    }
+
+    @And("^I try to navigate to the \"([^\"]*)\" tab$")
+    public void iTryToNavigateToTheTab(String tabName) throws Throwable {
+        targetTab = tabName;
+        pOPage.NavigateToTab(targetTab);
+    }
+
+    @And("^Find the created request$")
+    public void findTheCreatedRequest() throws Exception {
+        pOPage.FindWorkOrder(targetTab);
+        Thread.sleep(10000);
+
+    }
+
+    @And("^Open the request details for that request$")
+    public void openTheRequestDetailsForThatRequest() throws Exception {
+        pOPage.OpenWorkOrderFromGrid(targetTab);
+
+    }
+
+    @Then("^I edit the title from the request details page$")
+    public void iEditTheTitleFromTheRequestDetailsPage() throws InterruptedException {
+        pOPage.EditTitleFromDetailsPage();
+    }
+
+    @Then("^I will see that the change was not saved$")
+    public void verifyTheChangeWasNotSaved() {
+        pOPage.VerifyWorkOrderTitle();
+
+    }
+
+    @And("^Find work order \"([^\"]*)\"$")
+    public void findWorkOrder(String orderNumber) throws Throwable {
+        pOPage.WorkOrderNumber(targetTab, orderNumber);
+    }
+
+    @And("^Add comment title and description$")
+    public void addCommentTitleAndDescription() throws InterruptedException {
+        pOPage.AddCommentText();
+    }
+
+    @And("^Click the comment cancel button$")
+    public void clickTheCommentCancelButton() {
+        pOPage.CancelRequestComment();
+    }
+
+    @Then("^I will see that comment was not saved$")
+    public void iWillSeeThatCommentWasNotSaved() {
+        pOPage.VerifyCommentNotSaved();
+    }
+
+    @And("^Click the Add Purchase Order button$")
+    public void clickTheAddPurchaseOrderButton() {
+        pOPage.AddPurchaseOrderBtn();
+
+    }
+
+    @And("^I edit the Subject field$")
+    public void iEditTheVendorAddressField() throws InterruptedException {
+        pOPage.EditSubjectFromPOPage();
+    }
+
+    @And("^I close the purchase order screen without saving$")
+    public void iCloseThePurchaseOrderScreenWithoutSaving() {
+        pOPage.clickClosePo();
+    }
+
+    @Then("^I will see that the purchase order was not raised$")
+    public void iWillSeeThatThePurchaseOrderWasNotRaised() {
+        pOPage.VerifyPONotSaved();
+
+    }
+
+    @Then("^I will see that the Add Purchase Order button is not displayed$")
+    public void iWillSeeThatTheAddPurchaseOrderButtonIsNotDisplayed() {
+        pOPage.CheckAddPOBtn();
+    }
+
+    @And("^Edit the Quote Title field$")
+    public void editTheQuoteTitleField() throws InterruptedException {
+        pOPage.EditQuoteTitle();
+    }
+
+    @And("^Click the cancel button on the Edit Quote modal$")
+    public void clickTheCancelButtonOnTheEditQuoteModal() {
+        pOPage.CancelQuoteEdit();
+    }
+
+    @Then("^I will see that the title has not changed$")
+    public void iWillSeeThatTheTitleHasNotChanged() {
+        pOPage.VerifyQuoteTitleNotSaved();
+    }
+
+    @And("^Go to the \"([^\"]*)\" tab in Request Details$")
+    public void goToTheTab(String tabName) throws Throwable {
+        pOPage.RequestDetailTabs(tabName);
+    }
+
 
     public class pagin {
         public String pagevalue;
@@ -104,18 +223,18 @@ public class MyStepdefs extends BaseUtil {
     @When("^Click on Add Request$")
     public void clickOnAddRequest() throws Throwable {
         System.out.println("clicking on Add Request\n");
-        Loginpage page = new Loginpage(base.driver);
+
         Thread.sleep(25000);
-        page.clickAddRequest();
+        pOPage.clickAddRequest();
         Thread.sleep(5000);
     }
 
     @Then("^I click on edit item icon and edited and submitted$")
     public void clickOnEditItemIcon() throws Throwable {
         System.out.println("clicking on Edit icon to edit the item quantity\n");
-        Loginpage page = new Loginpage(base.driver);
+
         Thread.sleep(3000);
-        page.clickOnEditIcon();
+        pOPage.clickOnEditIcon();
     }
 
     @Then("^Enter Add Request Details$")
@@ -123,10 +242,10 @@ public class MyStepdefs extends BaseUtil {
         System.out.println("Entering Work order Request Details\n");
         List<addRequest> users = new ArrayList<addRequest>();
         users = table.asList(addRequest.class);
-        Loginpage page = new Loginpage(base.driver);
+
         Thread.sleep(5000);
         for (addRequest user : users) {
-            page.addRequestButton(user.wotitle, user.location, user.department, user.itemName, user.description, user.quantity);
+            pOPage.addRequestButton(user.wotitle, user.location, user.department, user.itemName, user.description, user.quantity);
            }
         Thread.sleep(5000);
     }
@@ -150,10 +269,10 @@ public class MyStepdefs extends BaseUtil {
         System.out.println("Entering Purchase Order Details\n");
         List<addPurchaseOrderDetails> poDetails = new ArrayList<addPurchaseOrderDetails>();
         poDetails = table.asList(addPurchaseOrderDetails.class);
-        Loginpage page = new Loginpage(base.driver);
+
         Thread.sleep(5000);
         for (addPurchaseOrderDetails POdet : poDetails) {
-            page.addPurchaseOrderMandatoryDetails(POdet.vendorReferenceNumber, POdet.vendorAddress, POdet.partNo);
+            pOPage.addPurchaseOrderMandatoryDetails(POdet.vendorReferenceNumber, POdet.vendorAddress, POdet.partNo);
         }
         Thread.sleep(5000);
     }
@@ -170,9 +289,9 @@ public class MyStepdefs extends BaseUtil {
     public void clickOnAddCommentButton() throws Throwable {
         // Write code here that turns the phrase above into concrete actions
         System.out.println("clicking on Add Comment Button in detail page\n");
-        Loginpage page = new Loginpage(base.driver);
+
         Thread.sleep(3000);
-        page.clickOnAddComment();
+        pOPage.clickOnAddComment();
         Thread.sleep(3000);
     }
 
@@ -181,10 +300,10 @@ public class MyStepdefs extends BaseUtil {
         System.out.println("Entering details in the comments Pop-up\n");
         List<noteDetails> users1 = new ArrayList<noteDetails>();
         users1 = table.asList(noteDetails.class);
-        Loginpage page = new Loginpage(base.driver);
+
         Thread.sleep(5000);
         for (noteDetails user1 : users1) {
-            page.commentDetails(user1.title, user1.description);
+            pOPage.commentDetails(user1.title, user1.description);
         }
         Thread.sleep(2000);
     }
@@ -200,18 +319,18 @@ public class MyStepdefs extends BaseUtil {
     @Then("^Click on Add Quote by Purchase Officer Button$")
     public void clickOnAddQuoteButton() throws Throwable {
         System.out.println("clicking on Add Quote Button - To raise quotes by purchase officer\n");
-        Loginpage page = new Loginpage(base.driver);
+
         Thread.sleep(3000);
-        page.clickAddQuote();
+        pOPage.clickAddQuote();
         Thread.sleep(3000);
     }
 
     @Then("^Click on Add Quote by Initiator Button$")
     public void clickOnAddQuoteByInitiator() throws Throwable {
         System.out.println("clicks Add Quote Button to add quotes by initiator\n");
-        Loginpage page = new Loginpage(base.driver);
+
         Thread.sleep(3000);
-        page.clickAddQuoteByInitiator();
+        pOPage.clickAddQuoteByInitiator();
         Thread.sleep(3000);
     }
 
@@ -219,13 +338,13 @@ public class MyStepdefs extends BaseUtil {
     public void clickOnAddAttachment() throws Throwable {
         // Write code here that turns the phrase above into concrete actions
         System.out.println("clicks on Add Attachment button\n");
-        Loginpage page = new Loginpage(base.driver);
-        page.clickAddAttachment();
+
+        pOPage.clickAddAttachment();
         Thread.sleep(10000);
         WebElement uploadElement = base.driver.findElement(By.id("attach_file"));
-        uploadElement.sendKeys("C:\\Users\\Lakshmi.Lavanya\\Desktop\\PO flow.png");
+        uploadElement.sendKeys(filePath + "\\PO flow.png");
         Thread.sleep(15000);
-        page.attachSubmit();
+        pOPage.attachSubmit();
     }
 
     @Then("^Input values in the Quotes pop-up$")
@@ -233,10 +352,10 @@ public class MyStepdefs extends BaseUtil {
         System.out.println("Entering required details in the Quotes Pop-up\n");
         List<quotesDetails> users1 = new ArrayList<quotesDetails>();
         users1 = table.asList(quotesDetails.class);
-        Loginpage page = new Loginpage(base.driver);
+
         Thread.sleep(5000);
         for (quotesDetails user1 : users1) {
-            page.quotesDetails1(user1.quoteDate, user1.quoteTitle, user1.quoteVendor, user1.quotedPrice);
+            pOPage.quotesDetails1(user1.quoteDate, user1.quoteTitle, user1.quoteVendor, user1.quotedPrice);
         }
         Thread.sleep(1000);
     }
@@ -256,8 +375,8 @@ public class MyStepdefs extends BaseUtil {
     public void clickOnSubmitButton() throws Throwable {
         System.out.println("Click On request Submit button \n");
         Thread.sleep(5000);
-        Loginpage page = new Loginpage(base.driver);
-        page.addSubmit();
+
+        pOPage.addSubmit();
         Thread.sleep(15000);
     }
 
@@ -265,16 +384,16 @@ public class MyStepdefs extends BaseUtil {
     public void enterInvalidChars() throws Throwable {
         System.out.println("Entering invalid characters in WO# grid\n");
         Thread.sleep(5000);
-        Loginpage page = new Loginpage(base.driver);
-        page.enterSpecialCharsinWOGrid();
+
+        pOPage.enterSpecialCharsinWOGrid();
         Thread.sleep(1000);
     }
 
     @Then("^I observed the no data available message$")
     public void captureTextMsg() throws Throwable {
         Thread.sleep(5000);
-        Loginpage page = new Loginpage(base.driver);
-        page.VerifyNoDataAvailableMsg();
+
+        pOPage.VerifyNoDataAvailableMsg();
         Thread.sleep(1000);
     }
 
@@ -283,8 +402,8 @@ public class MyStepdefs extends BaseUtil {
         // Write code here that turns the phrase above into concrete actions
         System.out.println("Click On Cancel Changes button in detail page\n");
         Thread.sleep(5000);
-        Loginpage page = new Loginpage(base.driver);
-        page.clickCancelChangesButton();
+
+        pOPage.clickCancelChangesButton();
         Thread.sleep(1000);
     }
 
@@ -292,8 +411,8 @@ public class MyStepdefs extends BaseUtil {
     public void deleteTheItem() throws Throwable {
         // Write code here that turns the phrase above into concrete actions
         System.out.println("Click On Delete Icon - To delete the added items\n");
-        Loginpage page = new Loginpage(base.driver);
-        page.addDelete();
+
+        pOPage.addDelete();
         Thread.sleep(5000);
     }
 
@@ -301,9 +420,9 @@ public class MyStepdefs extends BaseUtil {
     public void clickOnAddPurchaseOrder() throws Throwable {
         // Write code here that turns the phrase above into concrete actions
         System.out.println("clicking on  Add purchase order Button\n");
-        Loginpage page = new Loginpage(base.driver);
+
         Thread.sleep(3000);
-        page.clickAddPO();
+        pOPage.clickAddPO();
         Thread.sleep(3000);
     }
 
@@ -312,10 +431,10 @@ public class MyStepdefs extends BaseUtil {
        System.out.println("Entering required details in the Purchase Order Page\n");
         List<addPoDetails> users1 = new ArrayList<addPoDetails>();
         users1 = table.asList(addPoDetails.class);
-        Loginpage page = new Loginpage(base.driver);
+
         Thread.sleep(5000);
         for (addPoDetails user1 : users1) {
-            page.addPoDetails1(user1.poDate, user1.poVendor, user1.poSubject, user1.poReference,user1.poVendorAddress,user1.poItemName,
+            pOPage.addPoDetails1(user1.poDate, user1.poVendor, user1.poSubject, user1.poReference,user1.poVendorAddress,user1.poItemName,
                     user1.poPartNo,user1.poDescription, user1.poQty,user1.poUnit);
         }
         Thread.sleep(5000);
@@ -340,8 +459,8 @@ public class MyStepdefs extends BaseUtil {
     @Then("^Click on Print PDF on PO Page$")
     public void clickOnPrintPDFOnPoPage() throws Throwable {
         System.out.println("clicks on Print PDF button on PO Page\n");
-        Loginpage page = new Loginpage(base.driver);
-        page.clickPrintPDFPo();
+
+        pOPage.clickPrintPDFPo();
         Thread.sleep(5000);
         String currentWindow = base.driver.getWindowHandle();
         base.driver.switchTo().window(currentWindow);
@@ -350,292 +469,280 @@ public class MyStepdefs extends BaseUtil {
     @And("^Click on Close button on PO Page$")
     public void clickOnCloseButtonOnPoPage() throws Throwable {
         System.out.println("clicks on close button on PO Page\n");
-        Loginpage page = new Loginpage(base.driver);
-        page.clickClosePo();
+
+        pOPage.clickClosePo();
         Thread.sleep(5000);
     }
 
     @And("^verify the status$")
     public void verifyStatus() throws Throwable {
-        Loginpage page = new Loginpage(base.driver);
+
         Thread.sleep(10000);
-        page.verifyStatus();
+        pOPage.verifyStatus();
     }
 
     @And("^I verify the PO status$")
     public void verifyPurchaseOrderStatus() throws Throwable {
-        Loginpage page = new Loginpage(base.driver);
+
         Thread.sleep(8000);
-        page.verifyPOStatus();
+        pOPage.verifyPOStatus();
     }
 
     @And("^I verify the Reference Number$")
     public void getReferenceNumber() throws Throwable {
-        Loginpage page = new Loginpage(base.driver);
+
         Thread.sleep(13000);
-        page.getReferenceFromPO();
+        pOPage.getReferenceFromPO();
     }
 
     @And("^I get the created Purchase Order Number$")
     public void getPONumber() throws Throwable {
-        Loginpage page = new Loginpage(base.driver);
+
         Thread.sleep(10000);
-        page.getCreatedPONumber();
+        pOPage.getCreatedPONumber();
     }
 
     @And("^Verify the approval status on Quotes Tab for 1st Quote$")
     public void verifyApprovalStatusforQuote1() throws Throwable {
-        Loginpage page = new Loginpage(base.driver);
+
         Thread.sleep(10000);
-        page.verifyQuote1Status();
+        pOPage.verifyQuote1Status();
     }
 
     @And("^Verify the approval status on Quotes Tab for 2nd Quote$")
     public void verifyApprovalStatusforQuote2() throws Throwable {
-        Loginpage page = new Loginpage(base.driver);
+
         Thread.sleep(10000);
-        page.verifyQuote2Status();
+        pOPage.verifyQuote2Status();
     }
 
     @Then("^I click on Confirm button$")
     public void clickOnConfirmButtonOnPOPage() throws Throwable {
         System.out.println("Confirm the created Work order by clicking on confirm button \n");
-        Loginpage page = new Loginpage(base.driver);
+
         Thread.sleep(5000);
-        page.clickConfirmButton();
+        pOPage.clickConfirmButton();
     }
 
-    @Then("^I click on Initiator Logout button$")
-    public void clickInitiatorLogOutButton() throws Throwable {
+    @Then("^I click on the Logout button$")
+    public void clickTheLogOutButton() throws Throwable {
         // Write code here that turns the phrase above into concrete actions
-        System.out.println("Clicks on Initiator Log Out Button \n");
-        Loginpage page = new Loginpage(base.driver);
-        page.clickOnInitiatorLogOutButton();
+        System.out.println("Clicks on the Log Out Button \n");
+
+        pOPage.clickOnLogOutButton();
         Thread.sleep(20000);
     }
-
-    @Then("^I click on Approver Logout button$")
-    public void clickApproverLogOutButton() throws Throwable {
-        // Write code here that turns the phrase above into concrete actions
-        System.out.println("Clicks on Approver Log Out Button \n");
-        Loginpage page = new Loginpage(base.driver);
-        page.clickOnApproverLogOutButton();
-        Thread.sleep(5000);
-    }
-
-    @Then("^I click on Purchase officer role Logout button$")
-    public void clickPurchaseOfficerLogOutButton() throws Throwable {
-        // Write code here that turns the phrase above into concrete actions
-        System.out.println("Clicks on Purchase Officer Log Out Button \n");
-        Loginpage page = new Loginpage(base.driver);
-        Thread.sleep(5000);
-        page.clickOnPurchaseOfficerLogOutButton();
-        Thread.sleep(10000);
-    }
-
-    @Then("^I click on Procurement Manager role Logout button$")
-    public void clickProcurementManagerLogOutButton() throws Throwable {
-        // Write code here that turns the phrase above into concrete actions
-        System.out.println("Clicks on Procurement manager Log Out Button\n");
-        Loginpage page = new Loginpage(base.driver);
-        page.clickOnProcurementManagerLogOutButton();
-        Thread.sleep(10000);
-    }
-
 
     @Then("^click on quotes submit button$")
     public void clickQuotesSubmitButton() throws Throwable {
         System.out.println("Clicks on quotes submit button \n");
-        Loginpage page = new Loginpage(base.driver);
-        page.clickOnQuotesSubmitButton();
+
+        pOPage.clickOnQuotesSubmitButton();
         Thread.sleep(10000);
     }
 
     @Then("^click on quotes delete button$")
     public void clickQuotesDeleteButton() throws Throwable {
-        Loginpage page = new Loginpage(base.driver);
-        page.clickOnQuotesDeleteButton();
+
+        pOPage.clickOnQuotesDeleteButton();
         Thread.sleep(10000);
     }
 
     @And("^I click on Quotes tab$")
     public void clickQuotesTab() throws Throwable {
         System.out.println("Clicks on quotes tab \n");
-        Loginpage page = new Loginpage(base.driver);
-        page.clickOnQuotesTab();
+
+        pOPage.clickOnQuotesTab();
         Thread.sleep(10000);
     }
     @And("^I click on Quotes Approve button$")
     public void clickQuotesApproveButton() throws Throwable {
         System.out.println("Clicks on quotes approve button \n");
-        Loginpage page = new Loginpage(base.driver);
-        page.clickOnQuotesApproveButton();
+
+        pOPage.clickOnQuotesApproveButton();
         Thread.sleep(10000);
     }
 
     @And("^I click on Quotes SendBack button$")
     public void clickQuotesSendBackButton() throws Throwable {
         System.out.println("Clicks on quotes sendback button \n");
-        Loginpage page = new Loginpage(base.driver);
-        page.clickOnQuotesSendBackButton();
+
+        pOPage.clickOnQuotesSendBackButton();
         Thread.sleep(6000);
     }
 
     @And("^I click on Quotes Reject button$")
     public void clickQuotesRejectButton() throws Throwable {
         System.out.println("Clicks on quotes reject button\n");
-        Loginpage page = new Loginpage(base.driver);
-        page.clickOnQuotesRejectButton();
+
+        pOPage.clickOnQuotesRejectButton();
         Thread.sleep(7000);
     }
 
     @And("^I click on RaisePO button$")
     public void clickRaisePOButton() throws Throwable {
-        Loginpage page = new Loginpage(base.driver);
-        page.clickOnRaisePOButton();
+
+        pOPage.clickOnRaisePOButton();
         Thread.sleep(7000);
     }
 
     @And("^I click on ClosePO button$")
     public void clickClosePOButton() throws Throwable {
-        Loginpage page = new Loginpage(base.driver);
-        page.clickOnClosePOButton();
+
+        pOPage.clickOnClosePOButton();
         Thread.sleep(7000);
     }
 
     @And("^I click on CloseWO button$")
     public void clickCloseWOButton() throws Throwable {
-        Loginpage page = new Loginpage(base.driver);
-        page.clickOnCloseWOButton();
+
+        pOPage.clickOnCloseWOButton();
         Thread.sleep(7000);
     }
 
     @And("^I click on Add Purchase Order button$")
     public void clickAddPurchaseOrderButton() throws Throwable {
-        Loginpage page = new Loginpage(base.driver);
-        page.clickOnAddPurchaseOrderButton();
+
+        pOPage.clickOnAddPurchaseOrderButton();
         Thread.sleep(7000);
     }
 
     @And("^I click on view quote eye icon button$")
     public void clickQuotesEyeIcon() throws Throwable {
        System.out.println("Click on Eye button to view the quote details \n");
-        Loginpage page = new Loginpage(base.driver);
-        page.clickOnQuotesEyeIcon();
-        Thread.sleep(10000);
+
+        pOPage.clickOnQuotesEyeIcon();
+        Thread.sleep(5000);
     }
 
     @And("^I click on Approve button$")
     public void clickOnWOApproveButton() throws Throwable {
         System.out.println("Click on approve button to approve the WO request \n");
-        Loginpage page = new Loginpage(base.driver);
-        page.clickApproveButton();
+
+        pOPage.clickApproveButton();
         Thread.sleep(5000);
     }
 
     @And("^I click on SendBack button$")
     public void clickOnWOSendBackButton() throws Throwable {
         System.out.println("Click on Send back back button \n");
-        Loginpage page = new Loginpage(base.driver);
-        page.clickSendBackButton();
+
+        pOPage.clickSendBackButton();
         Thread.sleep(5000);
     }
 
     @And("^I click on Reject button$")
     public void clickOnWORejectButton() throws Throwable {
         System.out.println("Click on work order Reject button \n");
-        Loginpage page = new Loginpage(base.driver);
-        page.clickRejectButton();
+
+        pOPage.clickRejectButton();
         Thread.sleep(4000);
     }
 
     @Then("^Get the created Work Order Number$")
     public void getWONumber(){
         System.out.println("Getting the created WO number from detail page \n");
-        Loginpage page = new Loginpage(base.driver);
-        page.getWorkOrderNum();
+
+        pOPage.getWorkOrderNum();
     }
 
     @Then("^I verified the Location error message$")
     public void getErrorMsgForLocation(){
         System.out.println("Verifying the error message if location dropdown has not been selected\n");
-        Loginpage page = new Loginpage(base.driver);
-        page.getErrMsgForLocationDropDown();
+
+        pOPage.getErrMsgForLocationDropDown();
     }
 
     @Then("^I verified the error message when comments description is empty$")
     public void getErrorMsgForCommentsDesc(){
         System.out.println("Verifying the error message if comments description text box is empty\n");
-        Loginpage page = new Loginpage(base.driver);
-        page.getErrorMsgForCommentsDescription();
+
+        pOPage.getErrorMsgForCommentsDescription();
     }
 
     @Then("^I verified the error message when quotedPrice Value is empty$")
     public void getErrorMsgForQuotedPriceEmpty(){
         System.out.println("Verifying the error message if quoted price text box is empty\n");
-        Loginpage page = new Loginpage(base.driver);
-        page.getErrorMsgForQuotedPriceEmpty();
+
+        pOPage.getErrorMsgForQuotedPriceEmpty();
     }
 
     @Then("^I verify Submit button presence$")
     public void verifySubmitButton(){
-        Loginpage page = new Loginpage(base.driver);
-        page.verifySubmitButtonPresence();
+
+        pOPage.verifySubmitButtonPresence();
     }
 
     @Then("^I verify Cancel Changes button presence$")
     public void verifyCancelChangesButton(){
-        Loginpage page = new Loginpage(base.driver);
-        page.verifyCancelChangesButtonPresence();
+
+        pOPage.verifyCancelChangesButtonPresence();
     }
 
     @Then("^I verify Close button presence$")
     public void verifyCloseButton(){
-        Loginpage page = new Loginpage(base.driver);
-        page.verifyCloseButtonPresence();
+
+        pOPage.verifyCloseButtonPresence();
     }
 
     @Then("^I accept an alert$")
-    public void acceptAlert(){
-        Loginpage page = new Loginpage(base.driver);
-        page.acceptAnAlert();
+    public void acceptAlert() throws InterruptedException {
+
+        pOPage.acceptAnAlert();
     }
 
     @Then("^I accept giving Add Quote Access to Initiator$")
     public void giveAddQuotesAccessAlert(){
-        Loginpage page = new Loginpage(base.driver);
-        page.acceptAddQuotesAccessAlert();
+
+        pOPage.acceptAddQuotesAccessAlert();
     }
 
     @Then("^I accept close purchase order alert$")
     public void acceptClosePOAlert(){
-        Loginpage page = new Loginpage(base.driver);
-        page.acceptClosePurchaseOrderAlert();
+
+        pOPage.acceptClosePurchaseOrderAlert();
     }
 
     @Then("^I accept close work order alert$")
     public void acceptCloseWOAlert(){
-        Loginpage page = new Loginpage(base.driver);
-        page.acceptCloseWorkOrderAlert();
+
+        pOPage.acceptCloseWorkOrderAlert();
     }
 
     @Then("^I Navigate to Pending Approval tab and search the raised request$")
     public void clickOnPendingApprovalTab() throws Throwable{
-        Loginpage page = new Loginpage(base.driver);
+
         Thread.sleep(10000);
-        page.naviagteToPendingApproverTab();
+        pOPage.NavigateToPendingApprovalTab();
     }
 
     @Then("^I Navigate to Requests tab and search the raised request$")
     public void clickOnPORequestsTab() throws Throwable{
-        Loginpage page = new Loginpage(base.driver);
-        page.naviagteToPORequestTab();
+
+        pOPage.naviagteToPORequestTab();
     }
 
     @Then("^I verified the Reset Values$")
     public void verifyWOFieldsResetValues(){
-        Loginpage page = new Loginpage(base.driver);
-        page.verifyWOFields();
+
+        pOPage.verifyWOFields();
     }
+
+
+    @Then("^Get the \"([^\"]*)\" KPI Count$")
+    public void getTheKPICount(String kpi) throws Throwable {
+        int kpiUpdate = pOPage.KPICount(currentLogin, kpi);
+        if(kpiStore >= 0){
+            if(kpiUpdate > kpiStore) {
+                System.out.println(kpi + " has increased from " + kpiStore + " to " + kpiUpdate);
+            } else {
+                throw new Exception(kpi + " has not increased from previous number. Previous number: " + kpiStore + " - current number: " + kpiUpdate);
+            }
+
+        } else {
+            kpiStore = kpiUpdate;
+        }
+    }
+
 
 }

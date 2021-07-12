@@ -1,37 +1,3 @@
-
-Skip to content
-Pull requests
-Issues
-Marketplace
-Explore
-@Ian-Maclachlan
-patracorp /
-QA-PurchaseOrders
-Private
-
-3
-0
-
-    0
-
-Code
-Issues 6
-Pull requests
-ZenHub
-Actions
-Projects
-Wiki
-Security
-
-    Insights
-
-QA-PurchaseOrders/.gitignore
-@Ian-Maclachlan
-Ian-Maclachlan Adding .gitignore
-Latest commit 193d8af 3 minutes ago
-History
-1 contributor
-41 lines (34 sloc) 503 Bytes
 # OS generated files #
 ######################
 .DS_Store
@@ -42,7 +8,7 @@ History
 ehthumbs.db
 Thumbs.db
 
-# Java ignores #
+# Java ignores #  
 # Compiled class file
 *.class
 
@@ -73,3 +39,4 @@ target/
 test-output/
 logins.properties
 testrail.properties
+*.iml

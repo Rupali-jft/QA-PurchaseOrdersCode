@@ -244,7 +244,7 @@ public class Login extends BaseUtil {
 
     @FindBy(how = How.CSS, using = ".glyphicon-user")
     private WebElement userIcon;
-    @FindBy(how = How.XPATH, using = "//a/h4[contains(text(),'Log Out')]")
+    @FindBy(how = How.XPATH, using = "//a[normalize-space()='Log Out']")
     private WebElement logOutBtn;
     // Tiles for each app
     @FindBy(how = How.CSS, using = ".wot")

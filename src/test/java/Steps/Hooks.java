@@ -69,7 +69,7 @@ public class Hooks extends BaseUtil {
         js = (JavascriptExecutor) driver;
         wait = new WebDriverWait(driver, 10);
         login = new Login(driver);
-        //emails = new Emails(login.getLogins().getProperty("gmail.email"), login.getLogins().getProperty("gmail.auth"));
+        emails = new Emails(login.getLogins().getProperty("gmail.email"), login.getLogins().getProperty("gmail.auth"));
         commonForm = new CommonForm(driver, js);
         commonGrid = new CommonGrid(driver, js);
         commonKPI = new CommonKPI(driver, js);

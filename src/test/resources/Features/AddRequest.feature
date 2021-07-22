@@ -23,6 +23,8 @@ Feature: Tests involving the creation of a request
         | Location   | Vizag TH            |
         | Department | IT                  |
       And I click the "Cancel Changes" button
+    And I click the "confirm" button
+    Then Verify the changes has been erased
 
   @4879
   Scenario: Add Request with Location Vizag
@@ -36,19 +38,18 @@ Feature: Tests involving the creation of a request
       | Item / Service Name | Description              | Quantity |
       | Test                | Test Item <current date> | 1        |
     And I submit the new request
-    And I wait for 5 seconds
     And I click the "Confirm" button
     And I click the "Yes" button
     And I Click on user icon
     And I click Logout button
     Given I log into the Purchase Orders app as an "Approver"
-    And  I click on the "Pending Approval" link
-    And I click on the "8824" link
+    And I navigate to the "Pending Approval" tab
+    And I open the created WO
     And I approve the request
     And I Click on user icon
     And I click Logout button
     Given I log into the Purchase Orders app as an "Purchaseofficer"
-    And I click on the "8824" link
+    And I open the created WO
     And Click on Add Quote by Purchase Officer Button
     And I set the quote date in the datepicker
     Then Input values in the Quotes pop-up
@@ -57,29 +58,26 @@ Feature: Tests involving the creation of a request
     And I click the "Total Price" box
     And I click the "Submit" button
     And I click the "confirm" button
-    And I wait for 5 seconds
     And I Click on user icon
     And I click Logout button
     Given I log into the Purchase Orders app as an "Procurementmanager"
-    And I click on the "8824" link
+    And I open the created WO
     And I click on the "Quotes" link
     And I click the eye icon
     And I click the "Approve" button
     And I click the "confirm" button
-    And I wait for 5 seconds
     And I Click on user icon
     And I click Logout button
     Given I log into the Purchase Orders app as an "Approver"
-    And I click on the "8824" link
+    And I open the created WO
     And I click on the "Quotes" link
     And I click the eye icon
     And I click the "Approve" button
     And I click the "confirm" button
-    And I wait for 5 seconds
     And I Click on user icon
     And I click Logout button
     Given I log into the Purchase Orders app as an "Purchaseofficer"
-    And I click on the "8824" link
+    And I open the created WO
     And I click the "Add Purchase Order" button
     And I enter "GIP" in the "Vendor Address" text box
     And I click the edit action
@@ -87,7 +85,6 @@ Feature: Tests involving the creation of a request
     And I click the save action
     And I click the "RAISE PO" button
     And I click the "confirm" button
-    And I wait for 5 seconds
     And I click the "Close PO" button
     And I click the "Yes" button
     And I click the "Print PDF" button
@@ -105,19 +102,18 @@ Feature: Tests involving the creation of a request
       | Item / Service Name | Description              | Quantity |
       | Test                | Test Item <current date> | 1        |
     And I submit the new request
-    And I wait for 5 seconds
     And I click the "Confirm" button
     And I click the "Yes" button
     And I Click on user icon
     And I click Logout button
     Given I log into the Purchase Orders app as an "Approver"
-    And  I click on the "Pending Approval" link
-    And I click on the "8824" link
+    And I navigate to the "Pending Approval" tab
+    And I open the created WO
     And I approve the request
     And I Click on user icon
     And I click Logout button
     Given I log into the Purchase Orders app as an "Purchaseofficer"
-    And I click on the "8824" link
+    And I open the created WO
     And Click on Add Quote by Purchase Officer Button
     And I set the quote date in the datepicker
     Then Input values in the Quotes pop-up
@@ -126,29 +122,26 @@ Feature: Tests involving the creation of a request
     And I click the "Total Price" box
     And I click the "Submit" button
     And I click the "confirm" button
-    And I wait for 5 seconds
     And I Click on user icon
     And I click Logout button
     Given I log into the Purchase Orders app as an "Procurementmanager"
-    And I click on the "8824" link
+    And I open the created WO
     And I click on the "Quotes" link
     And I click the eye icon
     And I click the "Approve" button
     And I click the "confirm" button
-    And I wait for 5 seconds
     And I Click on user icon
     And I click Logout button
     Given I log into the Purchase Orders app as an "Approver"
-    And I click on the "8824" link
+    And I open the created WO
     And I click on the "Quotes" link
     And I click the eye icon
     And I click the "Approve" button
     And I click the "confirm" button
-    And I wait for 5 seconds
     And I Click on user icon
     And I click Logout button
     Given I log into the Purchase Orders app as an "Purchaseofficer"
-    And I click on the "8824" link
+    And I open the created WO
     And I click the "Add Purchase Order" button
     And I enter "GIP" in the "Vendor Address" text box
     And I click the edit action
@@ -156,7 +149,6 @@ Feature: Tests involving the creation of a request
     And I click the save action
     And I click the "RAISE PO" button
     And I click the "confirm" button
-    And I wait for 5 seconds
     And I click the "Close PO" button
     And I click the "Yes" button
     And I click the "Print PDF" button
@@ -174,19 +166,18 @@ Feature: Tests involving the creation of a request
       | Item / Service Name | Description              | Quantity |
       | Test                | Test Item <current date> | 1        |
     And I submit the new request
-    And I wait for 5 seconds
     And I click the "Confirm" button
     And I click the "Yes" button
     And I Click on user icon
     And I click Logout button
     Given I log into the Purchase Orders app as an "Approver"
-    And  I click on the "Pending Approval" link
-    And I click on the "8824" link
+    And I navigate to the "Pending Approval" tab
+    And I open the created WO
     And I approve the request
     And I Click on user icon
     And I click Logout button
     Given I log into the Purchase Orders app as an "Purchaseofficer"
-    And I click on the "8824" link
+    And I open the created WO
     And Click on Add Quote by Purchase Officer Button
     And I set the quote date in the datepicker
     Then Input values in the Quotes pop-up
@@ -195,29 +186,26 @@ Feature: Tests involving the creation of a request
     And I click the "Total Price" box
     And I click the "Submit" button
     And I click the "confirm" button
-    And I wait for 5 seconds
     And I Click on user icon
     And I click Logout button
     Given I log into the Purchase Orders app as an "Procurementmanager"
-    And I click on the "8824" link
+    And I open the created WO
     And I click on the "Quotes" link
     And I click the eye icon
     And I click the "Approve" button
     And I click the "confirm" button
-    And I wait for 5 seconds
     And I Click on user icon
     And I click Logout button
     Given I log into the Purchase Orders app as an "Approver"
-    And I click on the "8824" link
+    And I open the created WO
     And I click on the "Quotes" link
     And I click the eye icon
     And I click the "Approve" button
     And I click the "confirm" button
-    And I wait for 5 seconds
     And I Click on user icon
     And I click Logout button
     Given I log into the Purchase Orders app as an "Purchaseofficer"
-    And I click on the "8824" link
+    And I open the created WO
     And I click the "Add Purchase Order" button
     And I enter "GIP" in the "Vendor Address" text box
     And I click the edit action
@@ -225,11 +213,9 @@ Feature: Tests involving the creation of a request
     And I click the save action
     And I click the "RAISE PO" button
     And I click the "confirm" button
-    And I wait for 5 seconds
     And I click the "Close PO" button
     And I click the "Yes" button
     And I click the "Print PDF" button
     And Verify the GST "29AAECP2604C6Z0" under the Address Section for "Bangalore location"
-    And I wait for "5" seconds
 
 

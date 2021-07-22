@@ -156,5 +156,15 @@ purchaseOrder.enterQuoteDetails(table);
     }
 
 
+    @Then("Verify the changes has been erased")
+    public void verifyTheChangesHasBeenErased() {
+        purchaseOrder.verifyemptyfields();
+    }
+
+    @And("I open the created WO")
+    public void iOpenTheCreatedWO() {
+      // valueStore.put("WO #", driver.findElement(By.id("WoNumber1")).getText());
+        driver.findElement(By.linkText(valueStore.get("WO #"))).click();
+    }
 }
 

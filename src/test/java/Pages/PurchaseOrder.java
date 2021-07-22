@@ -44,7 +44,7 @@ public class PurchaseOrder {
 
     @FindBy(how = How.XPATH, using = "//input[@id='quote_date']")
     private WebElement quoDate;
-    @FindBy(how = How.XPATH, using = "/html[1]/body[1]/div[8]/div[1]/table[1]/tbody[1]/tr[4]/td[2]")
+    @FindBy(how = How.XPATH, using = "/html[1]/body[1]/div[8]/div[1]/table[1]/tbody[1]/tr[4]/td[5]")
     private WebElement quotedateselection;
     @FindBy(how = How.XPATH, using = "//form[@id='Add_Quotes']/div[2]/div/div[2]/input")
     private WebElement quoTitle;
@@ -54,6 +54,13 @@ public class PurchaseOrder {
     private WebElement quoPrice;
     @FindBy(how = How.XPATH, using = "//input[@id='total_price0']")
     private WebElement totPrice;
+    @FindBy(how = How.XPATH, using = "//input[@id='request_title']")
+    private WebElement woTitle;
+    @FindBy(how = How.XPATH, using = "//select[@id='request_location']")
+    private WebElement location;
+    @FindBy(how = How.XPATH, using = "//select[@id='request_Department']")
+    private WebElement department;
+
 
     public boolean onCorrectPage() {
         try {
@@ -115,6 +122,25 @@ public class PurchaseOrder {
         } catch (Exception e) {
         }
     }
+
+    public void verifyemptyfields(){
+
+           String title= woTitle.getAttribute("value");
+          String loc=location.getAttribute("value");
+           String dep=department.getAttribute("value");
+
+        if(title.isEmpty() && loc.isEmpty() && dep.isEmpty())
+        {
+            System.out.println("Input fields are empty");
+        }
+        else
+            System.out.println("Input fields are not empty");
+        }
+
+
+
+
+
 public void enterQuoteDate(){
     quoDate.click();
     quotedateselection.click();

@@ -83,10 +83,8 @@ Feature: Tests involving the creation of a request
     And I click the edit action
     And I enter "10" in the Part No field
     And I click the save action
-    And I click the "RAISE PO" button
-    And I click the "confirm" button
-    And I click the "Close PO" button
-    And I click the "Yes" button
+   And I raise the purchase order
+ And I close the purchase order
     And I click the "Print PDF" button
    And Verify the GST "37AAECP2604C1ZW" under the Address Section for "Vizag location"
 
@@ -147,10 +145,8 @@ Feature: Tests involving the creation of a request
     And I click the edit action
     And I enter "10" in the Part No field
     And I click the save action
-    And I click the "RAISE PO" button
-    And I click the "confirm" button
-    And I click the "Close PO" button
-    And I click the "Yes" button
+   And  I raise the purchase order
+  And I close the purchase order
     And I click the "Print PDF" button
     And Verify the GST "22AAECP2604C1Z7" under the Address Section for "Raipur location"
 
@@ -211,11 +207,7 @@ Feature: Tests involving the creation of a request
     And I click the edit action
     And I enter "10" in the Part No field
     And I click the save action
-    And I click the "RAISE PO" button
-    And I click the "confirm" button
-    And I click the "Close PO" button
-    And I click the "Yes" button
+    And I raise the purchase order
+    And I close the purchase order
     And I click the "Print PDF" button
     And Verify the GST "29AAECP2604C6Z0" under the Address Section for "Bangalore location"
-
-

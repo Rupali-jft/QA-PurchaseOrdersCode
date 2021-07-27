@@ -6,7 +6,9 @@ import org.openqa.selenium.*;
 import org.openqa.selenium.support.FindBy;
 import org.openqa.selenium.support.How;
 import org.openqa.selenium.support.PageFactory;
+import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
+import org.testng.Assert;
 
 import java.util.List;
 import java.util.Map;
@@ -60,8 +62,17 @@ public class PurchaseOrder {
     private WebElement location;
     @FindBy(how = How.XPATH, using = "//select[@id='request_Department']")
     private WebElement department;
-
-
+ /*   @FindBy(how = How.XPATH, using = "//body/div[1]/div[1]/div[1]/div[1]/div[1]/div[2]/button[2]")
+    private WebElement rejectBtn;
+    @FindBy(how = How.XPATH, using = "//body/div[1]/div[1]/div[1]/div[1]/div[1]/div[1]/button[5]")
+    private WebElement comment_tab;
+    @FindBy(how = How.XPATH, using = "//input[@id='note_title']")
+    private WebElement note_title;
+    @FindBy(how = How.XPATH, using = "//textarea[@id='note_desc']")
+    private WebElement note_desc;
+    @FindBy(how = How.XPATH, using = "//button[@id='notes_submit']")
+    private WebElement note_subBtn;
+*/
     public boolean onCorrectPage() {
         try {
             return pageName.isDisplayed();
@@ -129,14 +140,9 @@ public class PurchaseOrder {
           String loc=location.getAttribute("value");
            String dep=department.getAttribute("value");
 
-        if(title.isEmpty() && loc.isEmpty() && dep.isEmpty())
-        {
-            System.out.println("Input fields are empty");
-        }
-        else
-            System.out.println("Input fields are not empty");
-        }
-
+        boolean condition = title.isEmpty() && loc.isEmpty() && dep.isEmpty();
+        Assert.assertTrue(condition, "Input fields are not empty");
+        System.out.println("Input fields are empty");}
 
 
 
@@ -157,4 +163,49 @@ public void enterQuoteDate(){
             totPrice.click();
     }
 
+    /*To verify the Reject button presence
+    public void verifyRejectButtonPresence() {
+        boolean condition = rejectBtn.isDisplayed();
+        Assert.assertTrue(condition, "Reject button is not present in the page\n");
+        System.out.println("Reject button is enabled and present\n");
+
+    }
+    public void verifyValidationmessage(String validation_message){
+        boolean result=new WebDriverWait(driver, 5).until(ExpectedConditions.visibilityOfElementLocated(By.xpath("//div[contains(text(),'" + validation_message + "')]"))).isDisplayed();
+        WebElement validation = driver.findElement(By.xpath("//div[contains(text(),'" + validation_message + "')]"));
+        Assert.assertTrue(result,"Expected validation message \"" + validation_message + "\" did not display!");
+        System.out.println("Validation message appeared:  "+ validation_message);
+    }
+
+    public void verifyPagination(){
+        for(int i=1;i<=11;i++)
+
+        {
+
+comment_tab.click();
+            BaseUtil.pageLoaded();
+note_title.sendKeys("Test");
+            try {
+                note_desc.sendKeys("Test description");
+
+            }
+                catch
+             (ElementClickInterceptedException ignored) {
+            }
+            try {
+                note_subBtn.click();
+            }
+            catch
+            (ElementClickInterceptedException ignored) {
+            }
+
+           // wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("//div(text()='Comment Successfully Added')")));
+           // wait.until(ExpectedConditions.invisibilityOfElementLocated(By.xpath("//div(text()='Comment Successfully Added')")));
+
+           // BaseUtil.pageLoaded();
+            Login.waitForMiliseconds(1000);
+            wait.until(ExpectedConditions.visibilityOf(comment_tab));
+        }
+    }
+*/
 }

@@ -1,11 +1,13 @@
 package Steps;
 
 import Base.BaseUtil;
+import io.cucumber.datatable.DataTable;
 import io.cucumber.java.en.And;
 import io.cucumber.java.en.Given;
 import io.cucumber.java.en.Then;
-import org.openqa.selenium.By;
+import org.openqa.selenium.*;
 import org.openqa.selenium.support.ui.ExpectedConditions;
+import org.openqa.selenium.support.ui.WebDriverWait;
 import org.testng.Assert;
 
 import java.util.Date;
@@ -56,6 +58,7 @@ public class POSteps extends BaseUtil {
         wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("//span[@class=\"jconfirm-title\" and normalize-space()=\"Confirm!\"]")));
         commonForm.commonButton("confirm");
         wait.until(ExpectedConditions.visibilityOfElementLocated(By.id("header_succ_msg_add")));
+        wait.until(ExpectedConditions.visibilityOfElementLocated(By.id("request_confirm")));
         BaseUtil.pageLoaded();
         valueStore.put("WO #", driver.findElement(By.id("WoNumber1")).getText());
     }
@@ -80,4 +83,183 @@ public class POSteps extends BaseUtil {
 
 
     }
+
+    @And("I click the eye icon")
+    public void iClickTheEyeIcon() {
+        driver.findElement(By.xpath("//tbody/tr[1]/td[6]/center[1]/span[1]")).click();
+    }
+
+    @And("I approve the request")
+    public void iApproveTheRequest() {
+        commonForm.commonButton("Approve");
+        wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("//span[@class=\"jconfirm-title\" and normalize-space()=\"Confirm!\"]")));
+        commonForm.commonButton("confirm");
+        wait.until(ExpectedConditions.visibilityOfElementLocated(By.id("header_succ_msg_add")));
+        BaseUtil.pageLoaded();
+        valueStore.put("WO #", driver.findElement(By.id("WoNumber1")).getText());
+    }
+
+    @And("I click the edit action")
+    public void iClickTheEditAction() {
+        driver.findElement(By.xpath("//tbody/tr[1]/td[7]/a[2]/i[1]")).click();
+        ((JavascriptExecutor) driver).executeScript("scroll(0,2000);");
+    }
+
+    @And("Verify the GST {string} under the Address Section for {string}")
+    public void verifyTheGSTUnderTheAddressSectionFor(String arg0, String arg1) {
+        windowsHandling();
+        boolean result = false;
+        String GST = arg0;
+        try {
+            result = new WebDriverWait(driver, 5).until(ExpectedConditions.visibilityOfElementLocated(By.xpath("//body/div[@id='pdf']/form[@id='form']/h5[2]"))).isDisplayed();
+        } catch (
+                TimeoutException ignored) {
+        }
+        Assert.assertTrue(result, "Expected GST under address section \"" + GST + "\" did not display!");
+        System.out.println("GST under address section :\n"+arg1+"-" + GST);
+    }
+
+    @And("Click on Add Quote by Purchase Officer Button")
+    public void clickOnAddQuoteByPurchaseOfficerButton() {
+        System.out.println("clicking on Add Quote Button - To raise quotes by purchase officer\n");
+        purchaseOrder.clickAddQuote();
+        pageLoaded();
+    }
+
+    @Then("Input values in the Quotes pop-up")
+    public void inputValuesInTheQuotesPopUp(DataTable table) {
+        System.out.println("Entering required details in the Quotes Pop-up\n");
+purchaseOrder.enterQuoteDetails(table);
+        }
+
+    @And("I set the quote date in the datepicker")
+    public void iSetTheQuoteDateInTheDatepicker() {
+        purchaseOrder.enterQuoteDate();
+    }
+
+    @And("I click the {string} box")
+    public void iClickTheBox(String arg0) {
+        purchaseOrder.clickTotalPriceBox();
+    }
+
+
+    @And("I enter {string} in the Part No field")
+    public void iEnterInThePartNoField(String arg0) {
+        driver.findElement(By.xpath("//input[@id='item_partno0']")).sendKeys(arg0);
+    }
+
+    @And("I click the save action")
+    public void iClickTheSaveAction() {
+        driver.findElement(By.xpath("//tbody/tr[1]/td[7]/a[1]/i[1]")).click();
+        ((JavascriptExecutor) driver).executeScript("scroll(2000,0);");
+    }
+
+
+    @Then("Verify the changes has been erased")
+    public void verifyTheChangesHasBeenErased() {
+        purchaseOrder.verifyemptyfields();
+    }
+
+    @And("I open the created WO")
+    public void iOpenTheCreatedWO() {
+        driver.findElement(By.linkText(valueStore.get("WO #"))).click();
+        pageLoaded();
+    }
+
+  /*  @Then("I Verify that request got approved successfully BY APPROVER")
+    public void iVerifyThatRequestGotApprovedSuccessfullyBYAPPROVER() {
+        boolean result = false;
+        String validation = "Request Added Successfully";
+        try {
+            result = new WebDriverWait(driver, 5).until(ExpectedConditions.visibilityOfElementLocated(By.id("header_succ_msg_add"))).isDisplayed();
+        } catch (
+                TimeoutException ignored) {
+        }
+        Assert.assertTrue(result, "Expected validation message \"" + validation + "\" did not display!");
+        System.out.println("Validation message when request is approved by Approver: \n" + validation);
+
+    }
+
+    @Then("I verify that Reject button is enabled when the status is {string}")
+    public void iVerifyThatRejectButtonIsEnabledWhenTheStatusIs(String arg0) {
+purchaseOrder.verifyRejectButtonPresence();
+System.out.println("And the status is :"+ arg0);
+    }
+
+
+
+    @Then("I verify that reject button got disappeared")
+    public void iVerifyThatRejectButtonGotDisappeared() {
+        purchaseOrder.verifyRejectButtonPresence();
+    }
+
+
+
+    @Then("I verify that delete button is enabled")
+    public void iVerifyThatDeleteButtonIsEnabled() {
+        WebElement element = driver.findElement(By.xpath("//tbody/tr[1]/td[5]/center[1]/button[1]"));
+        if (element.isEnabled()) {
+            System.out.println("Good delete box enabled");
+        } else {
+            System.out.println("delete box disabled");
+        }
+    }
+    @And("I delete the attachments")
+    public void iDeleteTheAttachments() {
+        driver.findElement(By.xpath("//tbody/tr[1]/td[5]/center[1]/button[1]")).click();
+    }
+
+    @And("I click on {string} tab")
+    public void iClickOnTab(String arg0) {
+        driver.findElement(By.xpath("//a[@id='notes_sects']")).click();
+    }
+
+    @And("I click {string} button")
+    public void iClickButton(String arg0) {
+        driver.findElement(By.xpath("//button[@id='notes_submit']")).click();
+    }
+
+    @Then("I verify that {string} validation error message appears")
+    public void iVerifyThatValidationErrorMessageAppears(String validation_message) {
+purchaseOrder.verifyValidationmessage(validation_message);
+
+    }
+
+    @And("I enter the {int} number of comments")
+    public void iEnterTheNumberOfComments(int arg0) {
+        purchaseOrder.verifyPagination();
+    }*/
+
+    @And("I raise the purchase order")
+    public void iRaiseThePurchaseOrder() {
+        commonForm.commonButton("RAISE PO");
+        pageLoaded();
+        commonForm.commonButton("confirm");
+        wait.until(ExpectedConditions.visibilityOfElementLocated(By.id("po_succ_msg")));
+        wait.until(ExpectedConditions.invisibilityOfElementLocated(By.id("po_succ_msg")));
+        wait.until(ExpectedConditions.visibilityOfElementLocated(By.id("po_close")));
+        pageLoaded();
+    }
+
+    @And("I close the purchase order")
+    public void iCloseThePurchaseOrder() {
+        commonForm.commonButton("Close PO");
+        pageLoaded();
+        commonForm.commonButton("Yes");
+        wait.until(ExpectedConditions.visibilityOfElementLocated(By.id("po_close_msg")));
+        wait.until(ExpectedConditions.invisibilityOfElementLocated(By.id("po_close_msg")));
+    }
+
+  /*  @And("I enter {string} in the Page box and press the keyboard's enter button")
+    public void iEnterInThePageBoxAndPressTheKeyboardSEnterButton(String arg0) {
+        WebElement pagebox = driver.findElement(By.xpath("//body/div[1]/div[1]/div[1]/div[2]/div[1]/div[1]/div[1]/div[1]/div[1]/div[1]/div[1]/div[1]/input[1]"));
+        pagebox.sendKeys(Keys.chord(Keys.CONTROL, "a"),arg0,Keys.ENTER);
+    }
+
+    @Then("I verify that the correct page of the grid is displayed")
+    public void iVerifyThatTheCorrectPageOfTheGridIsDisplayed() {
+      Assert.assertTrue(pageLoaded(),"Correct page of the grid does not displayed");
+      System.out.println("Correct page of the grid is being displayed");
+    }*/
 }
+

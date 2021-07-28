@@ -62,6 +62,13 @@ public class BaseUtil {
         return file.getAbsolutePath();
     }
 
+    public void windowsHandling(){
+        String Tab1 = driver.getWindowHandle();
+        ArrayList<String> availableWindows = new ArrayList<String>(driver.getWindowHandles());
+        if (!availableWindows.isEmpty()) {
+            driver.switchTo().window(availableWindows.get(1));
+        }}
+
     // Folder where files downloaded during tests will be stored
     public static String dLFolder = attachPath("src/test/resources/downloads");
     public static String attachLocation = attachPath("src/test/resources/attachments/sir_fluffington.jpg");

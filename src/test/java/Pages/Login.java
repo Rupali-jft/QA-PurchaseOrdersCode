@@ -1,6 +1,7 @@
 package Pages;
 
 import Base.BaseUtil;
+import org.openqa.selenium.ElementClickInterceptedException;
 import org.openqa.selenium.NoSuchElementException;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
@@ -232,7 +233,10 @@ public class Login extends BaseUtil {
         wait.until(ExpectedConditions.elementToBeClickable(userIcon));
         long startTime = System.currentTimeMillis();
         while (!logOutBtn.isDisplayed() && ((System.currentTimeMillis() - startTime) < 5000)) {
-            userIcon.click();
+            try {
+                userIcon.click();
+            } catch (ElementClickInterceptedException ignored) {
+            }
             waitForMiliseconds(500);
         }
     }
@@ -244,7 +248,7 @@ public class Login extends BaseUtil {
 
     @FindBy(how = How.CSS, using = ".glyphicon-user")
     private WebElement userIcon;
-    @FindBy(how = How.XPATH, using = "//a/h4[contains(text(),'Log Out')]")
+    @FindBy(how = How.XPATH, using = "//a[normalize-space()='Log Out']")
     private WebElement logOutBtn;
     // Tiles for each app
     @FindBy(how = How.CSS, using = ".wot")
@@ -314,7 +318,7 @@ public class Login extends BaseUtil {
         return false;
     }
 
-    public void waitForMiliseconds(int miliseconds) {
+    public static void waitForMiliseconds(int miliseconds) {
         try {
             Thread.sleep(miliseconds);
         } catch (InterruptedException e) {

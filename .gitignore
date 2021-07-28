@@ -39,4 +39,5 @@ target/
 test-output/
 logins.properties
 testrail.properties
+chromedriver.exe
 *.iml

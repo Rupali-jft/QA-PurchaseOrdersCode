@@ -31,6 +31,11 @@ public class CommonGrid {
         initializeMaps();
     }
 
+    @FindBy(how = How.XPATH, using = "//thead/tr[1]/th[3]/span[1]/div[1]/ul[1]/li[1]/div[1]/input[1]")
+    private WebElement fieldSearch;
+    @FindBy(how = How.XPATH, using = "//thead/tr[1]/th[4]/span[1]/div[1]/ul[1]/li[1]/div[1]/input[1]")
+    public  WebElement fieldSearchStatus;
+
     /**
      * Navigates to the indicated grid tab
      *
@@ -854,5 +859,68 @@ public class CommonGrid {
             System.out.println("Was unable to find the first row in the " + currentTab + " grid.");
             return null;
         }
+    }
+
+    public void clickResetButton() {
+        List<WebElement> resetButtons = driver.findElements(By.className("search-clear"));
+        for (WebElement button : resetButtons) {
+            if (button.isDisplayed()) {
+                button.click();
+                break;
+            }
+        }
+
+    }
+    public void waitForFilter(String originalTopRecordID, String header) {
+        waitForFilter(originalTopRecordID, header, 3);
+    }
+    public void waitForFilter(String originalTopRecordID, String header, long waitLength) {
+        System.out.println("Waiting for the Grid to be resorted.");
+        waitLength = waitLength * 1000; // converting from seconds to milliseconds
+        long startTime = System.currentTimeMillis();
+        try {
+            while (gridEntry("row 1", header).getText().equals(originalTopRecordID) && (System.currentTimeMillis() - startTime) < waitLength) {
+                try {
+                    Thread.sleep(500); //check table every half second to see if it has been filtered.
+                } catch (InterruptedException ignored) {
+                    System.out.println("Sleep was interrupted.");
+                    //break;
+                }
+            }
+        } catch (StaleElementReferenceException e) {
+            // This happens when no entries are displayed.
+            System.out.println("Grid has no entries.");
+            return;
+        }
+
+        if (gridEntry("row 1", header).getText().equals(originalTopRecordID)) {
+            System.out.println("Grid filter wait timed out. Top record is the same after filtering.");
+        } else {
+            System.out.println("Grid has been sorted.");
+        }
+    }
+    public String topRowText() {
+        // used to verify an empty table
+        String title = null;
+        List<WebElement> titles = driver.findElements(By.xpath("//table[@id]"));
+        for (WebElement ttlEle : titles) {
+            if (ttlEle.isDisplayed() && ttlEle.getAttribute("id").length() > 0) {
+                title = ttlEle.getAttribute("id");
+                break;
+            }
+        }
+        return driver.findElement(By.xpath("//*[@id='" + title + "']/tbody/tr/td")).getText();
+    }
+    public void verifySearchFieldEmpty(){
+        String search= fieldSearchStatus.getAttribute("value");
+        Boolean condition=search.isEmpty();
+        Assert.assertTrue(condition, "Search Field is not empty");
+        System.out.println("Search field is empty");
+    }
+    public void enteringSearchField(String Initiator_Name){
+        fieldSearch.sendKeys(Initiator_Name);
+    }
+    public void searchingStatus(String Status_Value){
+        fieldSearchStatus.sendKeys(Status_Value);
     }
 }

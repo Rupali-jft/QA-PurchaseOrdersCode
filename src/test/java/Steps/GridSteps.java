@@ -6,7 +6,10 @@ import Pages.CommonGrid;
 import io.cucumber.java.en.And;
 import io.cucumber.java.en.Then;
 import io.cucumber.java.en.When;
+import org.openqa.selenium.By;
+import org.openqa.selenium.Keys;
 import org.openqa.selenium.TimeoutException;
+import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.testng.Assert;
 
@@ -15,6 +18,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.TimeUnit;
 
 public class GridSteps extends BaseUtil {
 
@@ -357,5 +361,164 @@ public class GridSteps extends BaseUtil {
                 expectatedColour = "rgba(" + colourName + ")";
         }
         Assert.assertEquals(actualColour, expectatedColour, "The colour of the first row (" + actualColour + ") did not match the expected colour (" + expectatedColour + ")");
+    }
+
+    @Then("There is no data in the grid")
+    public void gridIsEmpty() {
+        Assert.assertEquals(commonGrid.topRowText(), "No data available in table");
+        System.out.println("No data available in table");
+    }
+
+    @Then("The number of records in the {string} tab is {string}")
+    public void iCheckTheNumberOfRecordsInTheTab(String tabName, String expectation) {
+        // expectations should be "increased", "decreased", or "the same"
+        System.out.println("Checking the number of records in the " + tabName + " grid.");
+        commonGrid.gridTab(tabName);
+        gridRecords = commonGrid.gridRecordNumber(tabName);
+        try {
+            int oldNumber = Integer.parseInt(valueStore.get("numberOfRecords"));
+            System.out.println("oldNumber -" + oldNumber);
+            if (expectation.equalsIgnoreCase("decreased")) {
+                Assert.assertTrue(gridRecords < oldNumber);
+            } else if (expectation.equalsIgnoreCase("increased")) {
+                Assert.assertTrue(gridRecords > oldNumber);
+            } else {
+                Assert.assertEquals(gridRecords, oldNumber);
+            }
+        } catch (NumberFormatException e) {
+            System.out.println("NumberFormatException is handled ");
+        }
+    }
+
+    @And("I click the cross button")
+    public void iClickTheCrossButton() {
+        System.out.println("Clicking the cross button");
+        driver.findElement(By.xpath("//thead/tr[1]/th[3]/span[1]/div[1]/ul[1]/li[1]/div[1]/span[2]/button[1]/i[1]")).click();
+    }
+
+    @Then("Verify that text is removed from the field")
+    public void verifyThatTextIsRemovedFromTheField() {
+        commonGrid.verifySearchFieldEmpty();
+    }
+
+    @And("I enter {string} into the search field")
+    public void iEnterIntoTheSearchField(String arg0) {
+        System.out.println("Entering Initiator into the search field: " + arg0);
+        commonGrid.enteringSearchField(arg0);
+        driver.manage().timeouts().implicitlyWait(10, TimeUnit.SECONDS);
+    }
+
+    @And("Verify that  items in the dropdown list are displayed")
+    public void verifyThatItemsInTheDropdownListAreDisplayed() {
+        List<WebElement> drpdwn = driver.findElements(By.xpath("//thead/tr[1]/th[3]/span[1]/div[1]/ul[1]"));
+        for (WebElement suggestion : drpdwn) {
+            System.out.println("Drop-down list is displayed: " + suggestion.getText());
+        }
+    }
+
+    @And("I enter {string} into the search field for {string} column field")
+    public void iEnterIntoTheSearchFieldForColumnField(String arg0, String arg1) {
+        System.out.println("Entering " + arg1 + " into the search field: " + arg0);
+        commonGrid.searchingStatus(arg0);
+    }
+
+    @And("I click the cross icon")
+    public void iClickTheCrossIcon() {
+        System.out.println("Clicking the cross Icon");
+        driver.findElement(By.xpath("//thead/tr[1]/th[4]/span[1]/div[1]/ul[1]/li[1]/div[1]/span[2]/button[1]/i[1]")).click();
+    }
+
+    @And("Verify that  items in the Status dropdown list are displayed")
+    public void verifyThatItemsInTheStatusDropdownListAreDisplayed() {
+        List<WebElement> drpdwn = driver.findElements(By.xpath("//thead/tr[1]/th[4]/span[1]/div[1]/ul[1]"));
+        for (WebElement suggestion : drpdwn) {
+            System.out.println("Drop-down list is displayed: " + suggestion.getText());
+        }
+    }
+
+    @And("I clear the {string} field")
+    public void iClearTheField(String arg0) {
+        driver.findElement(By.xpath("//input[@placeholder='" + arg0 + "']")).clear();
+    }
+
+    @And("I click the select. . . button for {string} field")
+    public void iClickTheSelectButtonForField(String arg0) {
+        driver.findElement(By.xpath("//select[@name='" + arg0 + "']//following::button")).click();
+    }
+
+    @And("I enter {string} in the {string} field for Location column field at index {int}")
+    public void iEnterInTheFieldForLocationColumnFieldAtIndex(String arg0, String arg1, int arg2) {
+        driver.findElements(By.xpath("//input[@placeholder='" + arg1 + "']")).get(arg2).sendKeys(arg0);
+        System.out.println("Entering the location " + arg0 + " in the search box");
+        driver.manage().timeouts().implicitlyWait(2, TimeUnit.SECONDS);
+    }
+
+    @And("I click the cross icon button")
+    public void iClickTheCrossIconButton() {
+        driver.findElement(By.xpath("//thead/tr[1]/th[6]/span[1]/div[1]/ul[1]/li[1]/div[1]/span[2]/button[1]")).click();
+    }
+
+    @Then("Verify that text is removed from the {string} field for Location column field at index {int}")
+    public void verifyThatTextIsRemovedFromTheFieldForLocationColumnFieldAtIndex(String arg0, int arg1) {
+        WebElement ele = driver.findElements(By.xpath("//input[@placeholder='" + arg0 + "']")).get(arg1);
+        String search = ele.getAttribute("value");
+        Boolean condition = search.isEmpty();
+        Assert.assertTrue(condition, "Search Field is not empty");
+        System.out.println("Search field is empty");
+    }
+
+    @And("Verify that  items in the Location dropdown list are displayed")
+    public void verifyThatItemsInTheLocationDropdownListAreDisplayed() {
+        List<WebElement> drpdwn = driver.findElements(By.xpath("//thead/tr[1]/th[6]/span[1]/div[1]/ul[1]"));
+        for (WebElement suggestion : drpdwn) {
+            System.out.println("Drop-down list is displayed: " + suggestion.getText());
+        }
+    }
+
+    @And("Verify that  items in the Department dropdown list are displayed")
+    public void verifyThatItemsInTheDepartmentDropdownListAreDisplayed() {
+        List<WebElement> drpdwn = driver.findElements(By.xpath("//thead/tr[1]/th[7]/span[1]/div[1]/ul[1]"));
+        for (WebElement suggestion : drpdwn) {
+            System.out.println("Drop-down list is displayed: " + suggestion.getText());
+        }
+    }
+
+    @And("I click the cross")
+    public void iClickTheCross() {
+        driver.findElement(By.xpath("//thead/tr[1]/th[7]/span[1]/div[1]/ul[1]/li[1]/div[1]/span[2]/button[1]")).click();
+    }
+
+    @And("I clear the {string} field for {string} column field at index {int}")
+    public void iClearTheFieldForColumnFieldAtIndex(String arg0, String arg1, int arg2) {
+        driver.findElements(By.xpath("//input[@placeholder='" + arg0 + "']")).get(arg2).clear();
+        System.out.println("Search field is clear");
+    }
+
+    @And("I enter {string} in the Page box and press the keyboard's enter button")
+    public void iEnterInThePageBoxAndPressTheKeyboardSEnterButton(String arg0) {
+        WebElement pagebox = driver.findElement(By.xpath("//body/div[1]/div[1]/div[1]/div[2]/div[1]/div[1]/div[1]/div[1]/div[1]/div[1]/div[1]/div[1]/input[1]"));
+        pagebox.sendKeys(Keys.chord(Keys.CONTROL, "a"), arg0, Keys.ENTER);
+    }
+
+    @And("I click the Reset button in the grid header")
+    public void iClickTheResetButton() {
+        System.out.println("Clicking the Reset button to clear all filters");
+        String currentRow1 = commonGrid.gridEntry("row 1", "WO #").getText();
+        commonGrid.clickResetButton();
+        try {
+            commonGrid.waitForFilter(currentRow1, "WO #");
+        } catch (TimeoutException ignored) {
+        }
+    }
+
+    @Then("The {string} grid header is {string}")
+    public void theGridHeaderIs(String header, String expectation) {
+        System.out.println("Checking the " + header + "header contents.");
+        if (expectation.contains("<headerInfo>")) { //todo: maybe use a better flag.
+            expectation = expectation.replaceAll("<headerInfo>", headerInfo);
+        }
+        BaseUtil.pageLoaded();
+        String actual = commonGrid.gridHeaderField(header, null);
+        Assert.assertEquals(actual, expectation, "Header text was not correct. Expected \"" + expectation + "\", but was \"" + actual + "\".");
     }
 }

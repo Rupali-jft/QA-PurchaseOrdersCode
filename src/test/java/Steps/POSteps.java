@@ -166,7 +166,7 @@ purchaseOrder.enterQuoteDetails(table);
         pageLoaded();
     }
 
-  /*  @Then("I Verify that request got approved successfully BY APPROVER")
+    @Then("I Verify that request got approved successfully BY APPROVER")
     public void iVerifyThatRequestGotApprovedSuccessfullyBYAPPROVER() {
         boolean result = false;
         String validation = "Request Added Successfully";
@@ -197,38 +197,19 @@ System.out.println("And the status is :"+ arg0);
 
     @Then("I verify that delete button is enabled")
     public void iVerifyThatDeleteButtonIsEnabled() {
-        WebElement element = driver.findElement(By.xpath("//tbody/tr[1]/td[5]/center[1]/button[1]"));
-        if (element.isEnabled()) {
-            System.out.println("Good delete box enabled");
-        } else {
-            System.out.println("delete box disabled");
-        }
+        purchaseOrder.verifyDeleteButton();
     }
     @And("I delete the attachments")
     public void iDeleteTheAttachments() {
         driver.findElement(By.xpath("//tbody/tr[1]/td[5]/center[1]/button[1]")).click();
     }
 
-    @And("I click on {string} tab")
-    public void iClickOnTab(String arg0) {
-        driver.findElement(By.xpath("//a[@id='notes_sects']")).click();
-    }
-
-    @And("I click {string} button")
-    public void iClickButton(String arg0) {
-        driver.findElement(By.xpath("//button[@id='notes_submit']")).click();
-    }
-
-    @Then("I verify that {string} validation error message appears")
+    @Then("I verify that {string} validation  message appears")
     public void iVerifyThatValidationErrorMessageAppears(String validation_message) {
-purchaseOrder.verifyValidationmessage(validation_message);
+        Assert.assertTrue(purchaseOrder.verifyValidationmessage(validation_message),"Expected validation message \"" + validation_message + "\" did not display!");
+        System.out.println("Validation message appeared:  "+ validation_message);
 
     }
-
-    @And("I enter the {int} number of comments")
-    public void iEnterTheNumberOfComments(int arg0) {
-        purchaseOrder.verifyPagination();
-    }*/
 
     @And("I raise the purchase order")
     public void iRaiseThePurchaseOrder() {

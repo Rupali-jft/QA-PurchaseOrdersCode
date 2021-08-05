@@ -26,7 +26,7 @@ public class PurchaseOrder {
         this.driver = driver;
         this.js = js;
         PageFactory.initElements(driver, this);
-        this.wait=new WebDriverWait(this.driver,15);
+        this.wait = new WebDriverWait(this.driver, 15);
 
 
     }
@@ -62,10 +62,11 @@ public class PurchaseOrder {
     private WebElement location;
     @FindBy(how = How.XPATH, using = "//select[@id='request_Department']")
     private WebElement department;
-   @FindBy(how = How.XPATH, using = "//body/div[1]/div[1]/div[1]/div[1]/div[1]/div[2]/button[2]")
+    @FindBy(how = How.XPATH, using = "//body/div[1]/div[1]/div[1]/div[1]/div[1]/div[2]/button[2]")
     private WebElement rejectBtn;
     @FindBy(how = How.XPATH, using = "//tbody/tr[1]/td[5]/center[1]/button[1]")
     private WebElement deleteBtn;
+
     public boolean onCorrectPage() {
         try {
             return pageName.isDisplayed();
@@ -127,27 +128,29 @@ public class PurchaseOrder {
         }
     }
 
-    public void verifyemptyfields(){
+    public void verifyemptyfields() {
 
-           String title= woTitle.getAttribute("value");
-          String loc=location.getAttribute("value");
-           String dep=department.getAttribute("value");
+        String title = woTitle.getAttribute("value");
+        String loc = location.getAttribute("value");
+        String dep = department.getAttribute("value");
 
         boolean condition = title.isEmpty() && loc.isEmpty() && dep.isEmpty();
         Assert.assertTrue(condition, "Input fields are not empty");
-        System.out.println("Input fields are empty");}
+        System.out.println("Input fields are empty");
+    }
 
-public void verifyDeleteButton(){
-    Boolean condition=deleteBtn.isEnabled();
-    Assert.assertTrue(condition, "delete box disabled");
-    System.out.println("Good delete box enabled");
+    public void verifyDeleteButton() {
+        Boolean condition = deleteBtn.isEnabled();
+        Assert.assertTrue(condition, "delete box disabled");
+        System.out.println("Good delete box enabled");
     }
 
 
-public void enterQuoteDate(){
-    quoDate.click();
-    quotedateselection.click();
-}
+    public void enterQuoteDate() {
+        quoDate.click();
+        quotedateselection.click();
+    }
+
     public void enterQuoteDetails(DataTable dataTable) {
         for (Map<Object, Object> data : dataTable.asMaps(String.class, String.class)) {
 
@@ -156,23 +159,26 @@ public void enterQuoteDate(){
             quoPrice.sendKeys((String) data.get("QuotedPrice"));
         }
     }
-    public void clickTotalPriceBox(){
-            totPrice.click();
+
+    public void clickTotalPriceBox() {
+        totPrice.click();
     }
 
     //To verify the Reject button presence
     public void verifyRejectButtonPresence() {
         boolean condition = rejectBtn.isDisplayed();
-        if(condition==true){
-            System.out.println("Reject button is enabled and present");}
-        else  System.out.println("Reject button is not enabled and present\n");
+        if (condition == true) {
+            System.out.println("Reject button is enabled and present");
+        } else System.out.println("Reject button is not enabled and present\n");
 
     }
-    public void verifyValidationmessage(String validation_message){
-        boolean result=new WebDriverWait(driver, 5).until(ExpectedConditions.visibilityOfElementLocated(By.xpath("//div[contains(text(),'" + validation_message + "')]"))).isDisplayed();
-        WebElement validation = driver.findElement(By.xpath("//div[contains(text(),'" + validation_message + "')]"));
-        Assert.assertTrue(result,"Expected validation message \"" + validation_message + "\" did not display!");
-        System.out.println("Validation message appeared:  "+ validation_message);
-    }
 
+    public boolean verifyValidationmessage(String validation_message) {
+        try {
+            return new WebDriverWait(driver, 5).until(ExpectedConditions.visibilityOfElementLocated(By.xpath("//div[contains(text(),'" + validation_message + "')]"))).isDisplayed();
+        } catch (TimeoutException ignored) {
+        }
+        return false;
+    }
 }
+

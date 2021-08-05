@@ -206,7 +206,8 @@ System.out.println("And the status is :"+ arg0);
 
     @Then("I verify that {string} validation  message appears")
     public void iVerifyThatValidationErrorMessageAppears(String validation_message) {
-purchaseOrder.verifyValidationmessage(validation_message);
+        Assert.assertTrue(purchaseOrder.verifyValidationmessage(validation_message),"Expected validation message \"" + validation_message + "\" did not display!");
+        System.out.println("Validation message appeared:  "+ validation_message);
 
     }
 

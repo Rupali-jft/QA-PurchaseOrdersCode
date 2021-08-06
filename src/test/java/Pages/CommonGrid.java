@@ -32,7 +32,7 @@ public class CommonGrid {
     }
 
     @FindBy(how = How.XPATH, using = "//thead/tr[1]/th[3]/span[1]/div[1]/ul[1]/li[1]/div[1]/input[1]")
-    private WebElement fieldSearch;
+    private WebElement fieldSearchInitiator;
     @FindBy(how = How.XPATH, using = "//thead/tr[1]/th[4]/span[1]/div[1]/ul[1]/li[1]/div[1]/input[1]")
     public  WebElement fieldSearchStatus;
 
@@ -918,7 +918,7 @@ public class CommonGrid {
         System.out.println("Search field is empty");
     }
     public void enteringSearchField(String Initiator_Name){
-        fieldSearch.sendKeys(Initiator_Name);
+        fieldSearchInitiator.sendKeys(Initiator_Name);
     }
     public void searchingStatus(String Status_Value){
         fieldSearchStatus.sendKeys(Status_Value);

@@ -408,7 +408,7 @@ public class GridSteps extends BaseUtil {
         driver.manage().timeouts().implicitlyWait(10, TimeUnit.SECONDS);
     }
 
-    @And("Verify that  items in the dropdown list are displayed")
+    @And("Verify that items in the dropdown list are displayed")
     public void verifyThatItemsInTheDropdownListAreDisplayed() {
         List<WebElement> drpdwn = driver.findElements(By.xpath("//thead/tr[1]/th[3]/span[1]/div[1]/ul[1]"));
         for (WebElement suggestion : drpdwn) {
@@ -428,7 +428,7 @@ public class GridSteps extends BaseUtil {
         driver.findElement(By.xpath("//thead/tr[1]/th[4]/span[1]/div[1]/ul[1]/li[1]/div[1]/span[2]/button[1]/i[1]")).click();
     }
 
-    @And("Verify that  items in the Status dropdown list are displayed")
+    @And("Verify that items in the Status dropdown list are displayed")
     public void verifyThatItemsInTheStatusDropdownListAreDisplayed() {
         List<WebElement> drpdwn = driver.findElements(By.xpath("//thead/tr[1]/th[4]/span[1]/div[1]/ul[1]"));
         for (WebElement suggestion : drpdwn) {
@@ -467,7 +467,7 @@ public class GridSteps extends BaseUtil {
         System.out.println("Search field is empty");
     }
 
-    @And("Verify that  items in the Location dropdown list are displayed")
+    @And("Verify that items in the Location dropdown list are displayed")
     public void verifyThatItemsInTheLocationDropdownListAreDisplayed() {
         List<WebElement> drpdwn = driver.findElements(By.xpath("//thead/tr[1]/th[6]/span[1]/div[1]/ul[1]"));
         for (WebElement suggestion : drpdwn) {
@@ -475,7 +475,7 @@ public class GridSteps extends BaseUtil {
         }
     }
 
-    @And("Verify that  items in the Department dropdown list are displayed")
+    @And("Verify that items in the Department dropdown list are displayed")
     public void verifyThatItemsInTheDepartmentDropdownListAreDisplayed() {
         List<WebElement> drpdwn = driver.findElements(By.xpath("//thead/tr[1]/th[7]/span[1]/div[1]/ul[1]"));
         for (WebElement suggestion : drpdwn) {

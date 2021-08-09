@@ -180,21 +180,6 @@ purchaseOrder.enterQuoteDetails(table);
 
     }
 
-    @Then("I verify that Reject button is enabled when the status is {string}")
-    public void iVerifyThatRejectButtonIsEnabledWhenTheStatusIs(String arg0) {
-purchaseOrder.verifyRejectButtonPresence();
-System.out.println("And the status is :"+ arg0);
-    }
-
-
-
-    @Then("I verify that reject button got disappeared")
-    public void iVerifyThatRejectButtonGotDisappeared() {
-        purchaseOrder.verifyRejectButtonPresence();
-    }
-
-
-
     @Then("I verify that delete button is enabled")
     public void iVerifyThatDeleteButtonIsEnabled() {
         purchaseOrder.verifyDeleteButton();
@@ -230,17 +215,12 @@ System.out.println("And the status is :"+ arg0);
         wait.until(ExpectedConditions.visibilityOfElementLocated(By.id("po_close_msg")));
         wait.until(ExpectedConditions.invisibilityOfElementLocated(By.id("po_close_msg")));
     }
-
-  /*  @And("I enter {string} in the Page box and press the keyboard's enter button")
-    public void iEnterInThePageBoxAndPressTheKeyboardSEnterButton(String arg0) {
-        WebElement pagebox = driver.findElement(By.xpath("//body/div[1]/div[1]/div[1]/div[2]/div[1]/div[1]/div[1]/div[1]/div[1]/div[1]/div[1]/div[1]/input[1]"));
-        pagebox.sendKeys(Keys.chord(Keys.CONTROL, "a"),arg0,Keys.ENTER);
+    @Then("I verify that {string} button {string} appeared")
+    public void iVerifyThatButtonAppeared(String reject_Btn, String visibility) {
+        switch (visibility){
+            case "is" -> Assert.assertTrue(purchaseOrder.verifyRejectButtonPresence(),reject_Btn+" is not present");
+            case "is not" -> Assert.assertFalse(purchaseOrder.verifyRejectButtonPresence(),reject_Btn+" is present");
+        }
     }
-
-    @Then("I verify that the correct page of the grid is displayed")
-    public void iVerifyThatTheCorrectPageOfTheGridIsDisplayed() {
-      Assert.assertTrue(pageLoaded(),"Correct page of the grid does not displayed");
-      System.out.println("Correct page of the grid is being displayed");
-    }*/
 }
 

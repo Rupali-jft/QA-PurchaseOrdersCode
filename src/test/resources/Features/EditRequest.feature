@@ -28,7 +28,7 @@ Feature: Tests performing the actions on a WO
     ###------------Purchase Officer - Login Functionality-------------###
     Given I log into the Purchase Orders app as an "Purchaseofficer"
     And I open the created WO
-    Then I verify that Reject button is enabled when the status is " Pending quotes"
+    Then I verify that "Reject" button "is" appeared
 
     ###------------Add a quote from Purchase officer role which is >5K or < 5K-------------###
     And Click on Add Quote by Purchase Officer Button
@@ -40,7 +40,7 @@ Feature: Tests performing the actions on a WO
     And I click the "Submit" button
     And I click the "confirm" button
     Then I verify that "Quote Successfully Added" validation  message appears
-    And I verify that Reject button is enabled when the status is "Pending quotes"
+    Then I verify that "Reject" button "is" appeared
     And I Click on user icon
     And I click Logout button
 
@@ -59,7 +59,7 @@ Feature: Tests performing the actions on a WO
     Given I log into the Purchase Orders app as an "Purchaseofficer"
     And I open the created WO
     ###------------Reject button should not present when quote got approved partially-------------###
-    Then I verify that reject button got disappeared
+    Then I verify that "Reject" button "is not" appeared
     And I Click on user icon
     And I click Logout button
 
@@ -78,7 +78,7 @@ Feature: Tests performing the actions on a WO
     Given I log into the Purchase Orders app as an "Purchaseofficer"
     And I open the created WO
     ###------------Reject button should not present when quote got approved fully-------------###
-    Then I verify that reject button got disappeared
+    Then I verify that "Reject" button "is not" appeared
     And I Click on user icon
     And I click Logout button
 

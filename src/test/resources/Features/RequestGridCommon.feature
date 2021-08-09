@@ -7,7 +7,7 @@ Feature:Different Grids in Purchase Order
   @1268
   Scenario: Grid - Paging Functionality
 ###------------- Testing pagination on Purchase Orders tab --------------###
-    And I enter "5" in the Page box and press the keyboard's enter button
+    And I go to the "middle" page of the grid by entering the number in the pagination field
     And I get the current grid page number
     And I move to the next page in the grid
     And I move to the previous page in the grid

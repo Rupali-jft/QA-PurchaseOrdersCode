@@ -494,10 +494,17 @@ public class GridSteps extends BaseUtil {
         System.out.println("Search field is clear");
     }
 
-    @And("I enter {string} in the Page box and press the keyboard's enter button")
-    public void iEnterInThePageBoxAndPressTheKeyboardSEnterButton(String arg0) {
-        WebElement pagebox = driver.findElement(By.xpath("//body/div[1]/div[1]/div[1]/div[2]/div[1]/div[1]/div[1]/div[1]/div[1]/div[1]/div[1]/div[1]/input[1]"));
-        pagebox.sendKeys(Keys.chord(Keys.CONTROL, "a"), arg0, Keys.ENTER);
+    @And("I go to the {string} page of the grid by entering the number in the pagination field")
+    public void iGoToThePageOfTheGridByEnteringTheNumberInThePaginationField(String gridPage) {
+        int totalPages = commonGrid.gridPageNumber(currentTab, "total");
+        int page = -1;
+        switch (gridPage.toLowerCase()) {
+            case "first" -> page = commonGrid.gridSetPage(currentTab, 1);
+            case "middle" -> page = commonGrid.gridSetPage(currentTab, totalPages / 2);
+            case "last" -> page = commonGrid.gridSetPage(currentTab, totalPages);
+        }
+        Assert.assertTrue(page >= 0, currentTab + " grid is empty. Cannot navigate to " + gridPage + " page.");
+        System.out.println("Moved to " + gridPage + " page of the " + currentTab + " grid (page " + page + ")");
     }
 
     @And("I click the Reset button in the grid header")
@@ -521,4 +528,5 @@ public class GridSteps extends BaseUtil {
         String actual = commonGrid.gridHeaderField(header, null);
         Assert.assertEquals(actual, expectation, "Header text was not correct. Expected \"" + expectation + "\", but was \"" + actual + "\".");
     }
+
 }

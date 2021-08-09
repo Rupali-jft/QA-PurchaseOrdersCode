@@ -899,6 +899,30 @@ public class CommonGrid {
             System.out.println("Grid has been sorted.");
         }
     }
+
+    /**
+     * Sets the page in the requested grid to the requested number
+     *
+     * @param tabName Name of the tab as it displays on the page
+     * @param pageNum The page number to be navigated to
+     * @return Returns the new page number if it was successful, -1 if the requested page does not exist, 0 if the current page is the same as the requested page
+     */
+    public int gridSetPage(String tabName, int pageNum) {
+        int totalPages = gridPageNumber(tabName, "total");
+        int currPage = gridPageNumber(tabName, "current");
+        String tabNameFixed = tabName.replaceAll("\\s+", "").toLowerCase();
+        WebElement numField = driver.findElement(By.cssSelector("#" + gridMap.get(tabNameFixed) + "_paginate .pagination-panel-input"));
+        if (totalPages < pageNum) return -1;
+        if (currPage == pageNum) return 0;
+        numField.click();
+        numField.sendKeys(Keys.chord(Keys.LEFT_CONTROL, "a"));
+        numField.sendKeys(Integer.toString(pageNum));
+        numField.sendKeys(Keys.ENTER);
+        BaseUtil.pageLoaded();
+        return gridPageNumber(tabName, "current");
+
+    }
+
     public String topRowText() {
         // used to verify an empty table
         String title = null;

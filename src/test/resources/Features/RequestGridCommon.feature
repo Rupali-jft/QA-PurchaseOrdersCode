@@ -126,7 +126,6 @@ Scenario: Grid - Status column Search field
   And I select the "Pending Request Approval" checkbox
   And I clear the "Search" field for "Status" column field at index 1
   And I enter "Pending" into the search field for "status" column field
-  And I wait for "2" seconds
   And Verify that items in the Status dropdown list are displayed
 
 @1278
@@ -186,7 +185,6 @@ Scenario: Grid - Location column in PO Home Page Grid
     And I select the "Vizag TH" checkbox
     And I clear the "Search" field for "Location" column field at index 2
     And I enter "Vizag" in the "Search" field for Location column field at index 2
-    And I wait for "2" seconds
     And Verify that items in the Location dropdown list are displayed
 
 @1281
@@ -230,7 +228,6 @@ Scenario: Grid - Department column in PO Home Page Grid
     And I select the "Admin" checkbox
     And I clear the "Search" field for "Department" column field at index 3
     And I enter "F" in the "Search" field for Location column field at index 3
-  And I wait for "2" seconds
     And Verify that items in the Department dropdown list are displayed
 
 

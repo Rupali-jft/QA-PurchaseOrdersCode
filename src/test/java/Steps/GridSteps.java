@@ -2,12 +2,10 @@ package Steps;
 
 
 import Base.BaseUtil;
-import Pages.CommonGrid;
 import io.cucumber.java.en.And;
 import io.cucumber.java.en.Then;
 import io.cucumber.java.en.When;
 import org.openqa.selenium.By;
-import org.openqa.selenium.Keys;
 import org.openqa.selenium.TimeoutException;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.ui.ExpectedConditions;
@@ -417,7 +415,7 @@ public class GridSteps extends BaseUtil {
     }
 
     @And("I enter {string} into the search field for {string} column field")
-    public void iEnterIntoTheSearchFieldForColumnField(String arg0, String arg1) {
+    public void iEnterIntoTheSearchFieldForColumnField(String arg0, String arg1){
         System.out.println("Entering " + arg1 + " into the search field: " + arg0);
         commonGrid.searchingStatus(arg0);
     }
@@ -450,7 +448,8 @@ public class GridSteps extends BaseUtil {
     public void iEnterInTheFieldForLocationColumnFieldAtIndex(String arg0, String arg1, int arg2) {
         driver.findElements(By.xpath("//input[@placeholder='" + arg1 + "']")).get(arg2).sendKeys(arg0);
         System.out.println("Entering the location " + arg0 + " in the search box");
-        driver.manage().timeouts().implicitlyWait(2, TimeUnit.SECONDS);
+        login.waitForMiliseconds(1000);
+
     }
 
     @And("I click the cross icon button")
@@ -479,7 +478,8 @@ public class GridSteps extends BaseUtil {
     public void verifyThatItemsInTheDepartmentDropdownListAreDisplayed() {
         List<WebElement> drpdwn = driver.findElements(By.xpath("//thead/tr[1]/th[7]/span[1]/div[1]/ul[1]"));
         for (WebElement suggestion : drpdwn) {
-            System.out.println("Drop-down list is displayed: " + suggestion.getText());
+           System.out.println("Drop-down list is displayed: " + suggestion.getText());
+
         }
     }
 
@@ -492,6 +492,7 @@ public class GridSteps extends BaseUtil {
     public void iClearTheFieldForColumnFieldAtIndex(String arg0, String arg1, int arg2) {
         driver.findElements(By.xpath("//input[@placeholder='" + arg0 + "']")).get(arg2).clear();
         System.out.println("Search field is clear");
+
     }
 
     @And("I go to the {string} page of the grid by entering the number in the pagination field")
@@ -528,5 +529,4 @@ public class GridSteps extends BaseUtil {
         String actual = commonGrid.gridHeaderField(header, null);
         Assert.assertEquals(actual, expectation, "Header text was not correct. Expected \"" + expectation + "\", but was \"" + actual + "\".");
     }
-
 }

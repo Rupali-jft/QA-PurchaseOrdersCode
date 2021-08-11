@@ -318,7 +318,7 @@ public class Login extends BaseUtil {
         return false;
     }
 
-    public static void waitForMiliseconds(int miliseconds) {
+    public void waitForMiliseconds(int miliseconds) {
         try {
             Thread.sleep(miliseconds);
         } catch (InterruptedException e) {

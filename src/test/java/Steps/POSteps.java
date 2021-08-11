@@ -222,5 +222,77 @@ purchaseOrder.enterQuoteDetails(table);
             case "is not" -> Assert.assertFalse(purchaseOrder.verifyRejectButtonPresence(),reject_Btn+" is present");
         }
     }
+    @Then("I verify the selected status is {string} for the dropdown {string}")
+    public void iVerifyTheSelectedStatusIsForTheDropdown(String arg0, String dropDown) {
+        String value = commonForm.commonDropDownRead(dropDown);
+        System.out.println("Status is: \n" + value);
+    }
+    @And("I select the raised WO checkbox in the grid")
+    public void iSelectTheRaisedWOCheckboxInTheGrid() {
+        driver.findElement(By.xpath("//table[@id='dtApproval']/tbody/tr/td/input")).click();
+    }
+
+    @And("I verify the status is {string} from Requests tab")
+    public void iVerifyTheStatusIsFromRequestsTab(String status) throws Exception {
+        purchaseOrder.RequestsTabStatusCheck(status);
+    }
+
+    @And("I {string} the request from the grid")
+    public void iTheRequestFromTheGrid(String status) throws Exception {
+        purchaseOrder.ChangeStatusFromGrid(status);
+    }
+
+    @And("Click on Add Quote by Initiator Button")
+    public void clickOnAddQuoteByInitiatorButton() {
+        purchaseOrder.clickAddQuoteByInitiator();
+        System.out.println("Clicked add quote by Initiator");
+    }
+
+    @And("Verify the approval status on Quotes Tab for {int}st Quote")
+    public void verifyTheApprovalStatusOnQuotesTabForStQuote(int arg0) {
+        purchaseOrder.verifyQuote1Status();
+    }
+    @And("^Verify the approval status on Quotes Tab for 2nd Quote$")
+    public void verifyApprovalStatusforQuote2(){
+        purchaseOrder.verifyQuote2Status();
+    }
+    @Then("I check if {string} is {string}")
+    public void iCheckIfIs(String arg0, String arg1) {
+        js.executeScript("window.scrollBy(0,3000)");
+        String currentStatus= new WebDriverWait(driver,10).until(ExpectedConditions.visibilityOfElementLocated(By.xpath("//center[contains(text(),'" + arg1 +"')]"))).getText();
+        System.out.println(currentStatus);
+        boolean condition=(currentStatus.equals(arg1));
+        Assert.assertTrue(condition, "Approval status is not: "+currentStatus);
+        System.out.println("Approval status is: "+currentStatus);
+    }
+    @And("I verify that buttons are disabled")
+    public void iVerifyThatButtonsAreDisabled() {
+        purchaseOrder.verifyApproveButtonDisabled();
+        purchaseOrder.verifySendBackButtonDisabled();
+        purchaseOrder.verifyRejectButtonDisabled();
+        purchaseOrder.verifySubmitButtonDisabled();
+    }
+
+    @Then("I check if {string} is changed to {string}")
+    public void iCheckIfIsChangedTo(String arg0, String arg1) {
+        boolean result = false;
+        String status = arg1;
+        try {
+            result = new WebDriverWait(driver, 10).until(ExpectedConditions.visibilityOfElementLocated(By.xpath("//body[1]/div[1]/div[1]/div[1]/div[2]/div[1]/div[1]/div[5]/div[1]/div[1]/div[2]/table[1]/tbody[1]/tr[1]/td[5]/center[1]"))).isDisplayed();
+        } catch (
+                TimeoutException ignored) {
+        }
+        Assert.assertTrue(result, arg0 +" is not: "+status);
+        System.out.println(arg0 +" is: "+status);
+    }
+
+    @And("I click the eye icon in the second row")
+    public void iClickTheEyeIconInTheSecondRow() {
+        driver.findElement(By.xpath("//tbody/tr[2]/td[6]/center[1]/span[1]")).click();
+    }
+    @And("I click {string} button")
+    public void iClickButton(String arg0) {
+        driver.findElement(By.xpath("//button[@id='notes_submit']")).click();
+    }
 }
 

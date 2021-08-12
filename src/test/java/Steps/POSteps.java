@@ -1,6 +1,7 @@
 package Steps;
 
 import Base.BaseUtil;
+import Pages.Login;
 import io.cucumber.datatable.DataTable;
 import io.cucumber.java.en.And;
 import io.cucumber.java.en.Given;
@@ -193,7 +194,7 @@ purchaseOrder.enterQuoteDetails(table);
     public void iVerifyThatValidationErrorMessageAppears(String validation_message) {
         Assert.assertTrue(purchaseOrder.verifyValidationmessage(validation_message),"Expected validation message \"" + validation_message + "\" did not display!");
         System.out.println("Validation message appeared:  "+ validation_message);
-
+Login.waitForMiliseconds(5000);
     }
 
     @And("I raise the purchase order")
@@ -215,13 +216,11 @@ purchaseOrder.enterQuoteDetails(table);
         wait.until(ExpectedConditions.visibilityOfElementLocated(By.id("po_close_msg")));
         wait.until(ExpectedConditions.invisibilityOfElementLocated(By.id("po_close_msg")));
     }
-    @Then("I verify that {string} button {string} appeared")
-    public void iVerifyThatButtonAppeared(String reject_Btn, String visibility) {
-        switch (visibility){
-            case "is" -> Assert.assertTrue(purchaseOrder.verifyRejectButtonPresence(),reject_Btn+" is not present");
-            case "is not" -> Assert.assertFalse(purchaseOrder.verifyRejectButtonPresence(),reject_Btn+" is present");
-        }
+    @Then("I verify that Reject button {string} displayed")
+    public void iVerifyThatRejectButtonDisplayed(String visibility) {
+        commonForm.commonButtonGet("Reject");
     }
+
     @Then("I verify the selected status is {string} for the dropdown {string}")
     public void iVerifyTheSelectedStatusIsForTheDropdown(String arg0, String dropDown) {
         String value = commonForm.commonDropDownRead(dropDown);
@@ -233,18 +232,21 @@ purchaseOrder.enterQuoteDetails(table);
     }
 
     @And("I verify the status is {string} from Requests tab")
-    public void iVerifyTheStatusIsFromRequestsTab(String status) throws Exception {
-        purchaseOrder.RequestsTabStatusCheck(status);
+    public void iVerifyTheStatusIsFromRequestsTab(String status){
+        Assert.assertTrue(purchaseOrder.RequestsTabStatusCheck(status),"Expected status: " + status + " was not found. Current status is " + status);
+        System.out.println("Expected status: " + status + " matches found status: " + status);
     }
 
     @And("I {string} the request from the grid")
-    public void iTheRequestFromTheGrid(String status) throws Exception {
-        purchaseOrder.ChangeStatusFromGrid(status);
+    public void iTheRequestFromTheGrid(String status){
+        //purchaseOrder.ChangeStatusFromGrid(status);
+        Assert.assertTrue(purchaseOrder.ChangeStatusFromGrid(status),status + " button not found. Please use 'Approve', 'Send Back', or 'Reject'");
+        System.out.println(status + " button found.");
     }
 
     @And("Click on Add Quote by Initiator Button")
     public void clickOnAddQuoteByInitiatorButton() {
-        purchaseOrder.clickAddQuoteByInitiator();
+        Assert.assertTrue(purchaseOrder.clickAddQuoteByInitiator(),"Add quote by Initiator button is not clickable");
         System.out.println("Clicked add quote by Initiator");
     }
 
@@ -267,10 +269,17 @@ purchaseOrder.enterQuoteDetails(table);
     }
     @And("I verify that buttons are disabled")
     public void iVerifyThatButtonsAreDisabled() {
-        purchaseOrder.verifyApproveButtonDisabled();
-        purchaseOrder.verifySendBackButtonDisabled();
-        purchaseOrder.verifyRejectButtonDisabled();
-        purchaseOrder.verifySubmitButtonDisabled();
+        Assert.assertFalse(purchaseOrder.verifyApproveButtonDisabled(), "Approve button is not disabled");
+        System.out.println("Good Approve button disabled");
+
+        Assert.assertFalse(purchaseOrder.verifySendBackButtonDisabled(), "SendBack button is not disabled");
+        System.out.println("Good SendBack button disabled");
+
+        Assert.assertFalse( purchaseOrder.verifyRejectButtonDisabled(), "Reject button is not disabled");
+        System.out.println("Good Reject button disabled");
+
+        Assert.assertFalse(purchaseOrder.verifySubmitButtonDisabled(), "Submit button is not disabled");
+        System.out.println("Good Submit button disabled");
     }
 
     @Then("I check if {string} is changed to {string}")

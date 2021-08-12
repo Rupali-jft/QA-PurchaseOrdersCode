@@ -26,7 +26,7 @@ Scenario: Verify the functionality of APPROVE process through grid.
     Given I log into the Purchase Orders app as an "Approver"
     ###---------------Approver uses grid to approve the work order---------------###
     And I navigate to the "Pending Approval" tab
-    And I "approve" the request from the grid
+    And I "Approve" the request from the grid
     And I click the "confirm" button
 
 ###-----------Verify the status from request grid---------###
@@ -354,7 +354,7 @@ Scenario: Verify the Quotes added with Total Price >5k and APPROVE by Proc Mgr a
   And I click the "Submit" button
   And I click the "confirm" button
   Then I verify that "Quote Successfully Added" validation  message appears
-  Then I verify that "Reject" button "is" appeared
+  Then I verify that Reject button "is" displayed
   And I Click on user icon
   And I click Logout button
 

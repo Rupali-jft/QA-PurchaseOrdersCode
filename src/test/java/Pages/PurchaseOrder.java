@@ -62,8 +62,6 @@ public class PurchaseOrder {
     private WebElement location;
     @FindBy(how = How.XPATH, using = "//select[@id='request_Department']")
     private WebElement department;
-    @FindBy(how = How.XPATH, using = "//body/div[1]/div[1]/div[1]/div[1]/div[1]/div[2]/button[2]")
-    private WebElement rejectBtn;
     @FindBy(how = How.XPATH, using = "//tbody/tr[1]/td[5]/center[1]/button[1]")
     private WebElement deleteBtn;
     @FindBy(how = How.XPATH, using = "//button[@id='quotes_approve']")
@@ -149,12 +147,18 @@ public class PurchaseOrder {
     }
 
     // To add quotes by Initiator
-    public void clickAddQuoteByInitiator() {
-        try {
-            addQuoteBtn.click();
-            clickOnByInitiator.click();
-        } catch (Exception e) {
+    public boolean clickAddQuoteByInitiator() {
+if (addQuoteBtn.isDisplayed() && addQuoteBtn.isEnabled()) {
+            try {
+                js.executeScript("arguments[0].click()", addQuoteBtn);
+                js.executeScript("arguments[0].click()", clickOnByInitiator);
+            } catch (ElementClickInterceptedException e) {
+                BaseUtil.commonForm.clickErrorHandle(e.toString(), addQuoteBtn);
+                BaseUtil.commonForm.clickErrorHandle(e.toString(), clickOnByInitiator);
+            }
+            return true;
         }
+        return false;
     }
 
     public void verifyemptyfields() {
@@ -176,7 +180,7 @@ public class PurchaseOrder {
 
 
     public void enterQuoteDate() {
-        quoDate.click();
+        wait.until(ExpectedConditions.visibilityOf(quoDate)).click();
         quotedateselection.click();
     }
 
@@ -193,15 +197,6 @@ public class PurchaseOrder {
         totPrice.click();
     }
 
-    //To verify the Reject button presence
-    public boolean verifyRejectButtonPresence() {
-        try{
-            return  rejectBtn.isDisplayed();}
-        catch(NoSuchElementException ignored){
-        }
-        return false;
-    }
-
     public boolean verifyValidationmessage(String validation_message) {
         try {
             return new WebDriverWait(driver, 5).until(ExpectedConditions.visibilityOfElementLocated(By.xpath("//div[contains(text(),'" + validation_message + "')]"))).isDisplayed();
@@ -209,22 +204,19 @@ public class PurchaseOrder {
         }
         return false;
     }
-    public void RequestsTabStatusCheck(String status) throws Exception {
+    public boolean RequestsTabStatusCheck(String status) {
+        try {
         String gridStatus = gridRequestsStatus.getText().toLowerCase();
+    return status.toLowerCase().equals(gridStatus);}
+catch (Exception e){
 
-        if (status.toLowerCase().equals(gridStatus)) {
-            System.out.println("Expected status: " + status + " matches found status: " + gridStatus);
-        } else {
-            throw new Exception("Expected status: " + status + " was not found. Current status is " + gridStatus);
-        }
+}
+        return false;
     }
     // Approve through Pending Approval grid
-    public void ChangeStatusFromGrid(String status) throws Exception {
+    public boolean ChangeStatusFromGrid(String status){
         WebDriverWait wait = new WebDriverWait(driver, 20);
         wait.until(ExpectedConditions.visibilityOf(gridPendingApprovalCheckBox));
-
-        Thread.sleep(5000);
-
         try {
             gridPendingApprovalCheckBox.click();
         } catch (org.openqa.selenium.StaleElementReferenceException e) {
@@ -235,65 +227,102 @@ public class PurchaseOrder {
 
         switch (status.toLowerCase()) {
             case "approve":
-                gridApproveBtn.click();
+                if (gridApproveBtn.isDisplayed() && gridApproveBtn.isEnabled()) {
+                    try {
+                        js.executeScript("arguments[0].click()", gridApproveBtn);
+                    } catch (ElementClickInterceptedException e) {
+                        BaseUtil.commonForm.clickErrorHandle(e.toString(), gridApproveBtn);
+                    }
+                    return true;
+                }
                 break;
             case "send back":
-                gridSendBackBtn.click();
+                if (gridSendBackBtn.isDisplayed() && gridSendBackBtn.isEnabled()) {
+                    try {
+                        js.executeScript("arguments[0].click()", gridSendBackBtn);
+                    } catch (ElementClickInterceptedException e) {
+                        BaseUtil.commonForm.clickErrorHandle(e.toString(), gridSendBackBtn);
+                    }
+                    return true;
+                }
                 break;
             case "reject":
-                gridRejectBtn.click();
+                if (gridRejectBtn.isDisplayed() && gridRejectBtn.isEnabled()) {
+                    try {
+                        js.executeScript("arguments[0].click()", gridRejectBtn);
+                    } catch (ElementClickInterceptedException e) {
+                        BaseUtil.commonForm.clickErrorHandle(e.toString(), gridRejectBtn);
+                    }
+                    return true;
+                }
                 break;
-            default:
-                throw new Exception(status + " button not found. Please use 'Approve', 'Send Back', or 'Reject'");
         }
+        return false;
     }
+
+
     @FindBy(how = How.XPATH, using = "//*[@id=\"dtquotes\"]/tbody/tr[1]/td[5]/center")
     private WebElement ApprovalStatus1;
 
     //To verify quote1 approval status
-    public void verifyQuote1Status() {
+    public boolean verifyQuote1Status() {
         try {
-
-            Thread.sleep(5000);
+wait.until(ExpectedConditions.visibilityOf(ApprovalStatus1));
             String approvalStatus1 = ApprovalStatus1.getText();
             System.out.println("Current quote Approval status is showing as:" + approvalStatus1);
         } catch (Exception e) {
-
         }
+        return false;
     }
 
     @FindBy(how = How.XPATH, using = "//tbody/tr[2]/td[5]/center")
     private WebElement ApprovalStatus2;
 
     //To verify quote1 approval status
-    public void verifyQuote2Status() {
+    public boolean verifyQuote2Status() {
         try {
-
-            Thread.sleep(7000);
+            wait.until(ExpectedConditions.visibilityOf(ApprovalStatus1));
             String approvalStatus2 = ApprovalStatus2.getText();
             System.out.println("Approval status is showing as :" + approvalStatus2);
         } catch (Exception e) {
         }
+        return false;
     }
-    public void verifyApproveButtonDisabled(){
-        Boolean condition=approveBtn.isEnabled();
-        Assert.assertFalse(condition, "Approve button is not disabled");
-        System.out.println("Good Approve button disabled");
+    public boolean verifyApproveButtonDisabled(){
+       try {
+           return approveBtn.isEnabled();
+       }
+       catch (Exception e)
+       {
+       }
+       return false;
     }
-    public void verifySendBackButtonDisabled(){
-        Boolean condition=sendbackBtn.isEnabled();
-        Assert.assertFalse(condition, "SendBack Button is not disabled");
-        System.out.println("Good SendBack Button disabled");
+    public boolean verifySendBackButtonDisabled(){
+        try {
+            return sendbackBtn.isEnabled();
+        }
+        catch (Exception e)
+        {
+        }
+        return false;
     }
-    public void verifyRejectButtonDisabled(){
-        Boolean condition=rejectQuoteBtn.isEnabled();
-        Assert.assertFalse(condition, "Reject Button is not disabled");
-        System.out.println("Good Reject Button disabled");
+    public boolean verifyRejectButtonDisabled(){
+        try {
+            return rejectQuoteBtn.isEnabled();
+        }
+        catch (Exception e)
+        {
+        }
+        return false;
     }
-    public void verifySubmitButtonDisabled(){
-        Boolean condition=submitBtn.isEnabled();
-        Assert.assertFalse(condition, "Submit button is not disabled");
-        System.out.println("Good Submit button disabled");
+    public boolean verifySubmitButtonDisabled(){
+        try {
+            return submitBtn.isEnabled();
+        }
+        catch (Exception e)
+        {
+        }
+        return false;
     }
 }
 

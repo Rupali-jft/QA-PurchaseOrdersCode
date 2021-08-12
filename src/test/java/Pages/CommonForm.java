@@ -47,7 +47,6 @@ public class CommonForm {
         }
         return false;
     }
-
     public WebElement commonButtonGet(String button) {
         // This method returns the button element without clicking it (which the commonButton() method does).
         List<WebElement> buttons = driver.findElements(By.xpath(

@@ -2,7 +2,7 @@ Feature: Tests performing the actions on a WO
   @5151
   Scenario: Verifying the presence of Reject Button
 
-  ##---------Create a Work order# request from initiator role and approve the same from approver role-------------###
+##---------Create a Work order# request from initiator role and approve the same from approver role-------------###
     Given I log into the Purchase Orders app as an "Initiator"
     And I click the "Add Request" button
     And I enter the following information into the form

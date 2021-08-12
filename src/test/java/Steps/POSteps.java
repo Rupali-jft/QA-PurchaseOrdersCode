@@ -154,7 +154,6 @@ purchaseOrder.enterQuoteDetails(table);
         ((JavascriptExecutor) driver).executeScript("scroll(2000,0);");
     }
 
-
     @Then("Verify the changes has been erased")
     public void verifyTheChangesHasBeenErased() {
         purchaseOrder.verifyemptyfields();

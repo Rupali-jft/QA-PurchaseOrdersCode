@@ -48,6 +48,21 @@ public class CommonForm {
         return false;
     }
 
+    public WebElement commonButtonGet(String button) {
+        // This method returns the button element without clicking it (which the commonButton() method does).
+        List<WebElement> buttons = driver.findElements(By.xpath(
+                "//button[normalize-space()='" + button + "']"));
+
+        if (buttons.size() > 0) {
+            for (WebElement btn : buttons) {
+                if (btn.isDisplayed() && btn.isEnabled()) {
+                    return btn;
+                }
+            }
+        }
+        return null;
+    }
+
     public void commonLinkClick(String linkText) {
         try {
             wait.until(ExpectedConditions.elementToBeClickable(By.linkText(linkText))).click();

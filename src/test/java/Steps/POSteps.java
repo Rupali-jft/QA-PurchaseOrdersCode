@@ -215,12 +215,10 @@ purchaseOrder.enterQuoteDetails(table);
         wait.until(ExpectedConditions.visibilityOfElementLocated(By.id("po_close_msg")));
         wait.until(ExpectedConditions.invisibilityOfElementLocated(By.id("po_close_msg")));
     }
-    @Then("I verify that {string} button {string} appeared")
-    public void iVerifyThatButtonAppeared(String reject_Btn, String visibility) {
-        switch (visibility){
-            case "is" -> Assert.assertTrue(purchaseOrder.verifyRejectButtonPresence(),reject_Btn+" is not present");
-            case "is not" -> Assert.assertFalse(purchaseOrder.verifyRejectButtonPresence(),reject_Btn+" is present");
-        }
+
+    @Then("I verify that Reject button {string} displayed")
+    public void iVerifyThatRejectButtonDisplayed(String visibility) {
+        commonForm.commonButtonGet("Reject");
     }
 }
 

@@ -317,5 +317,33 @@ Login.waitForMiliseconds(5000);
         driver.findElement(By.xpath("//button[@id='notes_submit']")).click();
     }
 
+    @And("I click the {string} and {string} button")
+    public void iClickTheAndButton(String subBtn, String cnfrmBtn) {
+        commonForm.commonButton(subBtn);
+        wait.until(ExpectedConditions.visibilityOfElementLocated(By.linkText("")));
+        commonForm.commonButton(cnfrmBtn);
+        wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("//div[contains(text(),'Quote Successfully Added')]")));
+        pageLoaded();
+    }
+
+    @Then("^Enter Purchase Order confirmation Details$")
+    public void enterPurchaseOrderDetails(DataTable table){
+        purchaseOrder.enterPurchaseOrderDetails(table);
+    }
+    @And("^I get the created Purchase Order Number$")
+    public void getPONumber(){
+        purchaseOrder.getCreatedPONumber();
+    }
+
+    @And("I close the created work order")
+    public void iCloseTheCreatedWorkOrder() {
+        commonForm.commonButton("Close WO");
+        pageLoaded();
+        commonForm.commonButton("Yes");
+        wait.until(ExpectedConditions.visibilityOfElementLocated(By.id("wo_close_msg")));
+        wait.until(ExpectedConditions.invisibilityOfElementLocated(By.id("wo_close_msg")));
+
+    }
+
 }
 

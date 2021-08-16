@@ -217,7 +217,10 @@ purchaseOrder.enterQuoteDetails(table);
 
     @Then("I verify that Reject button {string} displayed")
     public void iVerifyThatRejectButtonDisplayed(String visibility) {
-        commonForm.commonButtonGet("Reject");
+        switch (visibility) {
+            case "is" -> Assert.assertTrue(commonForm.commonButtonGet("Reject").isDisplayed(), "Reject button is not present");
+            case "is not" -> Assert.assertNull(commonForm.commonButtonGet("Reject"), "Reject button is present");
+        }
     }
 }
 

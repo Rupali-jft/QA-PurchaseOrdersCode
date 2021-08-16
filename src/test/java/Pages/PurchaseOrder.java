@@ -165,12 +165,12 @@ public class PurchaseOrder {
     }
 
     //To verify the Reject button presence
-    public void verifyRejectButtonPresence() {
-        boolean condition = rejectBtn.isDisplayed();
-        if (condition == true) {
-            System.out.println("Reject button is enabled and present");
-        } else System.out.println("Reject button is not enabled and present\n");
-
+    public boolean verifyRejectButtonPresence() {
+        try{
+            return  rejectBtn.isDisplayed();}
+        catch(NoSuchElementException ignored){
+        }
+        return false;
     }
 
     public boolean verifyValidationmessage(String validation_message) {

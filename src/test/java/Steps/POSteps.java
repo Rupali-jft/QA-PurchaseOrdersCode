@@ -154,7 +154,6 @@ purchaseOrder.enterQuoteDetails(table);
         ((JavascriptExecutor) driver).executeScript("scroll(2000,0);");
     }
 
-
     @Then("Verify the changes has been erased")
     public void verifyTheChangesHasBeenErased() {
         purchaseOrder.verifyemptyfields();
@@ -179,21 +178,6 @@ purchaseOrder.enterQuoteDetails(table);
         System.out.println("Validation message when request is approved by Approver: \n" + validation);
 
     }
-
-    @Then("I verify that Reject button is enabled when the status is {string}")
-    public void iVerifyThatRejectButtonIsEnabledWhenTheStatusIs(String arg0) {
-purchaseOrder.verifyRejectButtonPresence();
-System.out.println("And the status is :"+ arg0);
-    }
-
-
-
-    @Then("I verify that reject button got disappeared")
-    public void iVerifyThatRejectButtonGotDisappeared() {
-        purchaseOrder.verifyRejectButtonPresence();
-    }
-
-
 
     @Then("I verify that delete button is enabled")
     public void iVerifyThatDeleteButtonIsEnabled() {
@@ -231,16 +215,13 @@ System.out.println("And the status is :"+ arg0);
         wait.until(ExpectedConditions.invisibilityOfElementLocated(By.id("po_close_msg")));
     }
 
-  /*  @And("I enter {string} in the Page box and press the keyboard's enter button")
-    public void iEnterInThePageBoxAndPressTheKeyboardSEnterButton(String arg0) {
-        WebElement pagebox = driver.findElement(By.xpath("//body/div[1]/div[1]/div[1]/div[2]/div[1]/div[1]/div[1]/div[1]/div[1]/div[1]/div[1]/div[1]/input[1]"));
-        pagebox.sendKeys(Keys.chord(Keys.CONTROL, "a"),arg0,Keys.ENTER);
+    @Then("I verify that Reject button {string} displayed")
+    public void iVerifyThatRejectButtonDisplayed(String visibility) {
+        switch (visibility) {
+            case "is" -> Assert.assertTrue(commonForm.commonButtonGet("Reject").isDisplayed(), "Reject button is not present");
+            case "is not" -> Assert.assertNull(commonForm.commonButtonGet("Reject"), "Reject button is present");
+            default -> System.out.println("Specified condition is not working");
+        }
     }
-
-    @Then("I verify that the correct page of the grid is displayed")
-    public void iVerifyThatTheCorrectPageOfTheGridIsDisplayed() {
-      Assert.assertTrue(pageLoaded(),"Correct page of the grid does not displayed");
-      System.out.println("Correct page of the grid is being displayed");
-    }*/
 }
 

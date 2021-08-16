@@ -220,6 +220,7 @@ purchaseOrder.enterQuoteDetails(table);
         switch (visibility) {
             case "is" -> Assert.assertTrue(commonForm.commonButtonGet("Reject").isDisplayed(), "Reject button is not present");
             case "is not" -> Assert.assertNull(commonForm.commonButtonGet("Reject"), "Reject button is present");
+            default -> System.out.println("Specified condition is not working");
         }
     }
 }

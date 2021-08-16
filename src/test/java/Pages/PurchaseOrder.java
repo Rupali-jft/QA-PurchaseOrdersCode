@@ -151,11 +151,15 @@ public class PurchaseOrder {
 if (addQuoteBtn.isDisplayed() && addQuoteBtn.isEnabled()) {
             try {
                 js.executeScript("arguments[0].click()", addQuoteBtn);
-                js.executeScript("arguments[0].click()", clickOnByInitiator);
             } catch (ElementClickInterceptedException e) {
                 BaseUtil.commonForm.clickErrorHandle(e.toString(), addQuoteBtn);
-                BaseUtil.commonForm.clickErrorHandle(e.toString(), clickOnByInitiator);
             }
+    if (clickOnByInitiator.isDisplayed() && clickOnByInitiator.isEnabled()) {
+    try {
+        js.executeScript("arguments[0].click()", clickOnByInitiator);
+    } catch (ElementClickInterceptedException e) {
+        BaseUtil.commonForm.clickErrorHandle(e.toString(), clickOnByInitiator);
+    }}
             return true;
         }
         return false;

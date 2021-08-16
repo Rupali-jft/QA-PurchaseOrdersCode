@@ -218,7 +218,11 @@ Login.waitForMiliseconds(5000);
     }
     @Then("I verify that Reject button {string} displayed")
     public void iVerifyThatRejectButtonDisplayed(String visibility) {
-        commonForm.commonButtonGet("Reject");
+        switch (visibility) {
+            case "is" -> Assert.assertTrue(commonForm.commonButtonGet("Reject").isDisplayed(), "Reject button is not present");
+            case "is not" -> Assert.assertNull(commonForm.commonButtonGet("Reject"), "Reject button is present");
+            default -> System.out.println("Specified condition is not working");
+        }
     }
 
     @Then("I verify the selected status is {string} for the dropdown {string}")
@@ -242,6 +246,15 @@ Login.waitForMiliseconds(5000);
         //purchaseOrder.ChangeStatusFromGrid(status);
         Assert.assertTrue(purchaseOrder.ChangeStatusFromGrid(status),status + " button not found. Please use 'Approve', 'Send Back', or 'Reject'");
         System.out.println(status + " button found.");
+    }
+
+    @And("Click on Add Quote by Initiator Button and click yes")
+    public void clickOnAddQuoteByInitiatorButtonAndClickYes() {
+        Assert.assertTrue(purchaseOrder.clickAddQuoteByInitiator(),"Add quote by Initiator button is not clickable");
+        System.out.println("Clicked add quote by Initiator");
+        wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("//button[text()='Yes']")));
+        commonForm.commonButton("Yes");
+        pageLoaded();
     }
 
     @And("Click on Add Quote by Initiator Button")
@@ -303,5 +316,6 @@ Login.waitForMiliseconds(5000);
     public void iClickButton(String arg0) {
         driver.findElement(By.xpath("//button[@id='notes_submit']")).click();
     }
+
 }
 

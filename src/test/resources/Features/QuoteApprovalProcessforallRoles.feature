@@ -134,8 +134,7 @@ Scenario: Verify the Quotes added with Total Price <5k and APPROVE it
   Given I log into the Purchase Orders app as an "Purchaseofficer"
   And I open the created WO
 ###------------Click on Add Quote by Initiator-------------###
-  And Click on Add Quote by Initiator Button
-  And I click the "Yes" button
+  And Click on Add Quote by Initiator Button and click yes
   Then I verify that "Add Quote Permission given to Initiator" validation  message appears
   And I Click on user icon
   And I click Logout button
@@ -180,8 +179,7 @@ Scenario: Verify the Quotes added with Total Price <5k and APPROVE it
   Given I log into the Purchase Orders app as an "Purchaseofficer"
   And I open the created WO
 ###------------Click on Add Quote by Initiator-------------###
-  And Click on Add Quote by Initiator Button
-  And I click the "Yes" button
+  And Click on Add Quote by Initiator Button and click yes
   Then I verify that "Add Quote Permission given to Initiator" validation  message appears
   And I Click on user icon
   And I click Logout button
@@ -228,8 +226,7 @@ Scenario: Verify the Quotes added with Total Price <5k and REJECT it by Approver
   Given I log into the Purchase Orders app as an "Purchaseofficer"
   And I open the created WO
 ###------------Click on Add Quote by Initiator-------------###
-  And Click on Add Quote by Initiator Button
- And I click the "Yes" button
+And Click on Add Quote by Initiator Button and click yes
   Then I verify that "Add Quote Permission given to Initiator" validation  message appears
   And I Click on user icon
   And I click Logout button

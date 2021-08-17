@@ -155,7 +155,6 @@ purchaseOrder.enterQuoteDetails(table);
         ((JavascriptExecutor) driver).executeScript("scroll(2000,0);");
     }
 
-
     @Then("Verify the changes has been erased")
     public void verifyTheChangesHasBeenErased() {
         purchaseOrder.verifyemptyfields();
@@ -216,6 +215,7 @@ Login.waitForMiliseconds(5000);
         wait.until(ExpectedConditions.visibilityOfElementLocated(By.id("po_close_msg")));
         wait.until(ExpectedConditions.invisibilityOfElementLocated(By.id("po_close_msg")));
     }
+
     @Then("I verify that Reject button {string} displayed")
     public void iVerifyThatRejectButtonDisplayed(String visibility) {
         switch (visibility) {

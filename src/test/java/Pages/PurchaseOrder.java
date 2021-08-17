@@ -18,7 +18,7 @@ import java.util.regex.Pattern;
 public class PurchaseOrder {
     private final WebDriver driver;
     private final JavascriptExecutor js;
-
+    private static String passingstringvalue = "";
     private final WebDriverWait wait;
 
 
@@ -62,10 +62,28 @@ public class PurchaseOrder {
     private WebElement location;
     @FindBy(how = How.XPATH, using = "//select[@id='request_Department']")
     private WebElement department;
-    @FindBy(how = How.XPATH, using = "//body/div[1]/div[1]/div[1]/div[1]/div[1]/div[2]/button[2]")
-    private WebElement rejectBtn;
     @FindBy(how = How.XPATH, using = "//tbody/tr[1]/td[5]/center[1]/button[1]")
     private WebElement deleteBtn;
+    @FindBy(how = How.XPATH, using = "//button[@id='quotes_approve']")
+    private WebElement approveBtn;
+    @FindBy(how = How.XPATH, using = "//button[@id='quotes_send_back']")
+    private WebElement sendbackBtn;
+    @FindBy(how = How.XPATH, using = "//button[@id='quotes_reject']")
+    private WebElement rejectQuoteBtn;
+    @FindBy(how = How.XPATH, using = "//button[@id='quotes_submit']")
+    private WebElement submitBtn;
+    @FindBy(how = How.XPATH, using = "//*[@id=\"dtRequests\"]/tbody/tr/td[4]")
+    private WebElement gridRequestsStatus;
+    @FindBy(how = How.XPATH, using = "//table[@id='dtApproval']/tbody/tr/td/input")
+    private WebElement gridPendingApprovalCheckBox;
+    @FindBy(how = How.ID, using = "btnApprove")
+    private WebElement gridApproveBtn;
+    @FindBy(how = How.XPATH, using = "//*[@id=\"btnApprove\"][2]")
+    private WebElement gridSendBackBtn;
+    @FindBy(how = How.XPATH, using = "//*[@id=\"btnApprove\"][3]")
+    private WebElement gridRejectBtn;
+    @FindBy(how = How.XPATH, using = "//a[normalize-space()='By Initiator']")
+    private WebElement clickOnByInitiator;
 
     public boolean onCorrectPage() {
         try {
@@ -128,6 +146,25 @@ public class PurchaseOrder {
         }
     }
 
+    // To add quotes by Initiator
+    public boolean clickAddQuoteByInitiator() {
+if (addQuoteBtn.isDisplayed() && addQuoteBtn.isEnabled()) {
+            try {
+                js.executeScript("arguments[0].click()", addQuoteBtn);
+            } catch (ElementClickInterceptedException e) {
+                BaseUtil.commonForm.clickErrorHandle(e.toString(), addQuoteBtn);
+            }
+    if (clickOnByInitiator.isDisplayed() && clickOnByInitiator.isEnabled()) {
+    try {
+        js.executeScript("arguments[0].click()", clickOnByInitiator);
+    } catch (ElementClickInterceptedException e) {
+        BaseUtil.commonForm.clickErrorHandle(e.toString(), clickOnByInitiator);
+    }}
+            return true;
+        }
+        return false;
+    }
+
     public void verifyemptyfields() {
 
         String title = woTitle.getAttribute("value");
@@ -147,7 +184,7 @@ public class PurchaseOrder {
 
 
     public void enterQuoteDate() {
-        quoDate.click();
+        wait.until(ExpectedConditions.visibilityOf(quoDate)).click();
         quotedateselection.click();
     }
 
@@ -164,19 +201,130 @@ public class PurchaseOrder {
         totPrice.click();
     }
 
-    //To verify the Reject button presence
-    public boolean verifyRejectButtonPresence() {
-        try{
-            return  rejectBtn.isDisplayed();}
-        catch(NoSuchElementException ignored){
-        }
-        return false;
-    }
-
     public boolean verifyValidationmessage(String validation_message) {
         try {
             return new WebDriverWait(driver, 5).until(ExpectedConditions.visibilityOfElementLocated(By.xpath("//div[contains(text(),'" + validation_message + "')]"))).isDisplayed();
         } catch (TimeoutException ignored) {
+        }
+        return false;
+    }
+    public boolean RequestsTabStatusCheck(String status) {
+        try {
+        String gridStatus = gridRequestsStatus.getText().toLowerCase();
+    return status.toLowerCase().equals(gridStatus);}
+catch (Exception e){
+
+}
+        return false;
+    }
+    // Approve through Pending Approval grid
+    public boolean ChangeStatusFromGrid(String status){
+        WebDriverWait wait = new WebDriverWait(driver, 20);
+        wait.until(ExpectedConditions.visibilityOf(gridPendingApprovalCheckBox));
+        try {
+            gridPendingApprovalCheckBox.click();
+        } catch (org.openqa.selenium.StaleElementReferenceException e) {
+            gridPendingApprovalCheckBox.click();
+        }
+
+        System.out.println("Changing status of WO# " + passingstringvalue + " to " + status.toUpperCase());
+
+        switch (status.toLowerCase()) {
+            case "approve":
+                if (gridApproveBtn.isDisplayed() && gridApproveBtn.isEnabled()) {
+                    try {
+                        js.executeScript("arguments[0].click()", gridApproveBtn);
+                    } catch (ElementClickInterceptedException e) {
+                        BaseUtil.commonForm.clickErrorHandle(e.toString(), gridApproveBtn);
+                    }
+                    return true;
+                }
+                break;
+            case "send back":
+                if (gridSendBackBtn.isDisplayed() && gridSendBackBtn.isEnabled()) {
+                    try {
+                        js.executeScript("arguments[0].click()", gridSendBackBtn);
+                    } catch (ElementClickInterceptedException e) {
+                        BaseUtil.commonForm.clickErrorHandle(e.toString(), gridSendBackBtn);
+                    }
+                    return true;
+                }
+                break;
+            case "reject":
+                if (gridRejectBtn.isDisplayed() && gridRejectBtn.isEnabled()) {
+                    try {
+                        js.executeScript("arguments[0].click()", gridRejectBtn);
+                    } catch (ElementClickInterceptedException e) {
+                        BaseUtil.commonForm.clickErrorHandle(e.toString(), gridRejectBtn);
+                    }
+                    return true;
+                }
+                break;
+        }
+        return false;
+    }
+
+
+    @FindBy(how = How.XPATH, using = "//*[@id=\"dtquotes\"]/tbody/tr[1]/td[5]/center")
+    private WebElement ApprovalStatus1;
+
+    //To verify quote1 approval status
+    public boolean verifyQuote1Status() {
+        try {
+wait.until(ExpectedConditions.visibilityOf(ApprovalStatus1));
+            String approvalStatus1 = ApprovalStatus1.getText();
+            System.out.println("Current quote Approval status is showing as:" + approvalStatus1);
+        } catch (Exception e) {
+        }
+        return false;
+    }
+
+    @FindBy(how = How.XPATH, using = "//tbody/tr[2]/td[5]/center")
+    private WebElement ApprovalStatus2;
+
+    //To verify quote1 approval status
+    public boolean verifyQuote2Status() {
+        try {
+            wait.until(ExpectedConditions.visibilityOf(ApprovalStatus1));
+            String approvalStatus2 = ApprovalStatus2.getText();
+            System.out.println("Approval status is showing as :" + approvalStatus2);
+        } catch (Exception e) {
+        }
+        return false;
+    }
+    public boolean verifyApproveButtonDisabled(){
+       try {
+           return approveBtn.isEnabled();
+       }
+       catch (Exception e)
+       {
+       }
+       return false;
+    }
+    public boolean verifySendBackButtonDisabled(){
+        try {
+            return sendbackBtn.isEnabled();
+        }
+        catch (Exception e)
+        {
+        }
+        return false;
+    }
+    public boolean verifyRejectButtonDisabled(){
+        try {
+            return rejectQuoteBtn.isEnabled();
+        }
+        catch (Exception e)
+        {
+        }
+        return false;
+    }
+    public boolean verifySubmitButtonDisabled(){
+        try {
+            return submitBtn.isEnabled();
+        }
+        catch (Exception e)
+        {
         }
         return false;
     }

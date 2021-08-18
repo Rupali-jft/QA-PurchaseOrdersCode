@@ -253,10 +253,9 @@ public class GridSteps extends BaseUtil {
     }
 
     @And("Verify the following headers are present")
-    public void verifyTheFollowingHeadersArePresent(List<List<String>> table) {
-        List<String> headers = table.get(0);
+    public void verifyTheFollowingHeadersArePresent(List<String> table) {
         BaseUtil.pageLoaded();
-        for (String header : headers) {
+        for (String header : table) {
             Assert.assertTrue(commonGrid.gridHeaderFind(currentTab, header),
                     header + " header not visible in " + currentTab + " grid!");
             System.out.println(header + " header verified on grid");
@@ -528,5 +527,10 @@ public class GridSteps extends BaseUtil {
         BaseUtil.pageLoaded();
         String actual = commonGrid.gridHeaderField(header, null);
         Assert.assertEquals(actual, expectation, "Header text was not correct. Expected \"" + expectation + "\", but was \"" + actual + "\".");
+    }
+    @When("I click on the top work order link")
+    public void iClickOnTheTopWorkOrderLink() {
+        commonGrid.clickTopWorkOrder(currentTab);
+        pageLoaded();
     }
 }

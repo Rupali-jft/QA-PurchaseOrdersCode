@@ -328,5 +328,37 @@ wait.until(ExpectedConditions.visibilityOf(ApprovalStatus1));
         }
         return false;
     }
+    String editedText;
+    String originalText;
+    public void EditQuoteTitle(){
+        wait.until(ExpectedConditions.visibilityOf(quoTitle));
+        java.util.Date date=new java.util.Date();
+      editedText = "Quote title was edited on " + date;
+      originalText = quoTitle.getAttribute("value");
+        System.out.println("Current subject for work order " + passingstringvalue + " is " + originalText);
+        quoTitle.click();
+        quoTitle.sendKeys(Keys.chord(Keys.LEFT_CONTROL, "a"));
+        System.out.println("Changing quote title to " + editedText);
+        quoTitle.sendKeys(editedText);
+    }
+    @FindBy(how = How.ID, using = "quotes_close")
+    private WebElement QuotesCloseButton;
+    public void CancelQuoteEdit(){
+        QuotesCloseButton.click();
+        WebDriverWait wait = new WebDriverWait(driver, 20);
+        wait.until(ExpectedConditions.invisibilityOf(QuotesCloseButton));
+        System.out.println("Closing work order without saving changes");
+    }
+    @FindBy(how = How.ID, using = "quotes_sects")
+    private WebElement quotesWOTab;
+    public boolean VerifyQuoteTitleNotSaved(){
+       try{
+            quotesWOTab.click();
+        return driver.findElements(By.xpath("//*[contains(text(), '"+editedText+"')]")).isEmpty();
+        }
+        catch (Exception e){
+        }
+        return false;
+    }
 }
 

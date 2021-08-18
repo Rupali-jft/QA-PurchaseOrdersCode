@@ -282,6 +282,26 @@ public class FormSteps extends BaseUtil {
         commonForm.commonDateShift(datePicker, count, units, direction, hasTime);
     }
 
+    @When("I delete the attachment")
+    public void iDeleteTheAttachment() throws InterruptedException {
+        System.out.println("Checking that the delete action is available.");
+        int numberOfAttachments = driver.findElements(By.id("attachment_delete")).size();
+        while(numberOfAttachments>0){
+            System.out.println("Deleting file.");
+            wait.until(ExpectedConditions.elementToBeClickable(By.id("attachment_delete")));
+            driver.findElement(By.id("attachment_delete")).click();
+            BaseUtil.pageLoaded();
+            commonForm.commonButton("confirm");
+            BaseUtil.pageLoaded();
+            // After confirming a delete, the user is redirected to the Details tab. Wait for a Details tab element to be visible before continuing.
+            wait.until(ExpectedConditions.visibilityOfElementLocated(By.id("pc_Comments")));//Nothing special about this element. Just unique to Detail tab.
+            driver.findElement(By.linkText("Attachments")).click();
+            wait.until(ExpectedConditions.visibilityOfElementLocated(By.id("th-LinkWOAttachments")));
+            numberOfAttachments=driver.findElements(By.id("attachment_delete")).size();
+        }
+        Assert.assertTrue(driver.findElements(By.id("attachment_delete")).isEmpty());
+    }
+
     @And("I upload an attachment")
     public void iUploadAnAttachment() {
         pageLoaded();
@@ -322,6 +342,17 @@ public class FormSteps extends BaseUtil {
             driver.findElement(By.id("filename")).sendKeys(attachLocation);
         }
         pageLoaded();
+    }
+
+    @Then("The file will not be displayed in the Attachments grid")
+    public void theFileWillNotBeDisplayedInTheAttachmentsGrid() {
+        try {
+            driver.findElement(By.linkText("Attachments")).click();
+        } catch (ElementClickInterceptedException e) {
+            commonForm.clickErrorHandle(e.toString(), driver.findElement(By.linkText("Attachments")));
+        }
+
+        wait.until(ExpectedConditions.presenceOfElementLocated(By.xpath("//*[text()='No data available in table']")));
     }
 
     @Then("The file will be displayed in the Attachments grid")

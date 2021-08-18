@@ -87,7 +87,8 @@ public class POSteps extends BaseUtil {
 
     @And("I click the eye icon")
     public void iClickTheEyeIcon() {
-        driver.findElement(By.xpath("//tbody/tr[1]/td[6]/center[1]/span[1]")).click();
+        ((JavascriptExecutor) driver).executeScript("scroll(0,2000);");
+        wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("//tbody/tr[1]/td[6]/center[1]"))).click();
     }
 
     @And("I approve the request")
@@ -193,7 +194,7 @@ purchaseOrder.enterQuoteDetails(table);
     public void iVerifyThatValidationErrorMessageAppears(String validation_message) {
         Assert.assertTrue(purchaseOrder.verifyValidationmessage(validation_message),"Expected validation message \"" + validation_message + "\" did not display!");
         System.out.println("Validation message appeared:  "+ validation_message);
-Login.waitForMiliseconds(5000);
+login.waitForMiliseconds(5000);
     }
 
     @And("I raise the purchase order")
@@ -317,5 +318,49 @@ Login.waitForMiliseconds(5000);
         driver.findElement(By.xpath("//button[@id='notes_submit']")).click();
     }
 
+    @And("I go to {string} tab.")
+    public void iGoToTab(String tabs) {
+        commonForm.commonLinkClick(tabs);
+    }
+
+    @And("I open the {string} tab")
+    public void iOpenTheTab(String comment_Tab) {
+        driver.findElement(By.xpath("//a[@id='notes_sects']")).click();
+        System.out.println("Navigate to "+comment_Tab);
+    }
+    @And("^Edit the Quote Title field$")
+    public void editTheQuoteTitleField(){
+        purchaseOrder.EditQuoteTitle();
+    }
+    @And("^Click the cancel button on the Edit Quote modal$")
+    public void clickTheCancelButtonOnTheEditQuoteModal() {
+        purchaseOrder.CancelQuoteEdit();
+    }
+    @Then("^I will see that the title has not changed$")
+    public void iWillSeeThatTheTitleHasNotChanged() {
+        Assert.assertTrue(purchaseOrder.VerifyQuoteTitleNotSaved(),"Title has been changed successfully");
+        System.out.println("Title has not been changed");
+            }
+    @And("I delete the Quote")
+    public void iDeleteTheQuote() {
+        wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("//tbody/tr[1]/td[7]/center[1]/button[1]/span[1]"))).click();
+        wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("//button[text()='Yes']")));
+        commonForm.commonButton("Yes");
+        System.out.println("Quote is deleted successfully");
+    }
+    @Then("verify that Quote page is opened.")
+    public void verifyThatQuotePageIsOpened() {
+        String expected_Title=driver.getTitle();
+        String actual_Title="Patra Corp - Purchase Order";
+        Assert.assertEquals(actual_Title,expected_Title,"Quote Page is opened");
+        wait.until(ExpectedConditions.visibilityOfElementLocated(By.cssSelector("#quotedprice0"))).sendKeys(Keys.chord(Keys.CONTROL, "a"),"3000");
+    System.out.println("Quote tab is editable.");
+    }
+
+    @And("I click the view PDF link")
+    public void iClickTheViewPDFLink() {
+        wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("//tbody/tr[1]/td[7]/center[1]/a[1]/span[1]"))).click();
+        windowsHandling();
+    }
 }
 

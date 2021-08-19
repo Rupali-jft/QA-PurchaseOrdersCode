@@ -353,7 +353,7 @@ login.waitForMiliseconds(5000);
         String expected_Title=driver.getTitle();
         String actual_Title="Patra Corp - Purchase Order";
         Assert.assertEquals(actual_Title,expected_Title,"Quote Page is opened");
-        wait.until(ExpectedConditions.visibilityOfElementLocated(By.cssSelector("#quotedprice0"))).sendKeys(Keys.chord(Keys.CONTROL, "a"),"3000");
+        wait.until(ExpectedConditions.visibilityOfElementLocated(By.cssSelector("#quotedprice0"))).sendKeys(Keys.chord(Keys.CONTROL, "a"),"2500");
     System.out.println("Quote tab is editable.");
     }
 
@@ -361,6 +361,16 @@ login.waitForMiliseconds(5000);
     public void iClickTheViewPDFLink() {
         wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("//tbody/tr[1]/td[7]/center[1]/a[1]/span[1]"))).click();
         windowsHandling();
+    }
+
+    @And("I click the PO# column field")
+    public void iClickThePOColumnField() {
+        String clicklnk = Keys.chord(Keys.CONTROL,Keys.ENTER);
+        wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("//tbody/tr[1]/td[1]/center[1]/a[1]"))).sendKeys(clicklnk);
+        System.out.println("Navigates to PO page");
+        mainWindowHandle();
+        new WebDriverWait(driver,20);
+        System.out.println("Back to main window");
     }
 }
 

@@ -79,6 +79,7 @@ Scenario: Purchase Orders Tab in Request Details Page
     |Vendor|
   | Price  |
   | View PDF|
+  And I click the PO# column field
   And I click the view PDF link
   And I click the "Print PDF" button
 
@@ -87,7 +88,7 @@ Scenario: Purchase Orders Tab in Request Details Page
 Scenario:Quotes Tab in Request Details Page-Purchase Officer Role
 Given I log into the Purchase Orders app as an "Purchaseofficer"
 And I navigate to the "Requests" tab
-When I select "Quote Pending Approver" from the "Status" header in the grid
+When I select "Quote Pending Proc. Mgr." from the "Status" header in the grid
 And I click on the top work order link
 When I go to "Quotes" tab.
 And set the tab to "Quotes"
@@ -100,6 +101,7 @@ Then Verify the following headers are present
 |View quote|
 And I click the eye icon
 Then verify that Quote page is opened.
+And I click the "Total Price" box
 And I click the "Submit" button
 And I click the "confirm" button
 Then I verify that "Quote Successfully Updated" validation  message appears
@@ -108,7 +110,7 @@ Then I verify that "Quote Successfully Updated" validation  message appears
 Scenario: Quotes Tab in Request Details Page-Initiator Role
   Given I log into the Purchase Orders app as an "Initiator"
     And I navigate to the "Requests" tab
-    When I select "Quote Pending Approver" from the "Status" header in the grid
+    When I select "Quote Pending Proc. Mgr." from the "Status" header in the grid
     And I click on the top work order link
     When I go to "Quotes" tab.
     And set the tab to "Quotes"
@@ -121,6 +123,7 @@ Scenario: Quotes Tab in Request Details Page-Initiator Role
       |View quote|
     And I click the eye icon
     Then verify that Quote page is opened.
+  And I click the "Total Price" box
     And I click the "Submit" button
     And I click the "confirm" button
     Then I verify that "Quote Successfully Updated" validation  message appears
@@ -129,7 +132,7 @@ Scenario: Quotes Tab in Request Details Page-Initiator Role
 Scenario: Quotes Tab in Request Details Page-Approver Role
   Given I log into the Purchase Orders app as an "Approver"
   And I navigate to the "Requests" tab
-  When I select "Quote Pending Approver" from the "Status" header in the grid
+  When I select "Quote Pending Proc. Mgr." from the "Status" header in the grid
   And I click on the top work order link
   When I go to "Quotes" tab.
   And set the tab to "Quotes"

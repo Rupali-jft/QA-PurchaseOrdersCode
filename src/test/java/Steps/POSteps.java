@@ -214,7 +214,6 @@ Login.waitForMiliseconds(5000);
         pageLoaded();
         commonForm.commonButton("Yes");
         wait.until(ExpectedConditions.visibilityOfElementLocated(By.id("po_close_msg")));
-        wait.until(ExpectedConditions.invisibilityOfElementLocated(By.id("po_close_msg")));
     }
     @Then("I verify that Reject button {string} displayed")
     public void iVerifyThatRejectButtonDisplayed(String visibility) {

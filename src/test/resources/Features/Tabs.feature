@@ -14,32 +14,7 @@ Feature:Different tabs functionality
       | Item / Service Name | Description              | Quantity |
       | Test                | Test Item <current date> | 1        |
     And I submit the new request
-    And I click the "Confirm" button
-    And I click the "Yes" button
-    And I Click on user icon
-    And I click Logout button
-    Given I log into the Purchase Orders app as an "Approver"
-    And I navigate to the "Pending Approval" tab
-    And I open the created WO
-    And I approve the request
-    And I Click on user icon
-    And I click Logout button
-    Given I log into the Purchase Orders app as an "Purchaseofficer"
-    And I open the created WO
-    And Click on Add Quote by Purchase Officer Button
-    And I set the quote date in the datepicker
-    Then Input values in the Quotes pop-up
-      | QuoteTitle | QuoteVendor | QuotedPrice |
-      | keyboard   | Apple       | 9000      |
-    And I click the "Total Price" box
-    And I click the "Submit" button
-    And I click the "confirm" button
-    And I Click on user icon
-    And I click Logout button
 #####--------Add Attachment in Request Details Page---------#####
-    Given I log into the Purchase Orders app as an "Initiator"
-    And I navigate to the "Requests" tab
-    When I click on the top work order link
     And I upload an attachment
     Then The file will be displayed in the Attachments grid
 
@@ -120,10 +95,43 @@ Scenario: Purchase Orders Tab in Request Details Page
 ###-----------Quotes Tab in Request Details Page--------###
 @1353
 Scenario:Quotes Tab in Request Details Page-Purchase Officer Role
+  ####--------------------happy path-----------------#####
+  Given I log into the Purchase Orders app as an "Initiator"
+  And I click the "Add Request" button
+  And I enter the following information into the form
+    | WO Title   | Test <current date> |
+    | Location   | Vizag TH            |
+    | Department | IT                  |
+  And I add the following into the "Item / Service Details" table
+    | Item / Service Name | Description              | Quantity |
+    | Test                | Test Item <current date> | 1        |
+  And I submit the new request
+  And I click the "Confirm" button
+  And I click the "Yes" button
+  And I Click on user icon
+  And I click Logout button
+  Given I log into the Purchase Orders app as an "Approver"
+  And I navigate to the "Pending Approval" tab
+  And I open the created WO
+  And I approve the request
+  And I Click on user icon
+  And I click Logout button
+  Given I log into the Purchase Orders app as an "Purchaseofficer"
+  And I open the created WO
+  And Click on Add Quote by Purchase Officer Button
+  And I set the quote date in the datepicker
+  Then Input values in the Quotes pop-up
+    | QuoteTitle | QuoteVendor | QuotedPrice |
+    | keyboard   | Apple       | 9000      |
+  And I click the "Total Price" box
+  And I click the "Submit" button
+  And I click the "confirm" button
+  And I Click on user icon
+  And I click Logout button
 Given I log into the Purchase Orders app as an "Purchaseofficer"
 And I navigate to the "Requests" tab
 When I select "Quote Pending Proc. Mgr." from the "Status" header in the grid
-And I click on the top work order link
+And I open the created WO
 When I go to "Quotes" tab.
 And set the tab to "Quotes"
 Then Verify the following headers are present
@@ -142,10 +150,43 @@ Then I verify that "Quote Successfully Updated" validation  message appears
 
 @1909
 Scenario: Quotes Tab in Request Details Page-Initiator Role
+   ####--------------------happy path-----------------#####
+  Given I log into the Purchase Orders app as an "Initiator"
+  And I click the "Add Request" button
+  And I enter the following information into the form
+    | WO Title   | Test <current date> |
+    | Location   | Vizag TH            |
+    | Department | IT                  |
+  And I add the following into the "Item / Service Details" table
+    | Item / Service Name | Description              | Quantity |
+    | Test                | Test Item <current date> | 1        |
+  And I submit the new request
+  And I click the "Confirm" button
+  And I click the "Yes" button
+  And I Click on user icon
+  And I click Logout button
+  Given I log into the Purchase Orders app as an "Approver"
+  And I navigate to the "Pending Approval" tab
+  And I open the created WO
+  And I approve the request
+  And I Click on user icon
+  And I click Logout button
+  Given I log into the Purchase Orders app as an "Purchaseofficer"
+  And I open the created WO
+  And Click on Add Quote by Purchase Officer Button
+  And I set the quote date in the datepicker
+  Then Input values in the Quotes pop-up
+    | QuoteTitle | QuoteVendor | QuotedPrice |
+    | keyboard   | Apple       | 9000      |
+  And I click the "Total Price" box
+  And I click the "Submit" button
+  And I click the "confirm" button
+  And I Click on user icon
+  And I click Logout button
   Given I log into the Purchase Orders app as an "Initiator"
     And I navigate to the "Requests" tab
     When I select "Quote Pending Proc. Mgr." from the "Status" header in the grid
-    And I click on the top work order link
+ And I open the created WO
     When I go to "Quotes" tab.
     And set the tab to "Quotes"
     Then Verify the following headers are present
@@ -164,6 +205,39 @@ Scenario: Quotes Tab in Request Details Page-Initiator Role
 
 @1910
 Scenario: Quotes Tab in Request Details Page-Approver Role
+   ####--------------------happy path-----------------#####
+  Given I log into the Purchase Orders app as an "Initiator"
+  And I click the "Add Request" button
+  And I enter the following information into the form
+    | WO Title   | Test <current date> |
+    | Location   | Vizag TH            |
+    | Department | IT                  |
+  And I add the following into the "Item / Service Details" table
+    | Item / Service Name | Description              | Quantity |
+    | Test                | Test Item <current date> | 1        |
+  And I submit the new request
+  And I click the "Confirm" button
+  And I click the "Yes" button
+  And I Click on user icon
+  And I click Logout button
+  Given I log into the Purchase Orders app as an "Approver"
+  And I navigate to the "Pending Approval" tab
+  And I open the created WO
+  And I approve the request
+  And I Click on user icon
+  And I click Logout button
+  Given I log into the Purchase Orders app as an "Purchaseofficer"
+  And I open the created WO
+  And Click on Add Quote by Purchase Officer Button
+  And I set the quote date in the datepicker
+  Then Input values in the Quotes pop-up
+    | QuoteTitle | QuoteVendor | QuotedPrice |
+    | keyboard   | Apple       | 9000      |
+  And I click the "Total Price" box
+  And I click the "Submit" button
+  And I click the "confirm" button
+  And I Click on user icon
+  And I click Logout button
   Given I log into the Purchase Orders app as an "Approver"
   And I navigate to the "Requests" tab
   When I select "Quote Pending Proc. Mgr." from the "Status" header in the grid
@@ -183,6 +257,39 @@ Scenario: Quotes Tab in Request Details Page-Approver Role
 
 @1904
 Scenario: Deleting a Quote
+   ####--------------------happy path-----------------#####
+  Given I log into the Purchase Orders app as an "Initiator"
+  And I click the "Add Request" button
+  And I enter the following information into the form
+    | WO Title   | Test <current date> |
+    | Location   | Vizag TH            |
+    | Department | IT                  |
+  And I add the following into the "Item / Service Details" table
+    | Item / Service Name | Description              | Quantity |
+    | Test                | Test Item <current date> | 1        |
+  And I submit the new request
+  And I click the "Confirm" button
+  And I click the "Yes" button
+  And I Click on user icon
+  And I click Logout button
+  Given I log into the Purchase Orders app as an "Approver"
+  And I navigate to the "Pending Approval" tab
+  And I open the created WO
+  And I approve the request
+  And I Click on user icon
+  And I click Logout button
+  Given I log into the Purchase Orders app as an "Purchaseofficer"
+  And I open the created WO
+  And Click on Add Quote by Purchase Officer Button
+  And I set the quote date in the datepicker
+  Then Input values in the Quotes pop-up
+    | QuoteTitle | QuoteVendor | QuotedPrice |
+    | keyboard   | Apple       | 9000      |
+  And I click the "Total Price" box
+  And I click the "Submit" button
+  And I click the "confirm" button
+  And I Click on user icon
+  And I click Logout button
 Given I log into the Purchase Orders app as an "Purchaseofficer"
 And I navigate to the "Requests" tab
 When I select "Quote Pending Proc. Mgr." from the "Status" header in the grid

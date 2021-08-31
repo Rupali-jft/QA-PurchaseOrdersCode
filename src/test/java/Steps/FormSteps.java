@@ -1,7 +1,6 @@
 package Steps;
 
 import Base.BaseUtil;
-import Pages.CommonForm;
 import io.cucumber.java.en.And;
 import io.cucumber.java.en.Then;
 import io.cucumber.java.en.When;
@@ -286,7 +285,7 @@ public class FormSteps extends BaseUtil {
     public void iDeleteTheAttachment() throws InterruptedException {
         System.out.println("Checking that the delete action is available.");
         int numberOfAttachments = driver.findElements(By.id("attachment_delete")).size();
-        while(numberOfAttachments>0){
+        while (numberOfAttachments > 0) {
             System.out.println("Deleting file.");
             wait.until(ExpectedConditions.elementToBeClickable(By.id("attachment_delete")));
             driver.findElement(By.id("attachment_delete")).click();
@@ -297,7 +296,7 @@ public class FormSteps extends BaseUtil {
             wait.until(ExpectedConditions.visibilityOfElementLocated(By.id("pc_Comments")));//Nothing special about this element. Just unique to Detail tab.
             driver.findElement(By.linkText("Attachments")).click();
             wait.until(ExpectedConditions.visibilityOfElementLocated(By.id("th-LinkWOAttachments")));
-            numberOfAttachments=driver.findElements(By.id("attachment_delete")).size();
+            numberOfAttachments = driver.findElements(By.id("attachment_delete")).size();
         }
         Assert.assertTrue(driver.findElements(By.id("attachment_delete")).isEmpty());
     }
@@ -352,7 +351,7 @@ public class FormSteps extends BaseUtil {
             commonForm.clickErrorHandle(e.toString(), driver.findElement(By.linkText("Attachments")));
         }
 
-        wait.until(ExpectedConditions.presenceOfElementLocated(By.xpath("//*[text()='No data available in table']")));
+        Assert.assertTrue(wait.until(ExpectedConditions.presenceOfElementLocated(By.xpath("//body[1]/div[1]/div[1]/div[1]/div[2]/div[1]/div[1]/div[4]/div[1]/div[1]/div[2]/table[1]/tbody[1]/tr[1]/td[1]"))).isDisplayed(), "Attachments grid is not empty");
     }
 
     @Then("The file will be displayed in the Attachments grid")

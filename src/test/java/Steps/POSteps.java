@@ -118,7 +118,7 @@ public class POSteps extends BaseUtil {
                 TimeoutException ignored) {
         }
         Assert.assertTrue(result, "Expected GST under address section \"" + GST + "\" did not display!");
-        System.out.println("GST under address section :\n"+arg1+"-" + GST);
+        System.out.println("GST under address section :\n" + arg1 + "-" + GST);
     }
 
     @And("Click on Add Quote by Purchase Officer Button")
@@ -131,8 +131,8 @@ public class POSteps extends BaseUtil {
     @Then("Input values in the Quotes pop-up")
     public void inputValuesInTheQuotesPopUp(DataTable table) {
         System.out.println("Entering required details in the Quotes Pop-up\n");
-purchaseOrder.enterQuoteDetails(table);
-        }
+        purchaseOrder.enterQuoteDetails(table);
+    }
 
     @And("I set the quote date in the datepicker")
     public void iSetTheQuoteDateInTheDatepicker() {
@@ -185,6 +185,7 @@ purchaseOrder.enterQuoteDetails(table);
     public void iVerifyThatDeleteButtonIsEnabled() {
         purchaseOrder.verifyDeleteButton();
     }
+
     @And("I delete the attachments")
     public void iDeleteTheAttachments() {
         driver.findElement(By.xpath("//tbody/tr[1]/td[5]/center[1]/button[1]")).click();
@@ -192,9 +193,9 @@ purchaseOrder.enterQuoteDetails(table);
 
     @Then("I verify that {string} validation  message appears")
     public void iVerifyThatValidationErrorMessageAppears(String validation_message) {
-        Assert.assertTrue(purchaseOrder.verifyValidationmessage(validation_message),"Expected validation message \"" + validation_message + "\" did not display!");
-        System.out.println("Validation message appeared:  "+ validation_message);
-login.waitForMiliseconds(5000);
+        Assert.assertTrue(purchaseOrder.verifyValidationmessage(validation_message), "Expected validation message \"" + validation_message + "\" did not display!");
+        System.out.println("Validation message appeared:  " + validation_message);
+        login.waitForMiliseconds(5000);
     }
 
     @And("I raise the purchase order")
@@ -231,27 +232,28 @@ login.waitForMiliseconds(5000);
         String value = commonForm.commonDropDownRead(dropDown);
         System.out.println("Status is: \n" + value);
     }
+
     @And("I select the raised WO checkbox in the grid")
     public void iSelectTheRaisedWOCheckboxInTheGrid() {
         driver.findElement(By.xpath("//table[@id='dtApproval']/tbody/tr/td/input")).click();
     }
 
     @And("I verify the status is {string} from Requests tab")
-    public void iVerifyTheStatusIsFromRequestsTab(String status){
-        Assert.assertTrue(purchaseOrder.RequestsTabStatusCheck(status),"Expected status: " + status + " was not found. Current status is " + status);
+    public void iVerifyTheStatusIsFromRequestsTab(String status) {
+        Assert.assertTrue(purchaseOrder.RequestsTabStatusCheck(status), "Expected status: " + status + " was not found. Current status is " + status);
         System.out.println("Expected status: " + status + " matches found status: " + status);
     }
 
     @And("I {string} the request from the grid")
-    public void iTheRequestFromTheGrid(String status){
+    public void iTheRequestFromTheGrid(String status) {
         //purchaseOrder.ChangeStatusFromGrid(status);
-        Assert.assertTrue(purchaseOrder.ChangeStatusFromGrid(status),status + " button not found. Please use 'Approve', 'Send Back', or 'Reject'");
+        Assert.assertTrue(purchaseOrder.ChangeStatusFromGrid(status), status + " button not found. Please use 'Approve', 'Send Back', or 'Reject'");
         System.out.println(status + " button found.");
     }
 
     @And("Click on Add Quote by Initiator Button and click yes")
     public void clickOnAddQuoteByInitiatorButtonAndClickYes() {
-        Assert.assertTrue(purchaseOrder.clickAddQuoteByInitiator(),"Add quote by Initiator button is not clickable");
+        Assert.assertTrue(purchaseOrder.clickAddQuoteByInitiator(), "Add quote by Initiator button is not clickable");
         System.out.println("Clicked add quote by Initiator");
         wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("//button[text()='Yes']")));
         commonForm.commonButton("Yes");
@@ -260,7 +262,7 @@ login.waitForMiliseconds(5000);
 
     @And("Click on Add Quote by Initiator Button")
     public void clickOnAddQuoteByInitiatorButton() {
-        Assert.assertTrue(purchaseOrder.clickAddQuoteByInitiator(),"Add quote by Initiator button is not clickable");
+        Assert.assertTrue(purchaseOrder.clickAddQuoteByInitiator(), "Add quote by Initiator button is not clickable");
         System.out.println("Clicked add quote by Initiator");
     }
 
@@ -268,19 +270,22 @@ login.waitForMiliseconds(5000);
     public void verifyTheApprovalStatusOnQuotesTabForStQuote(int arg0) {
         purchaseOrder.verifyQuote1Status();
     }
+
     @And("^Verify the approval status on Quotes Tab for 2nd Quote$")
-    public void verifyApprovalStatusforQuote2(){
+    public void verifyApprovalStatusforQuote2() {
         purchaseOrder.verifyQuote2Status();
     }
+
     @Then("I check if {string} is {string}")
     public void iCheckIfIs(String arg0, String arg1) {
         js.executeScript("window.scrollBy(0,3000)");
-        String currentStatus= new WebDriverWait(driver,10).until(ExpectedConditions.visibilityOfElementLocated(By.xpath("//center[contains(text(),'" + arg1 +"')]"))).getText();
+        String currentStatus = new WebDriverWait(driver, 10).until(ExpectedConditions.visibilityOfElementLocated(By.xpath("//center[contains(text(),'" + arg1 + "')]"))).getText();
         System.out.println(currentStatus);
-        boolean condition=(currentStatus.equals(arg1));
-        Assert.assertTrue(condition, "Approval status is not: "+currentStatus);
-        System.out.println("Approval status is: "+currentStatus);
+        boolean condition = (currentStatus.equals(arg1));
+        Assert.assertTrue(condition, "Approval status is not: " + currentStatus);
+        System.out.println("Approval status is: " + currentStatus);
     }
+
     @And("I verify that buttons are disabled")
     public void iVerifyThatButtonsAreDisabled() {
         Assert.assertFalse(purchaseOrder.verifyApproveButtonDisabled(), "Approve button is not disabled");
@@ -289,7 +294,7 @@ login.waitForMiliseconds(5000);
         Assert.assertFalse(purchaseOrder.verifySendBackButtonDisabled(), "SendBack button is not disabled");
         System.out.println("Good SendBack button disabled");
 
-        Assert.assertFalse( purchaseOrder.verifyRejectButtonDisabled(), "Reject button is not disabled");
+        Assert.assertFalse(purchaseOrder.verifyRejectButtonDisabled(), "Reject button is not disabled");
         System.out.println("Good Reject button disabled");
 
         Assert.assertFalse(purchaseOrder.verifySubmitButtonDisabled(), "Submit button is not disabled");
@@ -305,14 +310,15 @@ login.waitForMiliseconds(5000);
         } catch (
                 TimeoutException ignored) {
         }
-        Assert.assertTrue(result, arg0 +" is not: "+status);
-        System.out.println(arg0 +" is: "+status);
+        Assert.assertTrue(result, arg0 + " is not: " + status);
+        System.out.println(arg0 + " is: " + status);
     }
 
     @And("I click the eye icon in the second row")
     public void iClickTheEyeIconInTheSecondRow() {
         driver.findElement(By.xpath("//tbody/tr[2]/td[6]/center[1]/span[1]")).click();
     }
+
     @And("I click {string} button")
     public void iClickButton(String arg0) {
         driver.findElement(By.xpath("//button[@id='notes_submit']")).click();
@@ -326,21 +332,25 @@ login.waitForMiliseconds(5000);
     @And("I open the {string} tab")
     public void iOpenTheTab(String comment_Tab) {
         driver.findElement(By.xpath("//a[@id='notes_sects']")).click();
-        System.out.println("Navigate to "+comment_Tab);
+        System.out.println("Navigate to " + comment_Tab);
     }
+
     @And("^Edit the Quote Title field$")
-    public void editTheQuoteTitleField(){
+    public void editTheQuoteTitleField() {
         purchaseOrder.EditQuoteTitle();
     }
+
     @And("^Click the cancel button on the Edit Quote modal$")
     public void clickTheCancelButtonOnTheEditQuoteModal() {
         purchaseOrder.CancelQuoteEdit();
     }
+
     @Then("^I will see that the title has not changed$")
     public void iWillSeeThatTheTitleHasNotChanged() {
-        Assert.assertTrue(purchaseOrder.VerifyQuoteTitleNotSaved(),"Title has been changed successfully");
+        Assert.assertTrue(purchaseOrder.VerifyQuoteTitleNotSaved(), "Title has been changed successfully");
         System.out.println("Title has not been changed");
-            }
+    }
+
     @And("I delete the Quote")
     public void iDeleteTheQuote() {
         wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("//tbody/tr[1]/td[7]/center[1]/button[1]/span[1]"))).click();
@@ -348,13 +358,14 @@ login.waitForMiliseconds(5000);
         commonForm.commonButton("Yes");
         System.out.println("Quote is deleted successfully");
     }
+
     @Then("verify that Quote page is opened.")
     public void verifyThatQuotePageIsOpened() {
-        String expected_Title=driver.getTitle();
-        String actual_Title="Patra Corp - Purchase Order";
-        Assert.assertEquals(actual_Title,expected_Title,"Quote Page is opened");
-        wait.until(ExpectedConditions.visibilityOfElementLocated(By.cssSelector("#quotedprice0"))).sendKeys(Keys.chord(Keys.CONTROL, "a"),"2500");
-    System.out.println("Quote tab is editable.");
+        String expected_Title = driver.getTitle();
+        String actual_Title = "Patra Corp - Purchase Order";
+        Assert.assertEquals(actual_Title, expected_Title, "Quote Page is opened");
+        wait.until(ExpectedConditions.visibilityOfElementLocated(By.cssSelector("#quotedprice0"))).sendKeys(Keys.chord(Keys.CONTROL, "a"), "2500");
+        System.out.println("Quote tab is editable.");
     }
 
     @And("I click the view PDF link")
@@ -365,12 +376,24 @@ login.waitForMiliseconds(5000);
 
     @And("I click the PO# column field")
     public void iClickThePOColumnField() {
-        String clicklnk = Keys.chord(Keys.CONTROL,Keys.ENTER);
+        String clicklnk = Keys.chord(Keys.CONTROL, Keys.ENTER);
         wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("//tbody/tr[1]/td[1]/center[1]/a[1]"))).sendKeys(clicklnk);
         System.out.println("Navigates to PO page");
         mainWindowHandle();
-        new WebDriverWait(driver,20);
+        new WebDriverWait(driver, 20);
         System.out.println("Back to main window");
+    }
+
+    @Then("I see error warning {string} is displayed")
+    public void iSeeErrorWarningIsDisplayed(String warning_Message) {
+        Assert.assertTrue(purchaseOrder.verifyWarningmessage(warning_Message), "Expected validation message \"" + warning_Message + "\" did not display!");
+        System.out.println("Warning message appeared:  " + warning_Message);
+    }
+
+    @Then("I see error warning {string} appeared")
+    public void iSeeErrorWarningAppeared(String error) {
+        Assert.assertTrue(purchaseOrder.verifyErrormessage(error), "Expected validation message \"" + error + "\" did not display!");
+        System.out.println("Warning message appeared:  " + error);
     }
 }
 

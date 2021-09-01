@@ -380,5 +380,29 @@ public class PurchaseOrder {
         }
         return false;
     }
+    @FindBy(how = How.ID, using = "po_VendorRefNo")
+    private WebElement vendorRefNo;
+    @FindBy(how = How.ID, using = "po_vendorAddress")
+    private WebElement vendorAddressTextBox;
+    @FindBy(how = How.ID, using = "item_partno0")
+    private WebElement partNoTextBox;
+
+    //Entering Purchase Order required details
+    public void enterPurchaseOrderDetails(DataTable dataTable) {
+        for (Map<Object, Object> data : dataTable.asMaps(String.class, String.class)) {
+
+            vendorRefNo.sendKeys((String) data.get("VendorReferenceNumber"));
+            vendorAddressTextBox.sendKeys((String) data.get("VendorAddress"));
+            partNoTextBox.sendKeys((String) data.get("PartNo"));
+        }
+    }
+    @FindBy(how = How.ID, using = "WoNumber1")
+    private WebElement workOrderNumber;
+
+    //To get the created purchase order number.
+    public void getCreatedPONumber() {
+        String PONumber = workOrderNumber.getText();
+        System.out.println("Created PO # is  :" + PONumber);
+    }
 }
 

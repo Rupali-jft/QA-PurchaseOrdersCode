@@ -215,7 +215,6 @@ public class POSteps extends BaseUtil {
         pageLoaded();
         commonForm.commonButton("Yes");
         wait.until(ExpectedConditions.visibilityOfElementLocated(By.id("po_close_msg")));
-        wait.until(ExpectedConditions.invisibilityOfElementLocated(By.id("po_close_msg")));
     }
 
     @Then("I verify that Reject button {string} displayed")
@@ -239,7 +238,11 @@ public class POSteps extends BaseUtil {
     }
 
     @And("I verify the status is {string} from Requests tab")
-    public void iVerifyTheStatusIsFromRequestsTab(String status) {
+    public void i
+      
+      
+      
+    IsFromRequestsTab(String status) {
         Assert.assertTrue(purchaseOrder.RequestsTabStatusCheck(status), "Expected status: " + status + " was not found. Current status is " + status);
         System.out.println("Expected status: " + status + " matches found status: " + status);
     }
@@ -324,6 +327,7 @@ public class POSteps extends BaseUtil {
         driver.findElement(By.xpath("//button[@id='notes_submit']")).click();
     }
 
+
     @And("I go to {string} tab.")
     public void iGoToTab(String tabs) {
         commonForm.commonLinkClick(tabs);
@@ -395,5 +399,34 @@ public class POSteps extends BaseUtil {
         Assert.assertTrue(purchaseOrder.verifyErrormessage(error), "Expected validation message \"" + error + "\" did not display!");
         System.out.println("Warning message appeared:  " + error);
     }
+
+    @And("I click the {string} and {string} button")
+    public void iClickTheAndButton(String subBtn, String cnfrmBtn) {
+        commonForm.commonButton(subBtn);
+        wait.until(ExpectedConditions.visibilityOfElementLocated(By.linkText("")));
+        commonForm.commonButton(cnfrmBtn);
+        wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("//div[contains(text(),'Quote Successfully Added')]")));
+        pageLoaded();
+    }
+
+    @Then("^Enter Purchase Order confirmation Details$")
+    public void enterPurchaseOrderDetails(DataTable table){
+        purchaseOrder.enterPurchaseOrderDetails(table);
+    }
+    @And("^I get the created Purchase Order Number$")
+    public void getPONumber(){
+        purchaseOrder.getCreatedPONumber();
+    }
+
+    @And("I close the created work order")
+    public void iCloseTheCreatedWorkOrder() {
+        commonForm.commonButton("Close WO");
+        pageLoaded();
+        commonForm.commonButton("Yes");
+        wait.until(ExpectedConditions.visibilityOfElementLocated(By.id("wo_close_msg")));
+        wait.until(ExpectedConditions.invisibilityOfElementLocated(By.id("wo_close_msg")));
+
+    }
+
 }
 

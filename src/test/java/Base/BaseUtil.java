@@ -61,9 +61,14 @@ public class BaseUtil {
         File file = new File(relativePath);
         return file.getAbsolutePath();
     }
+String Tab1;
+    public void mainWindowHandle(){
+        windowsHandling();
+        driver.switchTo().window(Tab1);
+    }
 
     public void windowsHandling(){
-        String Tab1 = driver.getWindowHandle();
+        Tab1 = driver.getWindowHandle();
         ArrayList<String> availableWindows = new ArrayList<String>(driver.getWindowHandles());
         if (!availableWindows.isEmpty()) {
             driver.switchTo().window(availableWindows.get(1));

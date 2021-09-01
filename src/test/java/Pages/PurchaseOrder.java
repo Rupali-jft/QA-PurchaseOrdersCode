@@ -148,18 +148,19 @@ public class PurchaseOrder {
 
     // To add quotes by Initiator
     public boolean clickAddQuoteByInitiator() {
-if (addQuoteBtn.isDisplayed() && addQuoteBtn.isEnabled()) {
+        if (addQuoteBtn.isDisplayed() && addQuoteBtn.isEnabled()) {
             try {
                 js.executeScript("arguments[0].click()", addQuoteBtn);
             } catch (ElementClickInterceptedException e) {
                 BaseUtil.commonForm.clickErrorHandle(e.toString(), addQuoteBtn);
             }
-    if (clickOnByInitiator.isDisplayed() && clickOnByInitiator.isEnabled()) {
-    try {
-        js.executeScript("arguments[0].click()", clickOnByInitiator);
-    } catch (ElementClickInterceptedException e) {
-        BaseUtil.commonForm.clickErrorHandle(e.toString(), clickOnByInitiator);
-    }}
+            if (clickOnByInitiator.isDisplayed() && clickOnByInitiator.isEnabled()) {
+                try {
+                    js.executeScript("arguments[0].click()", clickOnByInitiator);
+                } catch (ElementClickInterceptedException e) {
+                    BaseUtil.commonForm.clickErrorHandle(e.toString(), clickOnByInitiator);
+                }
+            }
             return true;
         }
         return false;
@@ -201,6 +202,22 @@ if (addQuoteBtn.isDisplayed() && addQuoteBtn.isEnabled()) {
         totPrice.click();
     }
 
+    public boolean verifyWarningmessage(String warning_Message) {
+        try {
+            return new WebDriverWait(driver, 5).until(ExpectedConditions.visibilityOfElementLocated(By.xpath("//span[contains(text(),'" + warning_Message + "')]"))).isDisplayed();
+        } catch (TimeoutException ignored) {
+        }
+        return false;
+    }
+
+    public boolean verifyErrormessage(String error) {
+        try {
+            return new WebDriverWait(driver, 5).until(ExpectedConditions.visibilityOfElementLocated(By.xpath("//div[contains(text(),'" + error + "')]"))).isDisplayed();
+        } catch (TimeoutException ignored) {
+        }
+        return false;
+    }
+
     public boolean verifyValidationmessage(String validation_message) {
         try {
             return new WebDriverWait(driver, 5).until(ExpectedConditions.visibilityOfElementLocated(By.xpath("//div[contains(text(),'" + validation_message + "')]"))).isDisplayed();
@@ -208,17 +225,19 @@ if (addQuoteBtn.isDisplayed() && addQuoteBtn.isEnabled()) {
         }
         return false;
     }
+
     public boolean RequestsTabStatusCheck(String status) {
         try {
-        String gridStatus = gridRequestsStatus.getText().toLowerCase();
-    return status.toLowerCase().equals(gridStatus);}
-catch (Exception e){
+            String gridStatus = gridRequestsStatus.getText().toLowerCase();
+            return status.toLowerCase().equals(gridStatus);
+        } catch (Exception e) {
 
-}
+        }
         return false;
     }
+
     // Approve through Pending Approval grid
-    public boolean ChangeStatusFromGrid(String status){
+    public boolean ChangeStatusFromGrid(String status) {
         WebDriverWait wait = new WebDriverWait(driver, 20);
         wait.until(ExpectedConditions.visibilityOf(gridPendingApprovalCheckBox));
         try {
@@ -271,7 +290,7 @@ catch (Exception e){
     //To verify quote1 approval status
     public boolean verifyQuote1Status() {
         try {
-wait.until(ExpectedConditions.visibilityOf(ApprovalStatus1));
+            wait.until(ExpectedConditions.visibilityOf(ApprovalStatus1));
             String approvalStatus1 = ApprovalStatus1.getText();
             System.out.println("Current quote Approval status is showing as:" + approvalStatus1);
         } catch (Exception e) {
@@ -292,39 +311,72 @@ wait.until(ExpectedConditions.visibilityOf(ApprovalStatus1));
         }
         return false;
     }
-    public boolean verifyApproveButtonDisabled(){
-       try {
-           return approveBtn.isEnabled();
-       }
-       catch (Exception e)
-       {
-       }
-       return false;
+
+    public boolean verifyApproveButtonDisabled() {
+        try {
+            return approveBtn.isEnabled();
+        } catch (Exception e) {
+        }
+        return false;
     }
-    public boolean verifySendBackButtonDisabled(){
+
+    public boolean verifySendBackButtonDisabled() {
         try {
             return sendbackBtn.isEnabled();
-        }
-        catch (Exception e)
-        {
+        } catch (Exception e) {
         }
         return false;
     }
-    public boolean verifyRejectButtonDisabled(){
+
+    public boolean verifyRejectButtonDisabled() {
         try {
             return rejectQuoteBtn.isEnabled();
-        }
-        catch (Exception e)
-        {
+        } catch (Exception e) {
         }
         return false;
     }
-    public boolean verifySubmitButtonDisabled(){
+
+    public boolean verifySubmitButtonDisabled() {
         try {
             return submitBtn.isEnabled();
+        } catch (Exception e) {
         }
-        catch (Exception e)
-        {
+        return false;
+    }
+
+    String editedText;
+    String originalText;
+
+    public void EditQuoteTitle() {
+        wait.until(ExpectedConditions.visibilityOf(quoTitle));
+        java.util.Date date = new java.util.Date();
+        editedText = "Quote title was edited on " + date;
+        originalText = quoTitle.getAttribute("value");
+        System.out.println("Current subject for work order " + passingstringvalue + " is " + originalText);
+        quoTitle.click();
+        quoTitle.sendKeys(Keys.chord(Keys.LEFT_CONTROL, "a"));
+        System.out.println("Changing quote title to " + editedText);
+        quoTitle.sendKeys(editedText);
+    }
+
+    @FindBy(how = How.ID, using = "quotes_close")
+    private WebElement QuotesCloseButton;
+
+    public void CancelQuoteEdit() {
+        QuotesCloseButton.click();
+        WebDriverWait wait = new WebDriverWait(driver, 20);
+        wait.until(ExpectedConditions.invisibilityOf(QuotesCloseButton));
+        System.out.println("Closing work order without saving changes");
+    }
+
+    @FindBy(how = How.ID, using = "quotes_sects")
+    private WebElement quotesWOTab;
+
+    public boolean VerifyQuoteTitleNotSaved() {
+        try {
+            quotesWOTab.click();
+            return driver.findElements(By.xpath("//*[contains(text(), '" + editedText + "')]")).isEmpty();
+        } catch (Exception e) {
         }
         return false;
     }

@@ -257,14 +257,11 @@ public class CommonGrid {
     public boolean gridHeaderFind(String tab, String header) {
         String tabName = tab.replaceAll("\\s", "").toLowerCase();
         try {
-            return driver.findElement(By.xpath("//table[@id='" + gridMap.get(tabName) + "']/descendant::th[contains(@aria-label, '" + header + "')]")).isDisplayed();
-//            return driver.findElement(By.xpath("//table[@id='"+gridMap.get(tabName)+"']/descendant::th[normalize-space(@aria-label)='"+header+"']")).isDisplayed();
+            return driver.findElement(By.xpath("//table[@id='dt" + tabName + "']")).isDisplayed();
         } catch (Exception e) {
             return false;
         }
-
     }
-
     /**
      * Sort the column on the grid
      *
@@ -946,5 +943,14 @@ public class CommonGrid {
     }
     public void searchingStatus(String Status_Value){
         fieldSearchStatus.sendKeys(Status_Value);
+    }
+
+    public void clickTopWorkOrder(String tabName) {
+        String currentTab = gridMap.get(tabName.toLowerCase().replaceAll("\\s+", ""));
+        try {
+            driver.findElement(By.xpath("//*[@id='" + currentTab + "']/tbody/tr[1]/td[1]/a")).click();
+        } catch (NoSuchElementException e) {
+            driver.findElement(By.xpath("//*[@id='" + currentTab + "']/tbody/tr/td[1]/a")).click();
+        }
     }
 }

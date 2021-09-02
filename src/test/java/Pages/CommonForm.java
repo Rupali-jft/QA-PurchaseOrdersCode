@@ -1,6 +1,8 @@
 package Pages;
 
 import org.openqa.selenium.*;
+import org.openqa.selenium.support.FindBy;
+import org.openqa.selenium.support.How;
 import org.openqa.selenium.support.PageFactory;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.Select;
@@ -47,6 +49,7 @@ public class CommonForm {
         }
         return false;
     }
+
     public WebElement commonButtonGet(String button) {
         // This method returns the button element without clicking it (which the commonButton() method does).
         List<WebElement> buttons = driver.findElements(By.xpath(
@@ -628,5 +631,16 @@ public class CommonForm {
         target.click();
     }
 
+    public String getWorkOrderNumber() {
+        try {
+            if (workOrderNumber.isDisplayed()) return workOrderNumber.getText();
+        } catch (NoSuchElementException e) {
+            System.out.println("Work Order Number does not exist, or cannot be interacted with.");
+        }
+        return null;
+    }
+
+    @FindBy(how = How.ID, using = "WoNumber1")
+    private WebElement workOrderNumber;
 
 }

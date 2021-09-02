@@ -6,15 +6,15 @@ import io.cucumber.datatable.DataTable;
 import io.cucumber.java.en.And;
 import io.cucumber.java.en.Given;
 import io.cucumber.java.en.Then;
+import io.cucumber.java.en.When;
 import org.openqa.selenium.*;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
 import org.testng.Assert;
 
-import java.util.Date;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.*;
 
 public class POSteps extends BaseUtil {
 
@@ -238,11 +238,7 @@ public class POSteps extends BaseUtil {
     }
 
     @And("I verify the status is {string} from Requests tab")
-    public void i
-      
-      
-      
-    IsFromRequestsTab(String status) {
+    public void iVerifyTheStatusIsFromRequestsTab(String status) {
         Assert.assertTrue(purchaseOrder.RequestsTabStatusCheck(status), "Expected status: " + status + " was not found. Current status is " + status);
         System.out.println("Expected status: " + status + " matches found status: " + status);
     }
@@ -410,11 +406,12 @@ public class POSteps extends BaseUtil {
     }
 
     @Then("^Enter Purchase Order confirmation Details$")
-    public void enterPurchaseOrderDetails(DataTable table){
+    public void enterPurchaseOrderDetails(DataTable table) {
         purchaseOrder.enterPurchaseOrderDetails(table);
     }
+
     @And("^I get the created Purchase Order Number$")
-    public void getPONumber(){
+    public void getPONumber() {
         purchaseOrder.getCreatedPONumber();
     }
 
@@ -428,5 +425,137 @@ public class POSteps extends BaseUtil {
 
     }
 
+    @When("I refresh the page")
+    public void iRefreshThePage() {
+        driver.navigate().refresh();
+        pageLoaded();
+    }
+
+    @And("The {string} link {string} displayed")
+    public void theLinkDisplayed(String linkText, String expectation) {
+        System.out.println("Checking if " + linkText + " link exists.");
+        if (expectation.equalsIgnoreCase("is not")) {
+            Assert.assertFalse(purchaseOrder.linkDisplayed(linkText));
+        } else {
+            Assert.assertTrue(purchaseOrder.linkDisplayed(linkText));
+        }
+    }
+
+    @When("I enter {string} in the search field")
+    public void iCanUseTheSearchField(String recordID) {
+        pageLoaded();
+        purchaseOrder.typeInSearchField(recordID);
+        System.out.println("Entering \"" + recordID + "\" to the search field");
+    }
+
+    @Then("I see {int} result(s) saying {string}")
+    public void confirmSearchResults(int expectedNumberOfResponses, String expectedString) {
+
+        // Number of responses is correct?
+        Assert.assertEquals(purchaseOrder.numberOfSearchResults(), expectedNumberOfResponses, "Number of results was incorrect.");
+
+        // assert that expected string is present in each response
+        purchaseOrder.searchResultsContainSearch(expectedString);
+        System.out.println("Checking the search dropdown results");
+    }
+
+    @And("The results are in descending order")
+    public void resultsInDescendingOrder() {
+        purchaseOrder.searchResultsDescending();
+        System.out.println("Checking the search dropdown results are in order");
+    }
+
+    @Then("The record is added")
+    public void confirmAddRecord(List<String> fields) {
+        // confirm record details match what were entered
+        fields.forEach(key -> {
+            boolean foundItem = false;
+            if (commonForm.commonField(key) != null) {
+                foundItem = true;
+                String found = commonForm.commonFieldRead(key);
+                if (key.contains("Date")) { // The way dates are stored and displayed are different. Need to do some parsing.
+                    // Convert the expected format into the actual format, and then compare with the actual date.
+                    // expected: "19-02-2021 103851", actual: "02/19/2021 10:38 AM"
+                    SimpleDateFormat formatActual = new SimpleDateFormat("MM/dd/yyyy h:mm aa", Locale.ENGLISH); // need locale to catch AM/PM component
+                    SimpleDateFormat formatExpected = new SimpleDateFormat("dd-MM-yyyy HHmmss");
+                    try {
+                        Date expectedDate = formatExpected.parse(valueStore.get(key));
+                        String reformattedExpectedDate = formatActual.format(expectedDate);
+                        // "Mail Date" in Print Shop is special. It is always set to 15:15 PT.
+                        // Git issue: https://github.com/patracorp/print-shop/issues/34
+                        // Test Case: https://patra.testrail.io/index.php?/cases/view/10466
+                        if (key.equals("Mail Date")) {
+                            reformattedExpectedDate = reformattedExpectedDate.substring(0, 11) + "3:15 PM";
+                        }
+                        System.out.println("Comparing actual (\"" + found + "\") to expected (\"" + reformattedExpectedDate + "\") in \"" + key + "\" field");
+                        Assert.assertEquals(found, reformattedExpectedDate);
+                    } catch (ParseException e) {
+                        e.printStackTrace();
+                    }
+                } else {
+                    System.out.println("Comparing actual (\"" + found + "\") to expected (\"" + valueStore.get(key) + "\") in \"" + key + "\" field");
+                    Assert.assertEquals(found, valueStore.get(key));
+                }
+            } else if (commonForm.commonDropDown(key) != null) {
+                foundItem = true;
+                String found = commonForm.commonDropDownRead(key);
+                System.out.println("Comparing actual (\"" + found + "\") to expected (\"" + valueStore.get(key) + "\") in \"" + key + "\" drop down");
+                Assert.assertEquals(found, valueStore.get(key));
+            } else if (commonForm.commonTextArea(key) != null) {
+                foundItem = true;
+                String found = commonForm.commonTextAreaRead(key);
+                System.out.println("Comparing actual (\"" + found + "\") to expected (\"" + valueStore.get(key) + "\") in \"" + key + "\" test area");
+                Assert.assertEquals(found, valueStore.get(key));
+            }
+            Assert.assertTrue(foundItem, "Could not find " + key + " field, drop down, or text area!");
+        });
+        System.out.println("Record has been successfully read");
+    }
+
+    @And("I update my expectations")
+    public void iUpdateMyExpectations(Map<String, String> table) {
+        String dateString = dateFormat.format(new Date());
+        String timeString = timeFormat.format(new Date());
+        table.forEach((key, value) -> {
+            if (value.contains("<current date>")) {
+                value = value.replaceAll("<current date>", dateString + " " + timeString);
+            }
+            valueStore.put(key, value);
+        });
+    }
+
+    @Then("The record is closed")
+    public void record_is_added_closed() {
+        System.out.println("The edit request detail modal is closed.");
+        Assert.assertFalse(purchaseOrder.waitForAddRecordClosed());
+    }
+
+    @Then("I verify that {string} button is displayed")
+    public void iVerifyThatButtonIsDisplayed(String btn) {
+        Assert.assertTrue(commonForm.commonButtonGet(btn).isDisplayed(), btn + " button is not present");
+        System.out.println(btn + " button is visible");
+    }
+
+    @Then("The next WO is displayed")
+    public void theNextWOIsDisplayed() {
+        pageLoaded();
+        Assert.assertNotEquals(commonForm.getWorkOrderNumber(), valueStore.get("headerInfo"));
+        //Assert.assertEquals(commonForm.getWorkOrderNumber(), valueStore.get("headerInfoStore"));
+    }
+
+    @When("I use the Back button")
+    public void iUseTheBackButton() {
+        driver.navigate().back();
+        pageLoaded();
+        login.waitForMiliseconds(10000);
+    }
+
+    @And("I click on {string} button")
+    public void iClickOnButton(String submit_Next_Btn) {
+        commonForm.commonButton(submit_Next_Btn);
+        wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("//button[text()='confirm']")));
+        commonForm.commonButton("confirm");
+        login.waitForMiliseconds(15000);
+    }
 }
 

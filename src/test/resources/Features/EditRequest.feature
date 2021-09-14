@@ -3,9 +3,18 @@ Feature: Tests performing the actions on a WO
   @1151
   Scenario: Verify the Submit functionality
     Given I log into the Purchase Orders app as an "Initiator"
-    And I select "Pending Request Approval" from the "Status" header in the grid
-    And I navigate to the "Requests" tab
-    And I click on the top work order link
+    And I click the "Add Request" button
+    And I enter the following information into the form
+      | WO Title   | Test     |
+      | Location   | Vizag TH |
+      | Department | IT       |
+    And I add the following into the "Item / Service Details" table
+      | Item / Service Name | Description              | Quantity |
+      | Test                | Test Item <current date> | 1        |
+    And I submit the new request
+    And I click the "Confirm" button
+    And I click the "Yes" button
+    Then The new request will be displayed in the grid
     And I enter the following information into the form
       | WO Title | Test <current date> |
     When I click the "Submit" button
@@ -32,8 +41,7 @@ Feature: Tests performing the actions on a WO
     And I submit the new request
     And I click the "Confirm" button
     And I click the "Yes" button
-    And I click the "Close" button
-    And I open the created WO
+    Then The new request will be displayed in the grid
     And I enter the following information into the form
       | WO Title | Test1 |
     And I update my expectations
@@ -57,8 +65,7 @@ Feature: Tests performing the actions on a WO
     And I submit the new request
     And I click the "Confirm" button
     And I click the "Yes" button
-    And I click the "Close" button
-    And I open the created WO
+    Then The new request will be displayed in the grid
     And I enter the following information into the form
       | WO Title | Test1 |
     When I click the "Submit" button

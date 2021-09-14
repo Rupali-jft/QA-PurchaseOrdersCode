@@ -2,18 +2,18 @@ Feature: Top Level Navigation test-cases
 
   @1502
   Scenario:Validating Global Search Functionality
+
     Given I log into the Purchase Orders app as an "Initiator"
   #####------------ Search with existing request# in "Search All" text box on top right side of the page---------#####
-    When I enter "11353" in the search field
-    Then I see 1 result saying "11353"
+    When I get the "WO #" for "row 1" of the grid and enter in the search field
+    Then I see 1 result saying expected record
  #####--------Search with existing WO title in "Search All" text box on top right side of the page-------#####
-    When I enter "Test 24-08-2021 063701" in the search field
-    Then I see 1 result saying "Test 24-08-2021 063701"
+    When I get the "WO Title" for "row 1" of the grid and enter in the search field
+    Then I see 1 result saying expected record
   ###--------Search with single digit in search box------#####
     When I enter "6" in the search field
     Then I see 5 results saying "6"
     And The results are in descending order
-
 
   @1588
   Scenario:Validating Breadcrumbs Functionality

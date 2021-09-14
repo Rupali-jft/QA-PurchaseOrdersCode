@@ -207,7 +207,7 @@ public class GridSteps extends BaseUtil {
     }
 
     String headerChoice;
-    String headerInfo;
+    static String headerInfo;
 
     @And("I get the {string} for {string} of the grid")
     public void iGetTheForRowOfTheGrid(String columnName, String rowNumber) {
@@ -555,5 +555,13 @@ public class GridSteps extends BaseUtil {
     public void iStoreThatInformation() {
         valueStore.put("headerChoiceStore", valueStore.get("headerChoice"));
         valueStore.put("headerInfoStore", valueStore.get("headerInfo"));
+    }
+
+    @When("I get the {string} for {string} of the grid and enter in the search field")
+    public void iGetTheForOfTheGridAndEnterInTheSearchField(String columnName, String rowNumber) {
+        headerChoice = columnName;
+        headerInfo = commonGrid.gridEntry(rowNumber, columnName).getText();
+        System.out.println("The info in " + rowNumber + " for " + columnName + " was " + headerInfo);
+        purchaseOrder.typeInSearchField(headerInfo);
     }
 }

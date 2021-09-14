@@ -459,6 +459,16 @@ public class POSteps extends BaseUtil {
         System.out.println("Checking the search dropdown results");
     }
 
+    @Then("I see {int} result saying expected record")
+    public void iSeeResultSayingExpectedRecord(int expectedNumberOfResponses) {
+        // Number of responses is correct?
+        Assert.assertEquals(purchaseOrder.numberOfSearchResults(), expectedNumberOfResponses, "Number of results was incorrect.");
+
+        // assert that expected string is present in each response
+        purchaseOrder.searchResultsContainSearch(GridSteps.headerInfo);
+        System.out.println("Checking the search dropdown results");
+    }
+
     @And("The results are in descending order")
     public void resultsInDescendingOrder() {
         purchaseOrder.searchResultsDescending();

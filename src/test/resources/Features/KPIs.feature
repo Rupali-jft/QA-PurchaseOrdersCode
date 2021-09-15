@@ -14,8 +14,7 @@ Feature:Validation of KPIs incrementing when requests are actioned
       | Item / Service Name | Description              | Quantity |
       | Test                | Test Item <current date> | 1        |
     And I submit the new request
-    And I click the "Confirm" button
-    And I click the "Yes" button
+    And I confirm the raised work order
     And I refresh the page
     And I verify the selected status is "Requests Pending Approval" for the dropdown "Status"
     And I click the "Close" button
@@ -37,8 +36,7 @@ Feature:Validation of KPIs incrementing when requests are actioned
       | Item / Service Name | Description              | Quantity |
       | Test                | Test Item <current date> | 1        |
     And I submit the new request
-    And I click the "Confirm" button
-    And I click the "Yes" button
+    And I confirm the raised work order
     ###-----------Verify the status once Work Order created---------###
     And I refresh the page
     Then I verify the selected status is "Pending Request Approval" for the dropdown "Status"
@@ -87,8 +85,7 @@ Feature:Validation of KPIs incrementing when requests are actioned
       | Item / Service Name | Description              | Quantity |
       | Test                | Test Item <current date> | 1        |
     And I submit the new request
-    And I click the "Confirm" button
-    And I click the "Yes" button
+    And I confirm the raised work order
     ###-----------Verify the status once Work Order created---------###
     And I refresh the page
     Then I verify the selected status is "Pending Request Approval" for the dropdown "Status"
@@ -125,8 +122,7 @@ Feature:Validation of KPIs incrementing when requests are actioned
       | Item / Service Name | Description              | Quantity |
       | Test                | Test Item <current date> | 1        |
     And I submit the new request
-    And I click the "Confirm" button
-    And I click the "Yes" button
+    And I confirm the raised work order
     ###-----------Verify the status once Work Order created---------###
     And I refresh the page
     Then I verify the selected status is "Pending Request Approval" for the dropdown "Status"
@@ -168,8 +164,7 @@ Feature:Validation of KPIs incrementing when requests are actioned
       | Item / Service Name | Description              | Quantity |
       | Test                | Test Item <current date> | 1        |
     And I submit the new request
-    And I click the "Confirm" button
-    And I click the "Yes" button
+    And I confirm the raised work order
     ###-----------Verify the status once Work Order created---------###
     And I refresh the page
     Then I verify the selected status is "Pending Request Approval" for the dropdown "Status"
@@ -196,8 +191,7 @@ Feature:Validation of KPIs incrementing when requests are actioned
       | Item / Service Name | Description              | Quantity |
       | Test                | Test Item <current date> | 1        |
     And I submit the new request
-    And I click the "Confirm" button
-    And I click the "Yes" button
+    And I confirm the raised work order
     ###-----------Verify the status once Work Order created---------###
     And I refresh the page
     Then I verify the selected status is "Pending Request Approval" for the dropdown "Status"
@@ -232,8 +226,7 @@ Feature:Validation of KPIs incrementing when requests are actioned
       | Item / Service Name | Description              | Quantity |
       | Test                | Test Item <current date> | 1        |
     And I submit the new request
-    And I click the "Confirm" button
-    And I click the "Yes" button
+    And I confirm the raised work order
 ###-----------Verify the status once Work Order created---------###
     And I refresh the page
     Then I verify the selected status is "Pending Request Approval" for the dropdown "Status"
@@ -285,8 +278,7 @@ Feature:Validation of KPIs incrementing when requests are actioned
       | Item / Service Name | Description              | Quantity |
       | Test                | Test Item <current date> | 1        |
     And I submit the new request
-    And I click the "Confirm" button
-    And I click the "Yes" button
+    And I confirm the raised work order
     ###-----------Verify the status once Work Order created---------###
     And I refresh the page
     Then I verify the selected status is "Pending Request Approval" for the dropdown "Status"
@@ -324,8 +316,7 @@ Feature:Validation of KPIs incrementing when requests are actioned
       | Item / Service Name | Description              | Quantity |
       | Test                | Test Item <current date> | 1        |
     And I submit the new request
-    And I click the "Confirm" button
-    And I click the "Yes" button
+    And I confirm the raised work order
 ###-----------Verify the status once Work Order created---------###
     And I refresh the page
     Then I verify the selected status is "Pending Request Approval" for the dropdown "Status"
@@ -374,8 +365,7 @@ Feature:Validation of KPIs incrementing when requests are actioned
       | Item / Service Name | Description              | Quantity |
       | Test                | Test Item <current date> | 1        |
     And I submit the new request
-    And I click the "Confirm" button
-    And I click the "Yes" button
+    And I confirm the raised work order
 ###-----------Verify the status once Work Order created---------###
     And I refresh the page
     Then I verify the selected status is "Pending Request Approval" for the dropdown "Status"
@@ -442,8 +432,7 @@ Feature:Validation of KPIs incrementing when requests are actioned
       | Item / Service Name | Description              | Quantity |
       | Test                | Test Item <current date> | 1        |
     And I submit the new request
-    And I click the "Confirm" button
-    And I click the "Yes" button
+    And I confirm the raised work order
 ###-----------Verify the status once Work Order created---------###
     And I refresh the page
     Then I verify the selected status is "Pending Request Approval" for the dropdown "Status"
@@ -537,8 +526,7 @@ Feature:Validation of KPIs incrementing when requests are actioned
       | Item / Service Name | Description              | Quantity |
       | Test                | Test Item <current date> | 1        |
     And I submit the new request
-    And I click the "Confirm" button
-    And I click the "Yes" button
+    And I confirm the raised work order
 ###-----------Verify the status once Work Order created---------###
     And I refresh the page
     Then I verify the selected status is "Pending Request Approval" for the dropdown "Status"
@@ -601,8 +589,7 @@ Feature:Validation of KPIs incrementing when requests are actioned
       | Item / Service Name | Description              | Quantity |
       | Test                | Test Item <current date> | 1        |
     And I submit the new request
-    And I click the "Confirm" button
-    And I click the "Yes" button
+    And I confirm the raised work order
     And I refresh the page
     And I verify the selected status is "Requests Pending Approval" for the dropdown "Status"
     And I click the "Close" button
@@ -624,8 +611,7 @@ Feature:Validation of KPIs incrementing when requests are actioned
       | Item / Service Name | Description              | Quantity |
       | Test                | Test Item <current date> | 1        |
     And I submit the new request
-    And I click the "Confirm" button
-    And I click the "Yes" button
+    And I confirm the raised work order
     ###-----------Verify the status once Work Order created---------###
     And I refresh the page
     Then I verify the selected status is "Pending Request Approval" for the dropdown "Status"

@@ -567,5 +567,12 @@ public class POSteps extends BaseUtil {
         commonForm.commonButton("confirm");
         login.waitForMiliseconds(15000);
     }
+
+    @And("I confirm the raised work order")
+    public void iConfirmTheRaisedWorkOrder() {
+        commonForm.commonButton("Confirm");
+        wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("//button[text()='Yes']")));
+        commonForm.commonButton("Yes");
+    }
 }
 

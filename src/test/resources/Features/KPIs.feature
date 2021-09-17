@@ -482,8 +482,7 @@ Feature:Validation of KPIs incrementing when requests are actioned
     And I click on the "Quotes" link
     Then I check if "Approval Status" is "Partially Approved"
     And I click the eye icon
-    And I click the "Send back" button
-    And I click the "confirm" button
+    And I click on "Send back" button
     Then I verify that "Quote Sent Back By Manager to Procurement Manager" validation  message appears
     And I verify that buttons are disabled
     Then I verify the selected status is "Quote Pending Proc. Mgr." for the dropdown "Status"
@@ -551,8 +550,7 @@ Feature:Validation of KPIs incrementing when requests are actioned
       | QuoteTitle | QuoteVendor | QuotedPrice |
       | keyboard   | Apple       | 3000        |
     And I click the "Total Price" box
-    And I click the "Submit" button
-    And I click the "confirm" button
+    And I click on "Submit" button
     Then I verify that "Quote Successfully Added" validation  message appears
     And I verify the selected status is "Pending Quotes" for the dropdown "Status"
     And I Click on user icon

@@ -562,6 +562,7 @@ public class POSteps extends BaseUtil {
 
     @And("I click on {string} button")
     public void iClickOnButton(String submit_Next_Btn) {
+        pageLoaded();
         commonForm.commonButton(submit_Next_Btn);
         wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("//button[text()='confirm']")));
         commonForm.commonButton("confirm");

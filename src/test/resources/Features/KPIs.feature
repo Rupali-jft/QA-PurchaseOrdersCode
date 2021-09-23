@@ -61,8 +61,9 @@ Feature:Validation of KPIs incrementing when requests are actioned
       | QuoteTitle | QuoteVendor | QuotedPrice |
       | keyboard   | Apple       | 900         |
     And I click the "Total Price" box
-    And I click the "Submit" button
-    And I click the "confirm" button
+    And I click on "Submit" button
+    #And I click the "Submit" button
+    #And I click the "confirm" button
     Then I verify the selected status is "Quotes Pending approval" for the dropdown "Status"
     And I Click on user icon
     And I click Logout button
@@ -134,8 +135,8 @@ Feature:Validation of KPIs incrementing when requests are actioned
     ###---------------Approver uses grid to approve the work order---------------###
     And I navigate to the "Pending Approval" tab
     And I open the created WO
-    And I click the "Reject" button
-    And I click the "confirm" button
+    And I click on "Reject" button
+    #And I click the "confirm" button
     Then I verify that "Requests Rejected Successfully" validation  message appears
 
  ###-----------Verify the status after Rejecting---------###

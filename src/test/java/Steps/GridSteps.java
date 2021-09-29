@@ -207,7 +207,7 @@ public class GridSteps extends BaseUtil {
     }
 
     String headerChoice;
-    String headerInfo;
+    static String headerInfo;
 
     @And("I get the {string} for {string} of the grid")
     public void iGetTheForRowOfTheGrid(String columnName, String rowNumber) {
@@ -414,7 +414,7 @@ public class GridSteps extends BaseUtil {
     }
 
     @And("I enter {string} into the search field for {string} column field")
-    public void iEnterIntoTheSearchFieldForColumnField(String arg0, String arg1){
+    public void iEnterIntoTheSearchFieldForColumnField(String arg0, String arg1) {
         System.out.println("Entering " + arg1 + " into the search field: " + arg0);
         commonGrid.searchingStatus(arg0);
     }
@@ -477,7 +477,7 @@ public class GridSteps extends BaseUtil {
     public void verifyThatItemsInTheDepartmentDropdownListAreDisplayed() {
         List<WebElement> drpdwn = driver.findElements(By.xpath("//thead/tr[1]/th[7]/span[1]/div[1]/ul[1]"));
         for (WebElement suggestion : drpdwn) {
-           System.out.println("Drop-down list is displayed: " + suggestion.getText());
+            System.out.println("Drop-down list is displayed: " + suggestion.getText());
 
         }
     }
@@ -528,9 +528,40 @@ public class GridSteps extends BaseUtil {
         String actual = commonGrid.gridHeaderField(header, null);
         Assert.assertEquals(actual, expectation, "Header text was not correct. Expected \"" + expectation + "\", but was \"" + actual + "\".");
     }
+
     @When("I click on the top work order link")
     public void iClickOnTheTopWorkOrderLink() {
         commonGrid.clickTopWorkOrder(currentTab);
         pageLoaded();
+    }
+
+    @And("I search the stored work order number")
+    public void iSearchTheStoredWorkOrderNumber() {
+        System.out.println("Searching for work order: " + valueStore.get("workOrder"));
+        String currentRow1 = commonGrid.gridEntry("row 1", "WO #").getText();
+        commonGrid.gridHeaderField("WO #", valueStore.get("workOrder"));
+        commonGrid.waitForFilter(currentRow1, "WO #");
+        BaseUtil.pageLoaded();
+    }
+
+    @Then("The work order will be displayed in the grid")
+    public void theWorkOrderWillBeDisplayedInTheGrid() {
+        System.out.println("Checking that the most recent work order is displayed in the grid.");
+        String topWorkOrder = commonGrid.gridEntry("row 1", "WO #").getText();
+        Assert.assertEquals(topWorkOrder, valueStore.get("WO #"), "The actual work order (" + topWorkOrder + ") did not match the expected work order (" + valueStore.get("workOrder") + ")");
+    }
+
+    @And("I store that information for later")
+    public void iStoreThatInformation() {
+        valueStore.put("headerChoiceStore", valueStore.get("headerChoice"));
+        valueStore.put("headerInfoStore", valueStore.get("headerInfo"));
+    }
+
+    @When("I get the {string} for {string} of the grid and enter in the search field")
+    public void iGetTheForOfTheGridAndEnterInTheSearchField(String columnName, String rowNumber) {
+        headerChoice = columnName;
+        headerInfo = commonGrid.gridEntry(rowNumber, columnName).getText();
+        System.out.println("The info in " + rowNumber + " for " + columnName + " was " + headerInfo);
+        purchaseOrder.typeInSearchField(headerInfo);
     }
 }

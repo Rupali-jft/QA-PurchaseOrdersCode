@@ -380,6 +380,7 @@ public class PurchaseOrder {
         }
         return false;
     }
+
     @FindBy(how = How.ID, using = "po_VendorRefNo")
     private WebElement vendorRefNo;
     @FindBy(how = How.ID, using = "po_vendorAddress")
@@ -396,6 +397,7 @@ public class PurchaseOrder {
             partNoTextBox.sendKeys((String) data.get("PartNo"));
         }
     }
+
     @FindBy(how = How.ID, using = "WoNumber1")
     private WebElement workOrderNumber;
 
@@ -403,6 +405,138 @@ public class PurchaseOrder {
     public void getCreatedPONumber() {
         String PONumber = workOrderNumber.getText();
         System.out.println("Created PO # is  :" + PONumber);
+    }
+
+    public boolean linkDisplayed(String linkText) {
+        try {
+            if (driver.findElement(By.linkText(linkText)).isDisplayed()) {
+                System.out.println("Link: " + linkText + " was displayed.");
+                return true;
+            } else {
+                System.out.println("Link: " + linkText + " was not displayed.");
+                return false;
+            }
+        } catch (NoSuchElementException | ElementNotInteractableException e) {
+            System.out.println("Link: " + linkText + " does not exist.");
+            return false;
+        }
+    }
+
+    @FindBy(how = How.ID, using = "typeaheadValue")
+    private WebElement topSearchBar;
+    @FindBy(how = How.XPATH, using = "//*[@id=\"the-basics-new\"]/span/div/div/p")
+    private List<WebElement> allSearchDropdown;
+
+    public void typeInSearchField(String entry) {
+        // Manually clear the search field, because the .clear() function does not work (because it's a "value" and not "text")
+        // Could send "Ctrl+A" instead, but might not work on MacOS.
+
+        elementFound(topSearchBar, "Top Search Bar");
+        clearField(topSearchBar);
+
+        long startTime = System.currentTimeMillis();
+        while (topSearchBar.getAttribute("value").equals("") && ((System.currentTimeMillis() - startTime) < 5000)) { // even with the updated pageLoaded, sometimes the search field was not being filled. Just run this line until it is.
+            topSearchBar.sendKeys(entry);
+        }
+
+        wait.until(ExpectedConditions.visibilityOfAllElements(allSearchDropdown));
+    }
+
+    public boolean elementFound(WebElement targetElement, String elementName) {
+        try {
+            if (targetElement.isDisplayed()) {
+                return true;
+            } else {
+                System.out.println("Element " + elementName + " was not displayed.");
+                return false;
+            }
+        } catch (NoSuchElementException | ElementNotInteractableException e) {
+            System.out.println("Element " + elementName + " does not exist, or cannot be interacted with.");
+            return false;
+        }
+    }
+
+    public boolean elementFound(List<WebElement> targetElements, String elementName) {
+        try {
+            for (WebElement targetElement : targetElements) {
+                if (!targetElement.isDisplayed()) {
+                    System.out.println(elementName + " was not displayed.");
+                    return false;
+                }
+            }
+        } catch (NoSuchElementException | ElementNotInteractableException e) {
+            System.out.println(elementName + " does not exist, or cannot be interacted with.");
+            return false;
+        }
+        return true;
+    }
+
+    public boolean clearField(WebElement field) {
+        long startTime = System.currentTimeMillis();
+        while (!field.getAttribute("value").equals("") && ((System.currentTimeMillis() - startTime) < 5000)) { // lifted from NodeApp
+            field.sendKeys(Keys.BACK_SPACE);
+        }
+        return field.getAttribute("value").equals("");
+    }
+
+    public void searchResultsContainSearch(String expected) {
+        elementFound(allSearchDropdown, "Search Dropdown");
+        List<WebElement> searchResults = allSearchDropdown;
+        searchResults.addAll(emptySearchDropdown);
+        for (WebElement dropDownResult : searchResults) {
+            Assert.assertTrue(dropDownResult.getText().contains(expected), "Search string was not in this result.");
+        }
+    }
+
+    @FindBy(how = How.XPATH, using = "//*[@id=\"the-basics-new\"]/span/div/div/div")
+    private List<WebElement> emptySearchDropdown;
+
+    public int numberOfSearchResults() {
+        elementFound(allSearchDropdown, "Search Dropdown");
+        return allSearchDropdown.size();
+    }
+
+    @FindBy(how = How.XPATH, using = "//*[@id=\"the-basics-new\"]/span/div/div/p")
+    private WebElement topSearchDropdown;
+
+    public void searchResultsDescending() {
+        elementFound(allSearchDropdown, "Search Dropdown");
+        int[] workOrderNumbers = new int[allSearchDropdown.size()];
+        // initialize the first value so we can do the rest in just one FOR loop without IF statements
+        workOrderNumbers[0] = Integer.parseInt(topSearchDropdown.getText().split(" /| ")[0]);
+
+        // compare each number to its neighbours
+        for (int i = 1; i < allSearchDropdown.size(); i++) {
+            workOrderNumbers[i] = Integer.parseInt(allSearchDropdown.get(i).getText().split(" /| ")[0]); // To remove the " | <company name>" part of the string
+            Assert.assertTrue(workOrderNumbers[i] < workOrderNumbers[i - 1]);
+        }
+    }
+
+    @FindBy(how = How.ID, using = "WorkOrderDetails")
+    private WebElement addRecordModal;
+
+    public boolean waitForAddRecordClosed() {
+        waitForElementGone(addRecordModal);
+        if (elementFound(addRecordModal, "Current Request Detail Form")) {
+            return addRecordModal.isDisplayed();
+        }
+        return false;
+    }
+
+    public boolean waitForElementGone(WebElement gallowsElement) {
+        long startTime = System.currentTimeMillis();
+        while ((System.currentTimeMillis() - startTime) < 5000) { // lifted from NodeApp
+            try {
+                if (gallowsElement.isDisplayed()) { // element is displayed: wait longer
+                    new WebDriverWait(driver, 20);
+                } else { // element is hidden: we're done
+                    return true;
+                }
+            } catch (NoSuchElementException | ElementNotInteractableException e) { // element doesn't exist: we're done
+                return true;
+            }
+        }
+        return false;
     }
 }
 

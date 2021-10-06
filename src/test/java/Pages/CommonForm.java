@@ -74,6 +74,52 @@ public class CommonForm {
 
     }
 
+    public WebElement commonCheckBoxGet(String checkBox) {
+        List<WebElement> checkBoxes1 = driver.findElements(By.xpath(
+                "//label[normalize-space(text())='" + checkBox + "']/input[@type='checkbox' and @class='badgebox']"));
+        List<WebElement> checkBoxes2 = driver.findElements(By.xpath(
+                "//label[normalize-space(text())='" + checkBox + "']/following-sibling::*//input[@type='checkbox']"));
+        List<WebElement> checkBoxes3 = driver.findElements(By.xpath(
+                "//label[normalize-space()='" + checkBox + "']/input[@type='checkbox']"));
+
+        if (checkBoxes1.size() > 0) {
+            for (WebElement chkbx : checkBoxes1) {
+                if (chkbx.isEnabled()) {
+                    return chkbx;
+                }
+            }
+        } else if (checkBoxes2.size() > 0) {
+            for (WebElement chkbx : checkBoxes2) {
+                if (chkbx.isDisplayed() && chkbx.isEnabled()) {
+                    return chkbx;
+                }
+            }
+        } else if (checkBoxes3.size() > 0) {
+            for (WebElement chkbx : checkBoxes3) {
+                if (chkbx.isDisplayed() && chkbx.isEnabled()) {
+                    return chkbx;
+                }
+            }
+        }
+        return null;
+    }
+
+    public WebElement commonBtnGet(String button) {
+        // This method returns the button element without clicking it (which the commonButton() method does).
+        List<WebElement> buttons = driver.findElements(By.xpath(
+                "//button[normalize-space()='" + button + "']"));
+
+        if (buttons.size() > 0) {
+            for (WebElement btn : buttons) {
+                // if (btn.isDisplayed() && btn.isEnabled()) {
+                if (btn.isDisplayed()) { //removed inEnabled() requirement to work with "The following buttons are disabled" step
+                    return btn;
+                }
+            }
+        }
+        return null;
+    }
+
     public WebElement commonField(String field) {
         WebElement selectedField = null;
         List<WebElement> fields = driver.findElements(By.xpath(

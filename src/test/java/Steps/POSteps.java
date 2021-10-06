@@ -575,5 +575,136 @@ public class POSteps extends BaseUtil {
         wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("//button[text()='Yes']")));
         commonForm.commonButton("Yes");
     }
+
+    @And("I click the Comment_Submit button")
+    public void iClickTheComment_SubmitButton() {
+        driver.findElement(By.xpath("//button[@id='notes_submit']")).click();
+    }
+
+    @Then("Verify that Comment pop-up gets closed")
+    public void verifyThatCommentPopUpGetsClosed() {
+        String expected_Title = driver.getTitle();
+        String actual_Title = "Patra Corp - Purchase Order";
+        Assert.assertEquals(actual_Title, expected_Title, "Comment pop-up gets closed");
+    }
+
+    @And("The {string} button {string} displayed")
+    public void theButtonDisplayed(String button, String expectation) {
+        switch (expectation) {
+            case "is" -> Assert.assertTrue(commonForm.commonButtonGet(button).isDisplayed(), button + " is not present");
+            case "is not" -> Assert.assertNull(commonForm.commonButtonGet(button), button + " is present");
+            default -> System.out.println("Specified condition is not working");
+        }
+    }
+
+    @And("I get the {string} column value")
+    public void iGetTheColumnValue(String column) {
+        //To locate rows of table.
+        List<WebElement> rows_table = driver.findElements(By.tagName("tr"));
+        //To calculate no of rows In table.
+        int rows_count = rows_table.size();
+        System.out.println(rows_count);
+        //Loop will execute till the last row of table.
+        for (int row = 0; row < rows_count; row++) {
+            //To locate columns(cells) of that specific row.
+            WebElement Columns_row = rows_table.get(row).findElement(By.xpath("//tbody/tr/td[3]"));
+            // To retrieve text from that specific cell.
+            String celtext = Columns_row.getText();
+            System.out.println("Cell Value of row number " + row + " and column name " + column + " Is " + celtext);
+        }
+    }
+
+    @And("Verify below given headers are present")
+    public void verifyBelowGivenHeadersArePresent(List<String> table) {
+        BaseUtil.pageLoaded();
+        for (String header : table) {
+            Assert.assertTrue(purchaseOrder.gridHeaderFind(currentTab, header),
+                    header + " header not visible in " + currentTab + " grid!");
+            System.out.println(header + " header verified on grid");
+        }
+    }
+
+    @And("I click on the top purchase order link")
+    public void iClickOnTheTopPurchaseOrderLink() {
+        purchaseOrder.clickTopPurchaseOrder();
+        pageLoaded();
+    }
+
+    @Then("Verify that item is added into the {string} table")
+    public void verifyThatItemIsAddedIntoTheTable(String table_Name, List<Map<String, String>> dataTable) {
+        List<WebElement> rows = driver.findElements(By.cssSelector("tbody > tr"));
+        for (WebElement row : rows) {
+            Assert.assertTrue(row.isDisplayed(), "item is not added in the " + table_Name);
+            System.out.println("Item is added in the " + table_Name);
+        }
+    }
+
+    @And("I click the edit icon")
+    public void iClickTheEditIcon() {
+        driver.findElement(By.xpath("//i[contains(text(),'\uE254')]")).click();
+    }
+
+    @And("I update {string} into {string} field")
+    public void iUpdateIntoField(String value, String field) {
+        driver.findElement(By.xpath("//input[@id='qty']")).sendKeys(Keys.chord(Keys.CONTROL, "a"), value);
+        System.out.println("Entering the " + value + " in the " + field + " field");
+    }
+
+    @And("I add the record")
+    public void iAddTheRecord() {
+        driver.findElement(By.xpath("//i[contains(text(),'\uE03B')]")).click();
+    }
+
+    @And("I enter {string} into the {string} field")
+    public void iEnterIntoTheField(String value, String field) {
+        driver.findElement(By.xpath("//input[@id='request_item_service_description0']")).sendKeys(Keys.chord(Keys.CONTROL, "a"), value);
+        System.out.println("Entering the " + value + " in the " + field + " field");
+    }
+
+    @And("I enter {string} into {string} field")
+    public void iEnterIntoField(String value, String field) {
+        driver.findElement(By.xpath("//input[@id='item_service0']")).sendKeys(Keys.chord(Keys.CONTROL, "a"), value);
+        System.out.println("Entering the " + value + " in the " + field + " field");
+    }
+
+    @Then("verify that fields are enabled to edit")
+    public void verifyThatFieldsAreEnabledToEdit() {
+        Assert.assertTrue(driver.findElement(By.cssSelector("td:nth-of-type(2)")).isEnabled(), "Field is not enabled");
+        System.out.println("Field is enabled");
+    }
+
+    @Then("Verify the edited fields are updated correctly")
+    public void verifyTheEditedFieldsAreUpdatedCorrectly(List<String> dataTable) {
+        List<WebElement> rows = driver.findElements(By.cssSelector("tbody > tr"));
+        String val1 = dataTable.get(0);
+        String val2 = dataTable.get(1);
+        String val3 = dataTable.get(2);
+        System.out.println(val1 + val2 + val3);
+        for (WebElement row : rows) {
+            String d1 = driver.findElement(By.xpath("//input[@id='item_service0']")).getText();
+            System.out.println(d1);
+            if (row.findElement(By.cssSelector("td:nth-of-type(1)")).getText().equals(val1) && driver.findElement(By.cssSelector("td:nth-of-type(2)")).getText().equals(val2) && driver.findElement(By.cssSelector("td:nth-of-type(3)")).getText().equals(val3)) {
+                System.out.println("All fields are edited successfully");
+            } else
+                System.out.println("Fields are not updated correctly");
+
+        }
+    }
+
+    @And("I click the delete icon")
+    public void iClickTheDeleteIcon() {
+        driver.findElement(By.xpath("//i[contains(text(),'\uE872')]")).click();
+        System.out.println("Deleted Successfully");
+    }
+
+    @Then("Verify that item is deleted successfully and shouldn't display in the grid.")
+    public void verifyThatItemIsDeletedSuccessfullyAndShouldnTDisplayInTheGrid() {
+        List<WebElement> rows = driver.findElements(By.cssSelector("tbody > tr"));
+        for (WebElement row : rows) {
+            Assert.assertFalse(row.findElement(By.id("serviceDetails")).isDisplayed(), "Row is not removed in the Item/Service table");
+            System.out.println("Row is removed in the Item/Service table");
+        }
+    }
+
 }
 

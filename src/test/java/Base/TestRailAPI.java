@@ -40,18 +40,19 @@ public class TestRailAPI {
             int runId = Integer.parseInt(tRailProp.getProperty("runId"));
             SimpleDateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy");
             String dateString = dateFormat.format(new Date());
-            String runTitle = config.getProperty("environment").toUpperCase() +" "+ tRailProp.getProperty("runTitle") + " - " +dateString;
+            String runTitle = config.getProperty("environment").toUpperCase() + " " + tRailProp.getProperty("runTitle") + " - " + dateString;
             boolean runExists = false;
-            JSONArray runs = new JSONArray();
+            JSONObject runsObj = new JSONObject();
             try {
-                runs = (JSONArray) client.sendGet("get_runs/"+projId+"/&is_completed=0");
+                runsObj = (JSONObject) client.sendGet("get_runs/" + projId + "/&is_completed=0");
             } catch (APIException | IOException e) {
                 System.out.println(e);
             }
+            JSONArray runs = (JSONArray) runsObj.get("runs");
 
-            for(Object run : runs) {
+            for (Object run : runs) {
                 JSONObject test = (JSONObject) run;
-                if(test.get("name").toString().equals(runTitle)) {
+                if (test.get("name").toString().equals(runTitle)) {
                     runExists = true;
                     runId = Integer.parseInt(test.get("id").toString());
                 }
@@ -87,7 +88,8 @@ public class TestRailAPI {
         this.testRun = run;
         ArrayList<String> testIds = new ArrayList<>();
         try {
-            JSONArray rt = (JSONArray) client.sendGet("get_tests/" + testRun);
+            JSONObject rtObj = (JSONObject) client.sendGet("get_tests/" + testRun);
+            JSONArray rt = (JSONArray) rtObj.get("tests");
 
             for (Object tests : rt) {
                 HashMap data = (HashMap) tests;
@@ -113,7 +115,8 @@ public class TestRailAPI {
         ArrayList<Integer> caseIds = new ArrayList<>();
         String[] sections = tRailProp.getProperty("sectionIds").split(",");
         try {
-            JSONArray cases = (JSONArray) client.sendGet("get_cases/" + projId);
+            JSONObject casesObj = (JSONObject) client.sendGet("get_cases/" + projId);
+            JSONArray cases = (JSONArray) casesObj.get("cases");
 
             for (Object item : cases) {
                 JSONObject test = (JSONObject) item;
@@ -140,8 +143,6 @@ public class TestRailAPI {
             data.put("case_ids", caseIds);
 
             JSONObject newRun = (JSONObject) client.sendPost("add_run/" + projId, data);
-            System.out.println("New Run ID: " + newRun.get("id").toString());
-
 
             getRun(Integer.parseInt(newRun.get("id").toString()));
         } catch (APIException | IOException e) {
@@ -173,17 +174,17 @@ public class TestRailAPI {
 
     private boolean runExists(String runTitle, int projId) {
         boolean runExists = false;
-        JSONArray runs = new JSONArray();
+        JSONObject runsObj = new JSONObject();
         try {
-            runs = (JSONArray) client.sendGet("get_runs/"+projId+"/&is_completed=0");
+            runsObj = (JSONObject) client.sendGet("get_runs/" + projId + "/&is_completed=0");
         } catch (APIException | IOException e) {
             System.out.println(e);
         }
+        JSONArray runs = (JSONArray) runsObj.get("runs");
 
-        System.out.println("Size of array is: " + runs.size());
-        for(Object item : runs) {
+        for (Object item : runs) {
             JSONObject test = (JSONObject) item;
-            if(test.get("name").toString().equals(runTitle)) {
+            if (test.get("name").toString().equals(runTitle)) {
                 runExists = true;
             }
         }

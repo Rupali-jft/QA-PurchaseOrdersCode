@@ -538,5 +538,22 @@ public class PurchaseOrder {
         }
         return false;
     }
+
+    public boolean gridHeaderFind(String tab, String header) {
+        String tabName = tab.replaceAll("\\s", "");
+        try {
+            return driver.findElement(By.xpath("//table[@id='dt" + tabName + "']")).isDisplayed();
+        } catch (Exception e) {
+            return false;
+        }
+    }
+
+    public void clickTopPurchaseOrder() {
+        try {
+            driver.findElement(By.xpath("//*[@id='dtPurchaseOrder']/tbody/tr[1]/td[1]/a")).click();
+        } catch (NoSuchElementException e) {
+            driver.findElement(By.xpath("//*[@id='dtPurchaseOrder']/tbody/tr/td[1]/a")).click();
+        }
+    }
 }
 

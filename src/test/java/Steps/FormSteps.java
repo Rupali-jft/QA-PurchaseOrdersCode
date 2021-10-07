@@ -14,6 +14,7 @@ import org.testng.Assert;
 import java.io.File;
 import java.text.SimpleDateFormat;
 import java.util.*;
+import java.util.concurrent.atomic.AtomicBoolean;
 
 public class FormSteps extends BaseUtil {
 
@@ -341,6 +342,37 @@ public class FormSteps extends BaseUtil {
             driver.findElement(By.id("filename")).sendKeys(attachLocation);
         }
         pageLoaded();
+    }
+
+    @Then("The following elements exist")
+    public void fieldsExist(List<String> table) {
+        pageLoaded();
+        //Need atomic boolean to work with Java lambda expressions.
+        AtomicBoolean elementExists = new AtomicBoolean(false);
+        table.forEach(value -> {
+            System.out.println("Checking the existance of: " + value);
+            if (commonForm.commonField(value) != null) {
+                elementExists.set(true);
+            } else if (commonForm.commonDropDown(value) != null) {
+                elementExists.set(true);
+            } else if (commonForm.commonTextArea(value) != null) {
+                elementExists.set(true);
+            } else if (commonForm.commonBtnGet(value) != null) {
+                elementExists.set(true);
+            } else if (commonForm.commonCheckBoxGet(value) != null) {
+                elementExists.set(true);
+            } else {
+                boolean linkExists;
+                try {
+                    linkExists = driver.findElement(By.linkText(value)) != null;
+                } catch (NoSuchElementException e) {
+                    linkExists = false;
+                }
+                elementExists.set(linkExists);
+            }
+
+            Assert.assertTrue(elementExists.get(), "Could not find " + value + " field!");
+        });
     }
 
     @Then("The file will not be displayed in the Attachments grid")

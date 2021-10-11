@@ -304,44 +304,30 @@ public class FormSteps extends BaseUtil {
 
     @And("I upload an attachment")
     public void iUploadAnAttachment() {
-        pageLoaded();
-        // Creating a variable to check for the number of open tabs at the start of the operation
-        int initWindows = driver.getWindowHandles().size();
-        // Checks for three different ways to find the button to add attachments
-        if (!commonForm.commonButton("Add Attachments") && !commonForm.commonButton("Add Attachment")) {
-            driver.findElement(By.linkText("Add Attachments")).click();
+        commonForm.commonUploadAttachment(attachLocation);
+    }
+
+    @And("I upload an {string} attachment")
+    public void iUploadAnAttachment(String fileType) {
+        switch(fileType.toLowerCase())
+        {
+            case "pdf":
+                attachLocation=pdfAttachLocation;
+                attachName=pdfAttachName;
+                break;
+            case "doc":
+                attachLocation=docAttachLocation;
+                attachName=docAttachName;
+                break;
         }
-        pageLoaded();
-        Set<String> handles = driver.getWindowHandles();
-        // Checking if a new tab was opened after the add attachment button was clicked
-        // If true, then email2db attachment process is used
-        if (handles.size() > initWindows) {
-            String parentWindow = driver.getWindowHandle();
+        commonForm.commonUploadAttachment(attachLocation);
+        commonForm.fileWillBeDisplayedInTheAttachmentsGrid(attachName);
+    }
 
-            for (String windowHandle : handles) {
-                if (!windowHandle.equals(parentWindow)) {
-                    driver.switchTo().window(windowHandle);
-                }
-            }
-            WebElement element = driver.findElement(By.id("UploadFile1"));
-            Actions builder = new Actions(driver);
-            builder.moveToElement(element).perform();
-            element.sendKeys(attachLocation);
-            driver.findElement(By.id("btnSave")).click();
-
-
-            driver.switchTo().window(parentWindow);
-            wait.until(ExpectedConditions.numberOfWindowsToBe(initWindows));
-            // If statement to check if an attachment modal pop-up is displayed
-        } else if (driver.findElements(By.id("addAttachment")).size() >= 1) {
-            driver.findElement(By.id("attach_file")).sendKeys(attachLocation);
-            driver.findElement(By.id("attachment_submit")).click();
-            wait.until(ExpectedConditions.invisibilityOfElementLocated(By.id("addAttachment")));
-            // Final statement assumes a file browser dialog is displayed
-        } else {
-            driver.findElement(By.id("filename")).sendKeys(attachLocation);
-        }
-        pageLoaded();
+    @And("I upload an attachment more than 30MB")
+    public void iUploadAnAttachmentMoreThan30MB() {
+        attachLocation=moreThan30MbAttachLocation;
+        commonForm.commonUploadAttachment(attachLocation);
     }
 
     @Then("The following elements exist")
@@ -388,62 +374,20 @@ public class FormSteps extends BaseUtil {
 
     @Then("The file will be displayed in the Attachments grid")
     public void theFileWillBeDisplayedInTheAttachmentsGrid() {
-        // Boolean for verification at end of process
-        boolean result = false;
-        // Initializing the download folder for when file downloads are used for verification
-        File downloads = new File(dLFolder);
-        // Getting the number of files currently in the download folder
-        int fileNum = downloads.listFiles().length;
-        // Creating a variable to check for the number of open tabs at the start of the operation
-        int initWindows = driver.getWindowHandles().size();
-        commonForm.commonLinkClick("Attachments");
-        pageLoaded();
+        commonForm.fileWillBeDisplayedInTheAttachmentsGrid(attachName);
+    }
 
-        wait.until(ExpectedConditions.visibilityOfElementLocated(By.partialLinkText(attachName))).click();
-
-
-        System.out.println("File " + attachName + " found in Attachment grid");
-
-        Set<String> handles = driver.getWindowHandles();
-        // Checking if the attachment link opened a new tab
-        // If true, it will use the URL of the new tab to determine if the attachment was successfully uploaded
-        if (handles.size() > initWindows) {
-            String parentWindow = driver.getWindowHandle();
-
-            for (String windowHandle : handles) {
-                if (!windowHandle.equals(parentWindow)) {
-                    driver.switchTo().window(windowHandle);
-                }
-            }
-
-            String download = driver.getCurrentUrl();
-
-            if (download.contains(attachName)) {
-                System.out.println("Attachment URL verified as " + download);
-            }
-
-            driver.close();
-            driver.switchTo().window(parentWindow);
-        } else {
-            long startTime = System.currentTimeMillis();
-            while (downloads.listFiles().length == fileNum && (System.currentTimeMillis() - startTime) < 30000) {
-                try {
-                    Thread.sleep(1000);
-                } catch (InterruptedException ignored) {
-
-                }
-            }
-            if (downloads.listFiles().length > fileNum) {
-                for (File file : downloads.listFiles()) {
-                    System.out.println("Filename: " + file.getName());
-                    if (file.getName().contains(attachName)) {
-                        System.out.println(attachName + " downloaded");
-                        file.delete();
-                    }
-                }
-            }
-
-
+    @Then("I verify that Add Attachment button {string} displayed")
+    public void iVerifyThatAddAttachmentButtonDisplayed(String visibility) {
+        switch (visibility) {
+            case "is" -> Assert.assertTrue(commonForm.commonButtonGet("Add Attachment").isDisplayed(), "Add Attachment button is not present");
+            case "is not" -> Assert.assertNull(commonForm.commonButtonGet("Add Attachment"), "Add Attachment button is present");
+            default -> System.out.println("Specified condition is not working");
         }
+    }
+
+    @Then("I verified that hover message displayed")
+    public void IVerifyThatHoverMessageDisplayed() {
+        Assert.assertEquals(purchaseOrder.verifyHoverMessageOnDeleteButton(), "You can't delete the attahment, quote was already approved.");
     }
 }

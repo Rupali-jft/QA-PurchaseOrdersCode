@@ -77,8 +77,14 @@ String Tab1;
     // Folder where files downloaded during tests will be stored
     public static String dLFolder = attachPath("src/test/resources/downloads");
     public static String attachLocation = attachPath("src/test/resources/attachments/sir_fluffington.jpg");
+    public static String moreThan30MbAttachLocation = attachPath("src/test/resources/attachments/morethan30MBPdf.pdf");
+    public static String pdfAttachLocation = attachPath("src/test/resources/attachments/Letter Important.pdf");
+    public static String docAttachLocation = attachPath("src/test/resources/attachments/Letter@Important.docx");
     // File name of the attachment with the type stripped out (i.e., If it's my-attachment.jpg, just use "my-attachment")
     public static String attachName = "sir_fluffington";
+    public static String pdfAttachName = "Letter Important";
+    public static String docAttachName = "Letter@Important";
+    public static String moreThan30MbAttachName = "morethan30MBPdf";
 
 
     public static boolean pageLoaded() {

@@ -635,7 +635,7 @@ public class CommonForm {
      * method to upload the attachments dynamically
      * @param attachLocation
      */
-    public void commonUploadAttachment(String attachLocation){
+    public void commonUploadAttachment(String attachLocation) {
         BaseUtil.pageLoaded();
         // Creating a variable to check for the number of open tabs at the start of the operation
         int initWindows = driver.getWindowHandles().size();
@@ -682,7 +682,7 @@ public class CommonForm {
      * Method to display and download the attachments
      * @param attachName
      */
-    public void fileWillBeDisplayedInTheAttachmentsGrid(String attachName){
+    public void fileWillBeDisplayedInTheAttachmentsGrid(String attachName) {
         // Boolean for verification at end of process
         boolean result = false;
         // Initializing the download folder for when file downloads are used for verification

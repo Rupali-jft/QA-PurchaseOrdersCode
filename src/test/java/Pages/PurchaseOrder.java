@@ -558,7 +558,7 @@ public class PurchaseOrder {
     }
 
     //To get the message on hover the delete button
-    public String verifyHoverMessageOnDeleteButton(){
+    public String verifyHoverMessageOnDeleteButton() {
         WebElement ele = driver.findElement(By.xpath("//table[@id='dtattachments']/tbody/tr/td[5]/center/button"));
 //      Creating object of an Actions class
         Actions action = new Actions(driver);

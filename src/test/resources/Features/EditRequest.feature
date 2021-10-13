@@ -50,6 +50,7 @@ Feature: Tests performing the actions on a WO
     And I click the "confirm" button
     And The record is added
       | WO Title |
+
   @1153
   Scenario:Verify the Close functionality
     Given I log into the Purchase Orders app as an "Initiator"

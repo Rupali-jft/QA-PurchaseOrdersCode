@@ -309,6 +309,7 @@ Feature: Tests performing the actions on a WO
     And I delete the attachments
     And I click the "confirm" button
     Then I verify that "you are not authorized to perform this action" validation  message appears
+    And I click the "ok" button
     And I Click on user icon
     And I click Logout button
     Given I log into the Purchase Orders app as an "Approver"

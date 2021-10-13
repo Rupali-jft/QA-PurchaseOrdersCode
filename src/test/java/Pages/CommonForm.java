@@ -632,7 +632,8 @@ public class CommonForm {
     }
 
     /**
-     * method to upload the attachments dynamically
+     * moved this to CommonForm to upload different file attachments ,eg- pdf,docx,jpg
+     *
      * @param attachLocation
      */
     public void commonUploadAttachment(String attachLocation) {
@@ -679,6 +680,7 @@ public class CommonForm {
     }
 
     /**
+     * moved this to CommonForm to download  different file attachment
      * Method to display and download the attachments
      * @param attachName
      */

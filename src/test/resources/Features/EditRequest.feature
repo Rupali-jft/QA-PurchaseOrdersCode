@@ -241,11 +241,12 @@ Feature: Tests performing the actions on a WO
       | Item / Service Name | Description              | Quantity |
       | Test                | Test Item <current date> | 1        |
     And I submit the new request
-    #####---Add Attachment in Request Details Page---#####
+    ##Add Attachment in Request Details Page #
     And I upload an attachment
     Then The file will be displayed in the Attachments grid
     And I Click on user icon
     And I click Logout button
+    ##verify pdf file attachment upload and also verify role "Purchaseofficer" can upload/download attachment
     Given I log into the Purchase Orders app as an "Purchaseofficer"
     And I click the "Add Request" button
     And I enter the following information into the form
@@ -256,9 +257,11 @@ Feature: Tests performing the actions on a WO
       | Item / Service Name | Description              | Quantity |
       | Test                | Test Item <current date> | 1        |
     And I submit the new request
-    And I upload an "pdf" attachment
+    ## upload different types of file
+    And I upload an "pdf" attachment and verify is uploaded
     And I Click on user icon
     And I click Logout button
+    ##verify doc file attachment upload and also verify role "Procurementmanager" can upload/download  attachment
     Given I log into the Purchase Orders app as an "Procurementmanager"
     And I click the "Add Request" button
     And I enter the following information into the form
@@ -269,17 +272,18 @@ Feature: Tests performing the actions on a WO
       | Item / Service Name | Description              | Quantity |
       | Test                | Test Item <current date> | 1        |
     And I submit the new request
-    And I upload an "doc" attachment
+    And I upload an "doc" attachment and verify is uploaded
     And I Click on user icon
     And I click Logout button
+    #verify  "Add Attachment" button is not visible for role "poguestdevuser"
     Given I log into the Purchase Orders app as an "poguestdevuser"
     And I navigate to the "Requests" tab
     When I click on the top work order link
     Then I verify that Add Attachment button "is not" displayed
 
-###------------Verify delete file attachment-------------###
+###------------Verify delete file attachment for different roles-------------###
   @14669
-  Scenario: Delete file Attachments
+  Scenario: Verify delete file attachment for different roles
     Given I log into the Purchase Orders app as an "Initiator"
     And I click the "Add Request" button
     And I enter the following information into the form
@@ -297,6 +301,7 @@ Feature: Tests performing the actions on a WO
     Then The file will be displayed in the Attachments grid
     And I Click on user icon
     And I click Logout button
+    #Verify User is not able to delete files attached by other roles
     Given I log into the Purchase Orders app as an "Purchaseofficer"
     And I navigate to the "Requests" tab
     When I click on the top work order link
@@ -304,6 +309,8 @@ Feature: Tests performing the actions on a WO
     And I delete the attachments
     And I click the "confirm" button
     Then I verify that "you are not authorized to perform this action" validation  message appears
+    And I Click on user icon
+    And I click Logout button
     Given I log into the Purchase Orders app as an "Approver"
     And I navigate to the "Pending Approval" tab
     And I open the created WO
@@ -330,6 +337,7 @@ Feature: Tests performing the actions on a WO
     And I click the "confirm" button
     And I Click on user icon
     And I click Logout button
+    #Verify "Delete" button is disabled when quote was already approved.
     Given I log into the Purchase Orders app as an "Initiator"
     And I navigate to the "Requests" tab
     When I click on the top work order link
@@ -355,6 +363,7 @@ Feature: Tests performing the actions on a WO
     And I click the "Cancel" button
     And I Click on user icon
     And I click Logout button
+    #Verify more than 30Mb file upload is not allowed for role "Approver"
     Given I log into the Purchase Orders app as an "Approver"
     And I navigate to the "Requests" tab
     When I click on the top work order link
@@ -363,6 +372,7 @@ Feature: Tests performing the actions on a WO
     And I click the "Cancel" button
     And I Click on user icon
     And I click Logout button
+    #Verify more than 30Mb file upload is not allowed for role "Purchaseofficer"
     Given I log into the Purchase Orders app as an "Purchaseofficer"
     And I navigate to the "Requests" tab
     When I click on the top work order link
@@ -371,6 +381,7 @@ Feature: Tests performing the actions on a WO
     And I click the "Cancel" button
     And I Click on user icon
     And I click Logout button
+    #Verify more than 30Mb file upload is not allowed for role "Procurementmanager"
     Given I log into the Purchase Orders app as an "Procurementmanager"
     And I navigate to the "Requests" tab
     When I click on the top work order link

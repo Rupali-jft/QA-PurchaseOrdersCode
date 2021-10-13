@@ -307,7 +307,7 @@ public class FormSteps extends BaseUtil {
         commonForm.commonUploadAttachment(attachLocation);
     }
 
-    @And("I upload an {string} attachment")
+    @And("I upload an {string} attachment and verify is uploaded")
     public void iUploadAnAttachment(String fileType) {
         switch(fileType.toLowerCase())
         {

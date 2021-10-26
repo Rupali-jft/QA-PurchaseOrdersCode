@@ -228,3 +228,165 @@ Feature: Tests performing the actions on a WO
     Then I verify that Reject button "is not" displayed
     And I Click on user icon
     And I click Logout button
+
+###------------Verify Upload/Download attachment using S3 -------------###
+  @14668
+  Scenario: Verify Upload/Download attachment in Request Details Page
+    Given I log into the Purchase Orders app as an "Initiator"
+    And I click the "Add Request" button
+    And I enter the following information into the form
+      | WO Title   | Test <current date> |
+      | Location   | Vizag TH            |
+      | Department | IT                  |
+    And I add the following into the "Item / Service Details" table
+      | Item / Service Name | Description              | Quantity |
+      | Test                | Test Item <current date> | 1        |
+    And I submit the new request
+    ##Add Attachment in Request Details Page #
+    And I upload an attachment
+    Then The file will be displayed in the Attachments grid
+    And I Click on user icon
+    And I click Logout button
+    ##verify pdf file attachment upload and also verify role "Purchaseofficer" can upload/download attachment
+    Given I log into the Purchase Orders app as an "Purchaseofficer"
+    And I click the "Add Request" button
+    And I enter the following information into the form
+      | WO Title   | Test <current date> |
+      | Location   | Bangalore           |
+      | Department | IT                  |
+    And I add the following into the "Item / Service Details" table
+      | Item / Service Name | Description              | Quantity |
+      | Test                | Test Item <current date> | 1        |
+    And I submit the new request
+    ## upload different types of file
+    And I upload an "pdf" attachment and verify is uploaded
+    And I Click on user icon
+    And I click Logout button
+    ##verify doc file attachment upload and also verify role "Procurementmanager" can upload/download  attachment
+    Given I log into the Purchase Orders app as an "Procurementmanager"
+    And I click the "Add Request" button
+    And I enter the following information into the form
+      | WO Title   | Test <current date> |
+      | Location   | Bangalore           |
+      | Department | IT                  |
+    And I add the following into the "Item / Service Details" table
+      | Item / Service Name | Description              | Quantity |
+      | Test                | Test Item <current date> | 1        |
+    And I submit the new request
+    And I upload an "doc" attachment and verify is uploaded
+    And I Click on user icon
+    And I click Logout button
+    #verify  "Add Attachment" button is not visible for role "poguestdevuser"
+    Given I log into the Purchase Orders app as an "poguestdevuser"
+    And I navigate to the "Requests" tab
+    When I click on the top work order link
+    Then I verify that Add Attachment button "is not" displayed
+
+###------------Verify delete file attachment for different roles-------------###
+  @14669
+  Scenario: Verify delete file attachment for different roles
+    Given I log into the Purchase Orders app as an "Initiator"
+    And I click the "Add Request" button
+    And I enter the following information into the form
+      | WO Title   | Test <current date> |
+      | Location   | Vizag TH            |
+      | Department | IT                  |
+    And I add the following into the "Item / Service Details" table
+      | Item / Service Name | Description              | Quantity |
+      | Test                | Test Item <current date> | 1        |
+    And I submit the new request
+    And I click the "Confirm" button
+    And I click the "Yes" button
+    Then The new request will be displayed in the grid
+    And I upload an attachment
+    Then The file will be displayed in the Attachments grid
+    And I Click on user icon
+    And I click Logout button
+    #Verify User is not able to delete files attached by other roles
+    Given I log into the Purchase Orders app as an "Purchaseofficer"
+    And I navigate to the "Requests" tab
+    When I click on the top work order link
+    Then The file will be displayed in the Attachments grid
+    And I delete the attachments
+    And I click the "confirm" button
+    Then I verify that "you are not authorized to perform this action" validation  message appears
+    And I click the "ok" button
+    And I Click on user icon
+    And I click Logout button
+    Given I log into the Purchase Orders app as an "Approver"
+    And I navigate to the "Pending Approval" tab
+    And I open the created WO
+    And I approve the request
+    And I Click on user icon
+    And I click Logout button
+    Given I log into the Purchase Orders app as an "Purchaseofficer"
+    And I open the created WO
+    And Click on Add Quote by Purchase Officer Button
+    And I set the quote date in the datepicker
+    Then Input values in the Quotes pop-up
+      | QuoteTitle | QuoteVendor | QuotedPrice |
+      | keyboard   | Apple       | 900         |
+    And I click the "Total Price" box
+    And I click the "Submit" button
+    And I click the "confirm" button
+    And I Click on user icon
+    And I click Logout button
+    Given I log into the Purchase Orders app as an "Approver"
+    And I open the created WO
+    And I click on the "Quotes" link
+    And I click the eye icon
+    And I click the "Approve" button
+    And I click the "confirm" button
+    And I Click on user icon
+    And I click Logout button
+    #Verify "Delete" button is disabled when quote was already approved.
+    Given I log into the Purchase Orders app as an "Initiator"
+    And I navigate to the "Requests" tab
+    When I click on the top work order link
+    Then The file will be displayed in the Attachments grid
+    Then I verified that hover message displayed
+
+
+###------------Upload more than 30 MB file-------------###
+  @14670
+  Scenario: Upload more than 30 MB file
+    Given I log into the Purchase Orders app as an "Initiator"
+    And I click the "Add Request" button
+    And I enter the following information into the form
+      | WO Title   | Test <current date> |
+      | Location   | Vizag TH            |
+      | Department | IT                  |
+    And I add the following into the "Item / Service Details" table
+      | Item / Service Name | Description              | Quantity |
+      | Test                | Test Item <current date> | 1        |
+    And I submit the new request
+    And I upload an attachment more than 30MB
+    And I see error warning "The File Size Limit is Exceeded. You can not upload more than 30MB File" appeared
+    And I click the "Cancel" button
+    And I Click on user icon
+    And I click Logout button
+    #Verify more than 30Mb file upload is not allowed for role "Approver"
+    Given I log into the Purchase Orders app as an "Approver"
+    And I navigate to the "Requests" tab
+    When I click on the top work order link
+    And I upload an attachment more than 30MB
+    And I see error warning "The File Size Limit is Exceeded. You can not upload more than 30MB File" appeared
+    And I click the "Cancel" button
+    And I Click on user icon
+    And I click Logout button
+    #Verify more than 30Mb file upload is not allowed for role "Purchaseofficer"
+    Given I log into the Purchase Orders app as an "Purchaseofficer"
+    And I navigate to the "Requests" tab
+    When I click on the top work order link
+    And I upload an attachment more than 30MB
+    And I see error warning "The File Size Limit is Exceeded. You can not upload more than 30MB File" appeared
+    And I click the "Cancel" button
+    And I Click on user icon
+    And I click Logout button
+    #Verify more than 30Mb file upload is not allowed for role "Procurementmanager"
+    Given I log into the Purchase Orders app as an "Procurementmanager"
+    And I navigate to the "Requests" tab
+    When I click on the top work order link
+    And I upload an attachment more than 30MB
+    And I see error warning "The File Size Limit is Exceeded. You can not upload more than 30MB File" appeared
+    And I click the "Cancel" button

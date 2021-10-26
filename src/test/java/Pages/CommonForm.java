@@ -7,14 +7,18 @@ import org.openqa.selenium.support.PageFactory;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.Select;
 import org.openqa.selenium.support.ui.WebDriverWait;
+import org.openqa.selenium.WebElement;
+import org.openqa.selenium.interactions.Actions;
 import Base.BaseUtil;
 
+import java.io.File;
 import java.time.LocalDateTime;
 import java.time.Period;
 import java.time.format.DateTimeFormatter;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -22,6 +26,7 @@ public class CommonForm {
     private final WebDriver driver;
     private final JavascriptExecutor js;
     private final WebDriverWait wait;
+    public static PurchaseOrder purchaseOrder;
 
     public CommonForm(WebDriver driver, JavascriptExecutor js) {
         this.driver = driver;
@@ -626,6 +631,116 @@ public class CommonForm {
         return null;
     }
 
+    /**
+     * moved this to CommonForm to upload different file attachments ,eg- pdf,docx,jpg
+     *
+     * @param attachLocation
+     */
+    public void commonUploadAttachment(String attachLocation) {
+        BaseUtil.pageLoaded();
+        // Creating a variable to check for the number of open tabs at the start of the operation
+        int initWindows = driver.getWindowHandles().size();
+        // Checks for three different ways to find the button to add attachments
+        if (!commonButton("Add Attachments") && !commonButton("Add Attachment")) {
+            driver.findElement(By.linkText("Add Attachments")).click();
+        }
+        BaseUtil.pageLoaded();
+        Set<String> handles = driver.getWindowHandles();
+        // Checking if a new tab was opened after the add attachment button was clicked
+        // If true, then email2db attachment process is used
+        if (handles.size() > initWindows) {
+            String parentWindow = driver.getWindowHandle();
+
+            for (String windowHandle : handles) {
+                if (!windowHandle.equals(parentWindow)) {
+                    driver.switchTo().window(windowHandle);
+                }
+            }
+            WebElement element = driver.findElement(By.id("UploadFile1"));
+            Actions builder = new Actions(driver);
+            builder.moveToElement(element).perform();
+            element.sendKeys(attachLocation);
+            driver.findElement(By.id("btnSave")).click();
+
+
+            driver.switchTo().window(parentWindow);
+            wait.until(ExpectedConditions.numberOfWindowsToBe(initWindows));
+            // If statement to check if an attachment modal pop-up is displayed
+        } else if (driver.findElements(By.id("addAttachment")).size() >= 1) {
+            driver.findElement(By.id("attach_file")).sendKeys(attachLocation);
+            if(!attachLocation.contains(BaseUtil.moreThan30MbAttachName)) {
+                driver.findElement(By.id("attachment_submit")).click();
+                wait.until(ExpectedConditions.invisibilityOfElementLocated(By.id("addAttachment")));
+            }
+            // Final statement assumes a file browser dialog is displayed
+        } else {
+            driver.findElement(By.id("filename")).sendKeys(attachLocation);
+        }
+        BaseUtil.pageLoaded();
+    }
+
+    /**
+     * moved this to CommonForm to download  different file attachment
+     * Method to display and download the attachments
+     * @param attachName
+     */
+    public void fileWillBeDisplayedInTheAttachmentsGrid(String attachName) {
+        // Boolean for verification at end of process
+        boolean result = false;
+        // Initializing the download folder for when file downloads are used for verification
+        File downloads = new File(BaseUtil.dLFolder);
+        // Getting the number of files currently in the download folder
+        int fileNum = downloads.listFiles().length;
+        // Creating a variable to check for the number of open tabs at the start of the operation
+        int initWindows = driver.getWindowHandles().size();
+        commonLinkClick("Attachments");
+        BaseUtil.pageLoaded();
+
+        wait.until(ExpectedConditions.visibilityOfElementLocated(By.partialLinkText(attachName))).click();
+
+
+        System.out.println("File " + attachName + " found in Attachment grid");
+
+        Set<String> handles = driver.getWindowHandles();
+        // Checking if the attachment link opened a new tab
+        // If true, it will use the URL of the new tab to determine if the attachment was successfully uploaded
+        if (handles.size() > initWindows) {
+            String parentWindow = driver.getWindowHandle();
+
+            for (String windowHandle : handles) {
+                if (!windowHandle.equals(parentWindow)) {
+                    driver.switchTo().window(windowHandle);
+                }
+            }
+
+            String download = driver.getCurrentUrl();
+
+            if (download.contains(attachName)) {
+                System.out.println("Attachment URL verified as " + download);
+            }
+
+            driver.close();
+            driver.switchTo().window(parentWindow);
+        } else {
+            long startTime = System.currentTimeMillis();
+            while (downloads.listFiles().length == fileNum && (System.currentTimeMillis() - startTime) < 30000) {
+                try {
+                    Thread.sleep(1000);
+                } catch (InterruptedException ignored) {
+
+                }
+            }
+            if (downloads.listFiles().length > fileNum) {
+                for (File file : downloads.listFiles()) {
+                    System.out.println("Filename: " + file.getName());
+                    if (file.getName().contains(attachName)) {
+                        System.out.println(attachName + " downloaded");
+                        file.delete();
+                    }
+                }
+            }
+        }
+    }
 
     public boolean commonCheckBoxClick(String checkBox) {
         WebElement chkbx = commonCheckBox(checkBox);

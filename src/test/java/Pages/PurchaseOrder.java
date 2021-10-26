@@ -3,6 +3,7 @@ package Pages;
 import Base.BaseUtil;
 import io.cucumber.datatable.DataTable;
 import org.openqa.selenium.*;
+import org.openqa.selenium.interactions.Actions;
 import org.openqa.selenium.support.FindBy;
 import org.openqa.selenium.support.How;
 import org.openqa.selenium.support.PageFactory;
@@ -554,6 +555,16 @@ public class PurchaseOrder {
         } catch (NoSuchElementException e) {
             driver.findElement(By.xpath("//*[@id='dtPurchaseOrder']/tbody/tr/td[1]/a")).click();
         }
+    }
+
+    //To get the message on hover the delete button
+    public String verifyHoverMessageOnDeleteButton() {
+        WebElement ele = driver.findElement(By.xpath("//table[@id='dtattachments']/tbody/tr/td[5]/center/button"));
+//      Creating object of an Actions class
+        Actions action = new Actions(driver);
+//      Performing the mouse hover action on the target element.
+        action.moveToElement(ele).perform();
+        return ele.getAttribute("title");
     }
 }
 

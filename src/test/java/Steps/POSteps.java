@@ -203,9 +203,9 @@ public class POSteps extends BaseUtil {
         commonForm.commonButton("RAISE PO");
         pageLoaded();
         commonForm.commonButton("confirm");
-        wait.until(ExpectedConditions.visibilityOfElementLocated(By.id("po_succ_msg")));
-        wait.until(ExpectedConditions.invisibilityOfElementLocated(By.id("po_succ_msg")));
-        wait.until(ExpectedConditions.visibilityOfElementLocated(By.id("po_close")));
+        //wait.until(ExpectedConditions.visibilityOfElementLocated(By.id("po_succ_msg")));
+        //wait.until(ExpectedConditions.invisibilityOfElementLocated(By.id("po_succ_msg")));
+        //wait.until(ExpectedConditions.visibilityOfElementLocated(By.id("po_close")));
         pageLoaded();
     }
 
@@ -706,5 +706,28 @@ public class POSteps extends BaseUtil {
         }
     }
 
+    @Then("Verify the table headers in {string}")
+    public void verifyTheTableHeadersIn(String tableName, List<String> table) {
+        List<WebElement> heads = driver.findElements(By.xpath("//table[@id='" + tableName + "']//thead//tr"));
+        System.out.println(heads.size());
+        for (WebElement h : heads) {
+            System.out.println("Table headers are: " + h.getText());
+        }
+    }
+
+    @Then("Verify that Purchase order page opens")
+    public void verifyThatPurchaseOrderPageOpens() {
+        String expected_Title = driver.getTitle();
+        String actual_Title = "Patra Corp - Purchase Order";
+        Assert.assertEquals(actual_Title, expected_Title, "Purchase order page gets opened");
+    }
+
+    @Then("Verify that {string} text box is empty")
+    public void verifyThatTextBoxIsEmpty(String field) {
+        String vendor_Add = driver.findElement(By.xpath("//textarea[@id='po_vendorAddress']")).getText();
+        boolean condition = vendor_Add.isEmpty();
+        Assert.assertTrue(condition, "Changes have been saved");
+        System.out.println("All the changes have been discarded in " + field);
+    }
 }
 

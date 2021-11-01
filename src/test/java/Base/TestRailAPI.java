@@ -5,151 +5,132 @@ import com.gurock.testrail.APIException;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 
+import java.io.FileInputStream;
 import java.io.IOException;
-import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.Properties;
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
+import java.util.*;
 
 public class TestRailAPI {
 
-    private boolean testRailRun;
-    private HashMap<String, String> runIds;
-    private int testRun;
+    private final boolean useTestRail;
+    private HashMap<String, String> testCaseIds;
+    private long testRunId;
     private final APIClient client;
+    private final int projectId;
     private final Properties tRailProp = new Properties();
     private final Properties config = new Properties();
 
     public TestRailAPI() {
-        this.runIds = new HashMap<>();
         this.client = new APIClient("https://patra.testrail.io/");
         try {
-            this.tRailProp.load(getClass().getClassLoader().getResourceAsStream("testrail.properties"));
-            this.config.load(getClass().getClassLoader().getResourceAsStream("config.properties"));
+            this.tRailProp.load(new FileInputStream(Thread.currentThread().getContextClassLoader().getResource("").getPath() + "testrail.properties"));
+            this.config.load(new FileInputStream(Thread.currentThread().getContextClassLoader().getResource("").getPath() + "config.properties"));
         } catch (IOException e) {
-            System.err.println(e);
+            e.printStackTrace();
         }
 
-        this.testRailRun = tRailProp.getProperty("runtestrail").equals("true");
-        if (testRailRun) {
+        this.useTestRail = tRailProp.getProperty("useTestRail").equalsIgnoreCase("true");
+        this.projectId = Integer.parseInt(tRailProp.getProperty("projectId"));
+        this.testRunId = tRailProp.getProperty("runId").isEmpty() ? 0 : Long.parseLong(tRailProp.getProperty("runId"));
+        if (useTestRail) {
             client.setUser(tRailProp.getProperty("email"));
             client.setPassword(tRailProp.getProperty("password"));
-
-            int projId = Integer.parseInt(tRailProp.getProperty("projectId"));
-            int runId = Integer.parseInt(tRailProp.getProperty("runId"));
-            SimpleDateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy");
-            String dateString = dateFormat.format(new Date());
-            String runTitle = config.getProperty("environment").toUpperCase() + " " + tRailProp.getProperty("runTitle") + " - " + dateString;
-            boolean runExists = false;
-            JSONObject runsObj = new JSONObject();
-            try {
-                runsObj = (JSONObject) client.sendGet("get_runs/" + projId + "/&is_completed=0");
-            } catch (APIException | IOException e) {
-                System.out.println(e);
-            }
-            JSONArray runs = (JSONArray) runsObj.get("runs");
-
-            for (Object run : runs) {
-                JSONObject test = (JSONObject) run;
-                if (test.get("name").toString().equals(runTitle)) {
-                    runExists = true;
-                    runId = Integer.parseInt(test.get("id").toString());
+            if (this.testRunId == 0) {
+                String runTitle = tRailProp.getProperty("runTitle");
+                if (runTitle.contains("<current date>")) {
+                    String dateString = LocalDate.now().format(DateTimeFormatter.ofPattern("yyyy/MM/dd"));
+                    runTitle = runTitle.replaceAll("<current date>", dateString);
                 }
-            }
-
-
-            if (tRailProp.getProperty("createrun").equals("true") && !runExists) {
-                createRun(projId, runTitle);
+                this.testCaseIds = createRun(config.getProperty("environment").toUpperCase() + " " + runTitle);
             } else {
-                getRun(runId);
+                this.testCaseIds = getRunById(testRunId);
             }
+
         }
 
 
     }
 
-    public boolean isTestRailRun() {
-        return testRailRun;
+
+    public boolean getUseTestRail() {
+        return useTestRail;
     }
 
+    /**
+     * Check if the current test case is in the TestRail run
+     *
+     * @param testId The test case ID with the @ symbol (e.g., @1234)
+     * @return
+     */
     public boolean checkCaseId(String testId) {
-        return runIds.containsKey(testId);
+        return testCaseIds.containsKey(testId);
 
     }
 
     /**
-     * The getRun function is used to retrieve test runs that have already been created in TestRail. Either manually
-     * or through the createRun method.
+     * This function is used to retrieve previously created test runs by their IDs
      *
-     * @param run Accepts an int containing the ID of the run to be retrieved for testing
+     * @param run The ID of the run to be retrieved for testing
      */
-    public void getRun(int run) {
-        this.testRun = run;
+    public HashMap<String, String> getRunById(long run) {
+        testRunId = run;
+        HashMap<String, String> result = new HashMap<>();
+        JSONArray tests = getItems("tests");
         ArrayList<String> testIds = new ArrayList<>();
-        try {
-            JSONObject rtObj = (JSONObject) client.sendGet("get_tests/" + testRun);
-            JSONArray rt = (JSONArray) rtObj.get("tests");
-
-            for (Object tests : rt) {
-                HashMap data = (HashMap) tests;
-                runIds.put("@" + data.get("case_id").toString(), data.get("id").toString());
-                testIds.add("@" + data.get("case_id").toString());
-            }
-        } catch (APIException | IOException e) {
-            System.out.println(e);
-            System.exit(1);
+        for (Object test : tests) {
+            HashMap data = (HashMap) test;
+            result.put("@" + data.get("case_id").toString(), data.get("id").toString());
+            testIds.add("@" + data.get("case_id").toString());
         }
-        System.out.println("Initializing test run: \n" + testRun + "\n" +
-                "With the following testIds: \n" + testIds.toString());
+        System.out.println("Initializing test run: \n" + testRunId + "\n" +
+                "With the following testIds: \n" + testIds);
+        return result;
     }
 
     /**
-     * The createRun function will create a new run in TestRail at the start of the test. It is currently set to add
-     * all of the test cases in a project have Automation Type set to Selenium.
+     * This function creates a new test run with the given title and returns a HashMap of the test cases.
+     * If a test run with the same title exists, it will not create a new one and instead return the test
+     * cases from the current one.
      *
-     * @param projId   Accepts an int. This is the ID of the project where you wish to create the run (e.g., the ID of CertVault is 4)
-     * @param runTitle Accepts a String. This is the name you want the run to have.
+     * @param runTitle The title to be used for the test run
+     * @return Returns a HashMap of the test cases in the test run
      */
-    public void createRun(int projId, String runTitle) {
-        ArrayList<Integer> caseIds = new ArrayList<>();
-        String[] sections = tRailProp.getProperty("sectionIds").split(",");
-        try {
-            JSONObject casesObj = (JSONObject) client.sendGet("get_cases/" + projId);
-            JSONArray cases = (JSONArray) casesObj.get("cases");
+    public HashMap<String, String> createRun(String runTitle) {
+        long existingRun = 0;
+        if ((existingRun = getRunByTitle(runTitle)) > 0) return getRunById(existingRun);
+        ArrayList<Long> caseIds = new ArrayList<>();
+        String[] sections = tRailProp.getProperty("sectionIds").isEmpty() ? null : tRailProp.getProperty("sectionIds").replaceAll(" ", "").split(",");
+        JSONArray cases = getItems("cases");
+        JSONObject run = new JSONObject();
 
-            for (Object item : cases) {
-                JSONObject test = (JSONObject) item;
-                // Add test cases by section ID
-                if (!sections[0].equals("")) {
-                    for (String section : sections) {
-                        if (test.get("section_id").toString().equals(section.trim())) {
-                            caseIds.add(Integer.parseInt(test.get("id").toString()));
-                        }
-                    }
-                }
-                // If you want automation type:
-//                if (test.get("custom_automation_type").toString().equals("1")) {
-//                    caseIds.add(Integer.parseInt(test.get("id").toString()));
-//
-//                }
+
+        for (Object item : cases) {
+            JSONObject testCase = (JSONObject) item;
+            String id = testCase.get("section_id").toString();
+            if (sections != null && Arrays.asList(sections).contains(id) && testCase.get("custom_automation_type").toString().equals("1")) {
+                caseIds.add((Long) testCase.get("id"));
+            } else if (sections == null && testCase.get("custom_automation_type").toString().equals("1")) {
+                caseIds.add((Long) testCase.get("id"));
 
             }
 
+        }
+        try {
 
             HashMap data = new HashMap();
             data.put("name", runTitle);
             data.put("include_all", false);
             data.put("case_ids", caseIds);
 
-            JSONObject newRun = (JSONObject) client.sendPost("add_run/" + projId, data);
+            run = (JSONObject) client.sendPost("add_run/" + this.projectId, data);
 
-            getRun(Integer.parseInt(newRun.get("id").toString()));
+
         } catch (APIException | IOException e) {
-            System.out.println(e);
+            e.printStackTrace();
             System.exit(1);
         }
-
+        return getRunById((Long) run.get("id"));
 
     }
 
@@ -165,30 +146,67 @@ public class TestRailAPI {
         data.put("status_id", status);
         data.put("comment", comment);
         try {
-            client.sendPost("add_result/" + runIds.get(currentTest), data);
+            client.sendPost("add_result/" + testCaseIds.get(currentTest), data);
         } catch (Exception e) {
             System.out.println(e);
         }
 
     }
 
-    private boolean runExists(String runTitle, int projId) {
-        boolean runExists = false;
-        JSONObject runsObj = new JSONObject();
-        try {
-            runsObj = (JSONObject) client.sendGet("get_runs/" + projId + "/&is_completed=0");
-        } catch (APIException | IOException e) {
-            System.out.println(e);
-        }
-        JSONArray runs = (JSONArray) runsObj.get("runs");
+    /**
+     * Finds a test run by the title and returns the ID
+     *
+     * @param runTitle The title of the test run to search for
+     * @return Returns the ID of the test run as a long or -1 if no run was found
+     */
+    private long getRunByTitle(String runTitle) {
+        JSONArray runs = getItems("runs");
 
         for (Object item : runs) {
             JSONObject test = (JSONObject) item;
             if (test.get("name").toString().equals(runTitle)) {
-                runExists = true;
+                return (Long) test.get("id");
             }
         }
-        return runExists;
+        return -1;
+    }
+
+    /**
+     * Makes bulk calls for TestRail returning a JSONArray.
+     * Currently works with cases, runs, tests, and projects
+     *
+     * @param type The type of call to make accepts "cases", "runs", "tests", and "projects"
+     * @return Returns a JSONArray of the items found
+     */
+    private JSONArray getItems(String type) {
+        JSONObject itemsObj = null;
+        JSONArray itemsArr = new JSONArray();
+        boolean next;
+        String nextString = "";
+        String uriString = switch (type.toLowerCase(Locale.ROOT)) {
+            case "cases" -> "get_cases/" + this.projectId;
+            case "runs" -> "get_runs/" + this.projectId + "/&is_completed=0";
+            case "tests" -> "get_tests/" + this.testRunId;
+            case "projects" -> "get_projects/&is_completed=0";
+            default -> null;
+        };
+
+        do {
+            try {
+                itemsObj = (JSONObject) client.sendGet(uriString + nextString);
+            } catch (IOException | APIException e) {
+                e.printStackTrace();
+            }
+            assert itemsObj != null;
+            HashMap<String, String> links = new HashMap<>((HashMap<String, String>) itemsObj.get("_links"));
+            next = links.get("next") != null;
+            if (next) {
+                nextString = links.get("next").substring(links.get("next").indexOf('&'));
+            }
+            itemsArr.addAll((JSONArray) itemsObj.get(type));
+        } while (next);
+
+        return itemsArr;
     }
 
 }

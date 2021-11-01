@@ -46,7 +46,6 @@ public class BaseUtil {
     // Class initializers
     public static Login login;
     public static PurchaseOrder purchaseOrder;
-    public static Emails emails;
     public static CommonForm commonForm;
     public static CommonGrid commonGrid;
     public static CommonKPI commonKPI;
@@ -61,18 +60,21 @@ public class BaseUtil {
         File file = new File(relativePath);
         return file.getAbsolutePath();
     }
-String Tab1;
-    public void mainWindowHandle(){
+
+    String Tab1;
+
+    public void mainWindowHandle() {
         windowsHandling();
         driver.switchTo().window(Tab1);
     }
 
-    public void windowsHandling(){
+    public void windowsHandling() {
         Tab1 = driver.getWindowHandle();
         ArrayList<String> availableWindows = new ArrayList<String>(driver.getWindowHandles());
         if (!availableWindows.isEmpty()) {
             driver.switchTo().window(availableWindows.get(1));
-        }}
+        }
+    }
 
     // Folder where files downloaded during tests will be stored
     public static String dLFolder = attachPath("src/test/resources/downloads");

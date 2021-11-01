@@ -42,7 +42,7 @@ public class Hooks extends BaseUtil {
         scenarioName = scenario.getName();
         idList = (ArrayList<String>) scenario.getSourceTagNames();
 
-        if (testRun.isTestRailRun()) {
+        if (testRun.getUseTestRail()) {
             boolean caseFound = false;
             for (String testId : idList) {
                 if (testRun.checkCaseId(testId)) {
@@ -69,7 +69,6 @@ public class Hooks extends BaseUtil {
         js = (JavascriptExecutor) driver;
         wait = new WebDriverWait(driver, 10);
         login = new Login(driver);
-        emails = new Emails(login.getLogins().getProperty("gmail.email"), login.getLogins().getProperty("gmail.auth"));
         commonForm = new CommonForm(driver, js);
         commonGrid = new CommonGrid(driver, js);
         commonKPI = new CommonKPI(driver, js);
@@ -108,7 +107,7 @@ public class Hooks extends BaseUtil {
         }
         if (!skipped) {
             driver.quit();
-            if (testRun.isTestRailRun()) {
+            if (testRun.getUseTestRail()) {
                 testRun.setStatus(currentId, statusCode, testRailStatus);
             }
         }

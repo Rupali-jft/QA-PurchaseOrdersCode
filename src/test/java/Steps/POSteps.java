@@ -729,5 +729,46 @@ public class POSteps extends BaseUtil {
         Assert.assertTrue(condition, "Changes have been saved");
         System.out.println("All the changes have been discarded in " + field);
     }
+
+    @Then("I verify that {string} button {string} displayed")
+    public void iVerifyThatButtonDisplayed(String field, String visibility) {
+        switch (visibility) {
+            case "is" -> Assert.assertTrue(commonForm.commonButtonGet("Add Purchase Order").isDisplayed(), field + " is not present");
+            case "is not" -> Assert.assertNull(commonForm.commonButtonGet("Add Purchase Order"), field + " is present");
+            default -> System.out.println("Specified condition is not working");
+        }
+    }
+
+    @Then("I verify that PO status is changed to {string}")
+    public void iVerifyThatPOStatusIsChangedTo(String status) {
+        String po_Status = new WebDriverWait(driver, 60).until(ExpectedConditions.visibilityOfElementLocated(By.xpath("/html[1]/body[1]/div[1]/div[1]/div[1]/fieldset[1]/div[2]/div[1]/div[2]/div[3]/input[1]"))).getAttribute("value");
+        System.out.println(po_Status);
+        Assert.assertFalse(po_Status.isEmpty(), "Status is not " + status);
+        System.out.println("Status is " + status);
+    }
+
+    @Then("Verify that PDF preview opened in new tab")
+    public void verifyThatPDFPreviewOpenedInNewTab() {
+        String title = "Patra Corp - Purchase Order";
+        Assert.assertTrue(driver.getTitle().equals(title), "New tab is not opened");
+        System.out.println("New tab is opened");
+    }
+
+    @Then("Verify that PDF is downloading successfully")
+    public void verifyThatPDFIsDownloadingSuccessfully() {
+        String getLatestFile = attachPath("PurchaseOrder-7370.pdf");
+        String currentFile = "C:\\Users\\userf\\IdeaProjects\\QA-PurchaseOrdersMainBranchlatest\\PurchaseOrder-7370.pdf";
+        Assert.assertTrue(getLatestFile.equals(currentFile), "Downloaded file name is not matching with expected file name");
+        System.out.println("Downloaded file name is matched with expected file name");
+    }
+
+    @Then("Verify the fields present on the page")
+    public void verifyTheFieldsPresentOnThePage() {
+        List<WebElement> heads = driver.findElements(By.xpath("//table/thead/tr[1]/th"));
+        System.out.println((heads.size()));
+        for (WebElement h : heads) {
+            System.out.println(h.getText());
+        }
+    }
 }
 

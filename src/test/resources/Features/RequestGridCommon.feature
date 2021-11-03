@@ -124,7 +124,7 @@ Scenario: Grid - Status column Search field
   And I enter "Pending Request Approval" into the search field for "status" column field
   And Verify that items in the Status dropdown list are displayed
   And I select the "Pending Request Approval" checkbox
-  And I clear the "Search" field for "Status" column field at index 1
+  And I clear the "Search" field for "Status" column field at index 0
   And I enter "Pending" into the search field for "status" column field
   And Verify that items in the Status dropdown list are displayed
 
@@ -176,15 +176,15 @@ Scenario: Grid - Location column in PO Home Page Grid
   @1280
   Scenario: Grid - Location column Search field
     And I click the select. . . button for "Location" field
-    And I enter "Raipur" in the "Search" field for Location column field at index 2
+    And I enter "Raipur" in the "Search" field for Location column field at index 1
     And I click the cross icon button
-    Then Verify that text is removed from the "Search" field for Location column field at index 2
+    Then Verify that text is removed from the "Search" field for Location column field at index 1
     And Verify that items in the Location dropdown list are displayed
-    And I enter "Vizag TH" in the "Search" field for Location column field at index 2
+    And I enter "Vizag TH" in the "Search" field for Location column field at index 1
     And Verify that items in the Location dropdown list are displayed
     And I select the "Vizag TH" checkbox
-    And I clear the "Search" field for "Location" column field at index 2
-    And I enter "Vizag" in the "Search" field for Location column field at index 2
+    And I clear the "Search" field for "Location" column field at index 1
+    And I enter "Vizag" in the "Search" field for Location column field at index 1
     And Verify that items in the Location dropdown list are displayed
 
 @1281
@@ -219,15 +219,15 @@ Scenario: Grid - Department column in PO Home Page Grid
   @1282
   Scenario: Grid - Department column Search field
     And I click the select. . . button for "Department" field
-    And I enter "HR" in the "Search" field for Location column field at index 3
+    And I enter "HR" in the "Search" field for Location column field at index 2
     And I click the cross
-    Then Verify that text is removed from the "Search" field for Location column field at index 3
+    Then Verify that text is removed from the "Search" field for Location column field at index 2
     And Verify that items in the Department dropdown list are displayed
-    And I enter "Admin" in the "Search" field for Location column field at index 3
+    And I enter "Admin" in the "Search" field for Location column field at index 2
     And Verify that items in the Department dropdown list are displayed
     And I select the "Admin" checkbox
-    And I clear the "Search" field for "Department" column field at index 3
-    And I enter "F" in the "Search" field for Location column field at index 3
+    And I clear the "Search" field for "Department" column field at index 2
+    And I enter "F" in the "Search" field for Location column field at index 2
     And Verify that items in the Department dropdown list are displayed
 
 

@@ -203,9 +203,7 @@ public class POSteps extends BaseUtil {
         commonForm.commonButton("RAISE PO");
         pageLoaded();
         commonForm.commonButton("confirm");
-        //wait.until(ExpectedConditions.visibilityOfElementLocated(By.id("po_succ_msg")));
-        //wait.until(ExpectedConditions.invisibilityOfElementLocated(By.id("po_succ_msg")));
-        //wait.until(ExpectedConditions.visibilityOfElementLocated(By.id("po_close")));
+        login.waitForMiliseconds(10000);
         pageLoaded();
     }
 
@@ -214,7 +212,6 @@ public class POSteps extends BaseUtil {
         commonForm.commonButton("Close PO");
         pageLoaded();
         commonForm.commonButton("Yes");
-        wait.until(ExpectedConditions.visibilityOfElementLocated(By.id("po_close_msg")));
     }
 
     @Then("I verify that Reject button {string} displayed")
@@ -756,8 +753,9 @@ public class POSteps extends BaseUtil {
 
     @Then("Verify that PDF is downloading successfully")
     public void verifyThatPDFIsDownloadingSuccessfully() {
-        String getLatestFile = attachPath("PurchaseOrder-7370.pdf");
-        String currentFile = "C:\\Users\\userf\\IdeaProjects\\QA-PurchaseOrdersMainBranchlatest\\PurchaseOrder-7370.pdf";
+        String getLatestFile = attachPath("PurchaseOrder.pdf");
+        System.out.println(getLatestFile);
+        String currentFile = "C:\\Users\\userf\\IdeaProjects\\QA-PurchaseOrderslatest\\PurchaseOrder.pdf";
         Assert.assertTrue(getLatestFile.equals(currentFile), "Downloaded file name is not matching with expected file name");
         System.out.println("Downloaded file name is matched with expected file name");
     }

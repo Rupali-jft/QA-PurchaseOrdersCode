@@ -182,7 +182,7 @@ Feature: Tests performing the actions on a WO
     And I set the quote date in the datepicker
     Then Input values in the Quotes pop-up
       | QuoteTitle | QuoteVendor | QuotedPrice |
-      | keyboard   | Apple       | 900         |
+      | keyboard   | Apple       | 9000        |
     And I click the "Total Price" box
     And I click the "Submit" button
     And I click the "confirm" button

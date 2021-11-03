@@ -417,7 +417,7 @@ Feature:Validation of KPIs incrementing when requests are actioned
     Then Verify that "Returned Quotes" KPI has "Increased"
 
   @1766
-  Scenario: Verify the functionality of Returned Quotes from Approver role to Procurement manager role.(Quoted price below 5k)
+  Scenario: Verify the functionality of Returned Quotes from Approver role to Procurement manager role.(Quoted price greater than 5k)
   ###-------------PurchaseOfficer - Login Functionality --------------###
     Given I log into the Purchase Orders app as an "Purchaseofficer"
     When I get the count for "all" KPI
@@ -458,8 +458,9 @@ Feature:Validation of KPIs incrementing when requests are actioned
       | QuoteTitle | QuoteVendor | QuotedPrice |
       | keyboard   | Apple       | 6000        |
     And I click the "Total Price" box
-    And I click the "Submit" button
-    And I click the "confirm" button
+    #And I click the "Submit" button
+    #And I click the "confirm" button
+    And I click the "Submit" and "confirm" button
     Then I verify that "Quote Successfully Added" validation  message appears
     And I verify the selected status is "Pending Quotes" for the dropdown "Status"
     And I Click on user icon

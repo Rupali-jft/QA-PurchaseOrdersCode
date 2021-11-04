@@ -49,7 +49,7 @@ Feature:Purchase Order Grid Common test cases
 
     And I select "multiselect-all" from the "Status" header in the grid
     Then I check if the following items are selected in the "Status" header
-      |Pending Quotes|Pending Purchase Order|Pendinlg Request Approval|Purchase Order Closed|Purchase Order Raised|Quote Pending Approver|Quote Pending Approver|Quote Pending Approver|Work Order Closed|Work Order Raised|
+      |Pending Quotes|Pending Purchase Order|Pending Request Approval|Purchase Order Closed|Purchase Order Raised|Quote Pending Approver|Quote Pending Approver|Quote Pending Approver|Work Order Closed|Work Order Raised|
     And The number of records in the "Requests" tab is "the same"
     And I click the Reset button in the grid header
     And I select "multiselect-all" from the "Location" header in the grid

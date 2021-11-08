@@ -308,6 +308,66 @@ Feature: Quote Approval Process for all Roles
     And I Click on user icon
     And I click Logout button
 
+  @1887
+  Scenario: Verify the Quotes added with Total Price >5k and APPROVE by Proc Mgr and APPROVE by Approver.
+    Given I log into the Purchase Orders app as an "Approver"
+    And I navigate to the "Pending Approval" tab
+    And I open the created WO
+    And I approve the request
+    And I Click on user icon
+    And I click Logout button
+    Given I log into the Purchase Orders app as an "Purchaseofficer"
+    And I open the created WO
+    And Click on Add Quote by Purchase Officer Button
+    And I set the quote date in the datepicker
+    Then Input values in the Quotes pop-up
+      | QuoteTitle | QuoteVendor | QuotedPrice |
+      | keyboard   | Apple       | 6000        |
+    And I click the "Total Price" box
+    ###----------------Submit the quote 1--------------------####
+    And I click the "Submit" button
+    And I click the "confirm" button
+    Then I verify that "Quote Successfully Added" validation  message appears
+    Then I verify the selected status is "Quote Pending Proc. Mgr." for the dropdown "Status"
+    And Verify the approval status on Quotes Tab for 1st Quote
+    And I Click on user icon
+    And I click Logout button
+      ###------------Procurement Manager - Login Functionality-------------###
+    Given I log into the Purchase Orders app as an "Procurementmanager"
+
+###----------------------Get the Work Order ID-----------------------###
+    And I open the created WO
+    Then I verify the selected status is "Quote Pending Proc. Mgr." for the dropdown "Status"
+    And I click on the "Quotes" link
+    Then I check if "Approval Status" is "Pending for Approval"
+    And I click the eye icon
+
+###------------Approve any one of the quotes by Proc Mgr-------------###
+    And I click the "Approve" button
+    And I click the "confirm" button
+    ###----------------Verify the quote status--------------------####
+    Then I verify the selected status is "Quote Pending Approver" for the dropdown "Status"
+    And Verify the approval status on Quotes Tab for 1st Quote
+    And I Click on user icon
+    And I click Logout button
+
+      ###------------Approver - Login Functionality-------------###
+    Given I log into the Purchase Orders app as an "Approver"
+    ###---------------Get the Work order number and search in grid--------------###
+    And I open the created WO
+    And I click on the "Quotes" link
+    Then I check if "Approval Status" is "Partially Approved"
+    And I click the eye icon
+###---------------Approves the same quote by Approver---------------###
+    And I click the "Approve" button
+    And I click the "confirm" button
+    Then I verify that "Quote Approved" validation  message appears
+    Then I verify the selected status is "Pending Purchase Order" for the dropdown "Status"
+    Then I check if "Approval Status" is changed to "Approved"
+    And I Click on user icon
+    And I click Logout button
+
+
   @1888
   Scenario: Quotes By Purchase Officer
 ##---------Verify the Quotes added with Total Price >5k and APPROVE by Proc Mgr and SEND BACK by Approver and SEND BACK by Proc Mgr----###

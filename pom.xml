@@ -13,7 +13,7 @@
         <maven.compiler.target>14</maven.compiler.target>
         <cucumber.version>6.9.1</cucumber.version>
         <selenium.version>3.141.59</selenium.version>
-        <environment>release</environment>
+        <environment>dev</environment>
         <dev.url>http://login.dev.patracloud.net/auth</dev.url>
         <prod.url>https://apps.patracorp.net/auth</prod.url>
         <cloud.url>http://login.dev.patracloud.net/auth</cloud.url>

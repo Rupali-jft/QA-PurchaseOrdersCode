@@ -108,7 +108,7 @@ Feature:Validation of KPIs incrementing when requests are actioned
     Given I log into the Purchase Orders app as an "Initiator"
     Then Verify that "Returned Requests" KPI has "Increased"
 
-  @1843
+  @1343
   Scenario: Verify the functionality of Rejected Requests KPI
  ##-------------Initiator - Login Functionality --------------##
     Given I log into the Purchase Orders app as an "Initiator"

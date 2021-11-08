@@ -8,6 +8,7 @@ import io.cucumber.java.en.Given;
 import io.cucumber.java.en.Then;
 import io.cucumber.java.en.When;
 import org.openqa.selenium.*;
+import org.openqa.selenium.chrome.ChromeOptions;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
 import org.testng.Assert;
@@ -89,6 +90,7 @@ public class POSteps extends BaseUtil {
     public void iClickTheEyeIcon() {
         ((JavascriptExecutor) driver).executeScript("scroll(0,2000);");
         wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("//tbody/tr[1]/td[6]/center[1]"))).click();
+        login.waitForMiliseconds(2000);
     }
 
     @And("I approve the request")
@@ -203,7 +205,7 @@ public class POSteps extends BaseUtil {
         commonForm.commonButton("RAISE PO");
         pageLoaded();
         commonForm.commonButton("confirm");
-        login.waitForMiliseconds(10000);
+        login.waitForMiliseconds(5000);
         pageLoaded();
     }
 
@@ -643,7 +645,7 @@ public class POSteps extends BaseUtil {
 
     @And("I update {string} into {string} field")
     public void iUpdateIntoField(String value, String field) {
-        driver.findElement(By.xpath("//input[@id='qty']")).sendKeys(Keys.chord(Keys.CONTROL, "a"), value);
+        driver.findElement(By.xpath("//input[@id='quotedprice0']")).sendKeys(Keys.chord(Keys.CONTROL, "a"), value);
         System.out.println("Entering the " + value + " in the " + field + " field");
     }
 
@@ -755,7 +757,7 @@ public class POSteps extends BaseUtil {
     public void verifyThatPDFIsDownloadingSuccessfully() {
         String getLatestFile = attachPath("PurchaseOrder.pdf");
         System.out.println(getLatestFile);
-        String currentFile = "C:\\Users\\userf\\IdeaProjects\\QA-PurchaseOrderslatest\\PurchaseOrder.pdf";
+        String currentFile = "PurchaseOrder.pdf";
         Assert.assertTrue(getLatestFile.equals(currentFile), "Downloaded file name is not matching with expected file name");
         System.out.println("Downloaded file name is matched with expected file name");
     }
@@ -767,6 +769,20 @@ public class POSteps extends BaseUtil {
         for (WebElement h : heads) {
             System.out.println(h.getText());
         }
+    }
+
+    @When("I select {string}")
+    public void iSelect(String value) {
+        new WebDriverWait(driver,5).until(ExpectedConditions.visibilityOfElementLocated(By.xpath("//thead/tr[1]/th[3]/span[1]/div[1]/ul[1]/li[55]/a[1]/label[1]/input[1]"))).click();
+    }
+
+    @Then("Verify that Quote is updated successfully.")
+    public void verifyThatQuoteIsUpdatedSuccessfully() {
+        login.waitForMiliseconds(5000);
+        String updated_quote="6000";
+        String actual_quote=driver.findElement(By.xpath("//body[1]/div[1]/div[1]/div[1]/div[2]/div[1]/div[1]/div[5]/div[1]/div[1]/div[2]/table[1]/tbody[1]/tr[1]/td[4]")).getText();
+   Assert.assertTrue(actual_quote.equals(updated_quote),"Quote has not been updated");
+   System.out.println("Quote has been updated successfully");
     }
 }
 

@@ -31,10 +31,10 @@ public class CommonGrid {
         initializeMaps();
     }
 
-    @FindBy(how = How.XPATH, using = "//thead/tr[1]/th[3]/span[1]/div[1]/ul[1]/li[1]/div[1]/input[1]")
+    @FindBy(how = How.XPATH, using = "/html[1]/body[1]/div[1]/div[1]/div[1]/div[2]/div[1]/div[1]/div[1]/div[1]/div[2]/table[1]/thead[1]/tr[1]/th[3]/span[1]/div[1]/ul[1]/li[1]/div[1]/input[1]")
     private WebElement fieldSearchInitiator;
     @FindBy(how = How.XPATH, using = "//thead/tr[1]/th[4]/span[1]/div[1]/ul[1]/li[1]/div[1]/input[1]")
-    public  WebElement fieldSearchStatus;
+    public WebElement fieldSearchStatus;
 
     /**
      * Navigates to the indicated grid tab
@@ -262,6 +262,7 @@ public class CommonGrid {
             return false;
         }
     }
+
     /**
      * Sort the column on the grid
      *
@@ -868,9 +869,11 @@ public class CommonGrid {
         }
 
     }
+
     public void waitForFilter(String originalTopRecordID, String header) {
         waitForFilter(originalTopRecordID, header, 3);
     }
+
     public void waitForFilter(String originalTopRecordID, String header, long waitLength) {
         System.out.println("Waiting for the Grid to be resorted.");
         waitLength = waitLength * 1000; // converting from seconds to milliseconds
@@ -932,16 +935,19 @@ public class CommonGrid {
         }
         return driver.findElement(By.xpath("//*[@id='" + title + "']/tbody/tr/td")).getText();
     }
-    public void verifySearchFieldEmpty(){
-        String search= fieldSearchStatus.getAttribute("value");
-        Boolean condition=search.isEmpty();
+
+    public void verifySearchFieldEmpty() {
+        String search = fieldSearchStatus.getAttribute("value");
+        Boolean condition = search.isEmpty();
         Assert.assertTrue(condition, "Search Field is not empty");
         System.out.println("Search field is empty");
     }
-    public void enteringSearchField(String Initiator_Name){
+
+    public void enteringSearchField(String Initiator_Name) {
         fieldSearchInitiator.sendKeys(Initiator_Name);
     }
-    public void searchingStatus(String Status_Value){
+
+    public void searchingStatus(String Status_Value) {
         fieldSearchStatus.sendKeys(Status_Value);
     }
 

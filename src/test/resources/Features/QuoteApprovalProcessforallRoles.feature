@@ -193,8 +193,8 @@ Feature: Quote Approval Process for all Roles
       | QuoteTitle | QuoteVendor | QuotedPrice |
       | keyboard   | Apple       | 4000        |
     And I click the "Total Price" box
-    And I click the "Submit" button
-    And I click the "confirm" button
+    And I click the "Submit" and "confirm" button
+#    And I click the "confirm" button
     And I Click on user icon
     And I click Logout button
 

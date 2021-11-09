@@ -58,8 +58,7 @@ public class BaseUtil {
     // Location of attachment on your system
     public static String attachPath(String relativePath) {
         File file = new File(relativePath);
-        //return file.getAbsolutePath();
-        return file.getName();
+        return file.getAbsolutePath();
     }
 
     String Tab1;

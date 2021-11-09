@@ -394,7 +394,7 @@ Feature:Different tabs functionality
     And I click on the "Quotes" link
     Then I check if "Approval Status" is "Pending for Approval"
     And I click the eye icon
-    And I update "6000" into "Quoted Price" field
+    And I update "6000" in the "Quoted Price" field
     And I click the "Total Price" box
     And I click the "Submit" button
     And I click the "confirm" button

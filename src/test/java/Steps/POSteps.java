@@ -13,6 +13,7 @@ import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
 import org.testng.Assert;
 
+import java.io.File;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.*;
@@ -556,7 +557,7 @@ public class POSteps extends BaseUtil {
     public void iUseTheBackButton() {
         driver.navigate().back();
         pageLoaded();
-        login.waitForMiliseconds(10000);
+        login.waitForMiliseconds(5000);
     }
 
     @And("I click on {string} button")
@@ -565,7 +566,7 @@ public class POSteps extends BaseUtil {
         commonForm.commonButton(submit_Next_Btn);
         wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("//button[text()='confirm']")));
         commonForm.commonButton("confirm");
-        login.waitForMiliseconds(2000);
+        //login.waitForMiliseconds(3000);
     }
 
     @And("I confirm the raised work order")
@@ -645,7 +646,7 @@ public class POSteps extends BaseUtil {
 
     @And("I update {string} into {string} field")
     public void iUpdateIntoField(String value, String field) {
-        driver.findElement(By.xpath("//input[@id='quotedprice0']")).sendKeys(Keys.chord(Keys.CONTROL, "a"), value);
+        driver.findElement(By.name("qty0")).sendKeys(Keys.chord(Keys.CONTROL, "a"), value);
         System.out.println("Entering the " + value + " in the " + field + " field");
     }
 
@@ -755,7 +756,8 @@ public class POSteps extends BaseUtil {
 
     @Then("Verify that PDF is downloading successfully")
     public void verifyThatPDFIsDownloadingSuccessfully() {
-        String getLatestFile = attachPath("PurchaseOrder.pdf");
+        File file = new File("PurchaseOrder.pdf");
+        String getLatestFile = file.getName();
         System.out.println(getLatestFile);
         String currentFile = "PurchaseOrder.pdf";
         Assert.assertTrue(getLatestFile.equals(currentFile), "Downloaded file name is not matching with expected file name");
@@ -783,6 +785,12 @@ public class POSteps extends BaseUtil {
         String actual_quote=driver.findElement(By.xpath("//body[1]/div[1]/div[1]/div[1]/div[2]/div[1]/div[1]/div[5]/div[1]/div[1]/div[2]/table[1]/tbody[1]/tr[1]/td[4]")).getText();
    Assert.assertTrue(actual_quote.equals(updated_quote),"Quote has not been updated");
    System.out.println("Quote has been updated successfully");
+    }
+
+    @And("I update {string} in the {string} field")
+    public void iUpdateInTheField(String value, String field) {
+        driver.findElement(By.xpath("//input[@id='quotedprice0']")).sendKeys(Keys.chord(Keys.CONTROL, "a"), value);
+        System.out.println("Entering the " + value + " in the " + field + " field");
     }
 }
 

@@ -13,8 +13,7 @@ Feature: Quote Approval Process for all Roles
       | Item / Service Name | Description              | Quantity |
       | Test                | Test Item <current date> | 1        |
     And I submit the new request
-    And I click the "Confirm" button
-    And I click the "Yes" button
+    And I click on "Confirm" and "Yes" button
     ###-----------Verify the status once Work Order created---------###
     Then I verify the selected status is "Pending Request Approval" for the dropdown "Status"
     And I Click on user icon
@@ -391,8 +390,7 @@ Feature: Quote Approval Process for all Roles
       | QuoteTitle | QuoteVendor | QuotedPrice |
       | keyboard   | Apple       | 6000        |
     And I click the "Total Price" box
-    And I click the "Submit" button
-    And I click the "confirm" button
+    And I click the "Submit" and "confirm" button
     Then I verify that "Quote Successfully Added" validation  message appears
     And I verify the selected status is "Pending Quotes" for the dropdown "Status"
     And I Click on user icon

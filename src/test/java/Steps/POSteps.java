@@ -192,6 +192,8 @@ public class POSteps extends BaseUtil {
     @And("I delete the attachments")
     public void iDeleteTheAttachments() {
         driver.findElement(By.xpath("//tbody/tr[1]/td[5]/center[1]/button[1]")).click();
+        wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("//button[contains(text(),'confirm')]")));
+        commonForm.commonButton("confirm");
     }
 
     @Then("I verify that {string} validation  message appears")
@@ -399,10 +401,18 @@ public class POSteps extends BaseUtil {
     @And("I click the {string} and {string} button")
     public void iClickTheAndButton(String subBtn, String cnfrmBtn) {
         commonForm.commonButton(subBtn);
-        wait.until(ExpectedConditions.visibilityOfElementLocated(By.linkText("")));
+        wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("//button[contains(text(),'confirm')]")));
         commonForm.commonButton(cnfrmBtn);
         wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("//div[contains(text(),'Quote Successfully Added')]")));
         pageLoaded();
+    }
+
+
+    @And("I click on {string} and {string} button")
+    public void iClickOnAndButton(String cnfrm, String btn_Yes) {
+        commonForm.commonButton(cnfrm);
+        wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("//button[text()='Yes']")));
+        commonForm.commonButton(btn_Yes);
     }
 
     @Then("^Enter Purchase Order confirmation Details$")
@@ -566,7 +576,7 @@ public class POSteps extends BaseUtil {
         commonForm.commonButton(submit_Next_Btn);
         wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("//button[text()='confirm']")));
         commonForm.commonButton("confirm");
-        //login.waitForMiliseconds(3000);
+        login.waitForMiliseconds(3000);
     }
 
     @And("I confirm the raised work order")
@@ -695,6 +705,8 @@ public class POSteps extends BaseUtil {
     public void iClickTheDeleteIcon() {
         driver.findElement(By.xpath("//i[contains(text(),'\uE872')]")).click();
         System.out.println("Deleted Successfully");
+        wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("//button[text()='Yes']")));
+        commonForm.commonButton("Yes");
     }
 
     @Then("Verify that item is deleted successfully and shouldn't display in the grid.")
@@ -791,6 +803,23 @@ public class POSteps extends BaseUtil {
     public void iUpdateInTheField(String value, String field) {
         driver.findElement(By.xpath("//input[@id='quotedprice0']")).sendKeys(Keys.chord(Keys.CONTROL, "a"), value);
         System.out.println("Entering the " + value + " in the " + field + " field");
+    }
+
+    @And("I clicked {string} button")
+    public void iClickedButton(String btn_Reject) {
+            pageLoaded();
+            commonForm.commonButton(btn_Reject);
+            wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("//button[text()='confirm']")));
+            commonForm.commonButton("confirm");
+    }
+
+    @And("I click the {string} and {string} button to complete the updation")
+    public void iClickTheAndButtonToCompleteTheUpdation(String subBtn, String cnfrmBtn) {
+            commonForm.commonButton(subBtn);
+            wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("//button[contains(text(),'confirm')]")));
+            commonForm.commonButton(cnfrmBtn);
+            wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("//div[contains(text(),'Quote Successfully Updated')]")));
+            pageLoaded();
     }
 }
 

@@ -104,8 +104,7 @@ Feature: Add Purchase Order Test-Cases
       | Item / Service Name | Description              | Quantity |
       | Test                | Test Item <current date> | 1        |
     And I submit the new request
-    And I click the "Confirm" button
-    And I click the "Yes" button
+    And I click on "Confirm" and "Yes" button
     And I Click on user icon
     And I click Logout button
     Given I log into the Purchase Orders app as an "Approver"
@@ -122,8 +121,7 @@ Feature: Add Purchase Order Test-Cases
       | QuoteTitle | QuoteVendor | QuotedPrice |
       | keyboard   | Apple       | 9000        |
     And I click the "Total Price" box
-    And I click the "Submit" button
-    And I click the "confirm" button
+    And I click the "Submit" and "confirm" button
     And I Click on user icon
     And I click Logout button
     Given I log into the Purchase Orders app as an "Procurementmanager"

@@ -39,15 +39,13 @@ Feature: Tests performing the actions on a WO
       | Item / Service Name | Description              | Quantity |
       | Test                | Test Item <current date> | 1        |
     And I submit the new request
-    And I click the "Confirm" button
-    And I click the "Yes" button
+    And I click on "Confirm" and "Yes" button
     Then The new request will be displayed in the grid
     And I enter the following information into the form
       | WO Title | Test1 |
     And I update my expectations
       | WO Title | Test |
-    And I click the "Cancel Changes" button
-    And I click the "confirm" button
+    And I click on "Cancel Changes" button
     And The record is added
       | WO Title |
 
@@ -63,8 +61,7 @@ Feature: Tests performing the actions on a WO
       | Item / Service Name | Description              | Quantity |
       | Test                | Test Item <current date> | 1        |
     And I submit the new request
-    And I click the "Confirm" button
-    And I click the "Yes" button
+    And I click on "Confirm" and "Yes" button
     Then The new request will be displayed in the grid
     And I enter the following information into the form
       | WO Title | Test1 |
@@ -94,8 +91,7 @@ Feature: Tests performing the actions on a WO
       | Item / Service Name | Description              | Quantity |
       | Test                | Test Item <current date> | 1        |
     And I submit the new request
-    And I click the "Confirm" button
-    And I click the "Yes" button
+    And I click on "Confirm" and "Yes" button
     And I click the "Close" button
 # Setup: make a second new Work Order
     And I click the "Add Request" button
@@ -160,8 +156,7 @@ Feature: Tests performing the actions on a WO
       | Item / Service Name | Description              | Quantity |
       | Test                | Test Item <current date> | 1        |
     And I submit the new request
-    And I click the "Confirm" button
-    And I click the "Yes" button
+    And I click on "Confirm" and "Yes" button
     And I Click on user icon
     And I click Logout button
     Given I log into the Purchase Orders app as an "Approver"
@@ -184,8 +179,7 @@ Feature: Tests performing the actions on a WO
       | QuoteTitle | QuoteVendor | QuotedPrice |
       | keyboard   | Apple       | 9000        |
     And I click the "Total Price" box
-    And I click the "Submit" button
-    And I click the "confirm" button
+    And I click the "Submit" and "confirm" button
     Then I verify that "Quote Successfully Added" validation  message appears
     Then I verify that Reject button "is" displayed
     And I Click on user icon
@@ -196,8 +190,7 @@ Feature: Tests performing the actions on a WO
     And I open the created WO
     And I click on the "Quotes" link
     And I click the eye icon
-    And I click the "Approve" button
-    And I click the "confirm" button
+    And I click on "Approve" button
     Then I verify that "Quote approved by Procurement Manager, need Manager approval" validation  message appears
     And I Click on user icon
     And I click Logout button
@@ -215,8 +208,7 @@ Feature: Tests performing the actions on a WO
     And I open the created WO
     And I click on the "Quotes" link
     And I click the eye icon
-    And I click the "Approve" button
-    And I click the "confirm" button
+    And I click on "Approve" button
     Then I verify that "Quote Approved" validation  message appears
     And I Click on user icon
     And I click Logout button
@@ -308,7 +300,6 @@ Feature: Tests performing the actions on a WO
     When I click on the top work order link
     Then The file will be displayed in the Attachments grid
     And I delete the attachments
-    And I click the "confirm" button
     Then I verify that "you are not authorized to perform this action" validation  message appears
     And I click the "ok" button
     And I Click on user icon

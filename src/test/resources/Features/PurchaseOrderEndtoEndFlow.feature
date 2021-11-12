@@ -147,8 +147,7 @@ Scenario: Verify PO is raised for <5k Quotes
     | keyboard   | Apple       | 600     |
   And I click the "Total Price" box
     ###----------------Submit the quote 1--------------------####
-  And I click the "Submit" button
-  And I click the "confirm" button
+  And I click the "Submit" and "confirm" button
   Then I verify that "Quote Successfully Added" validation  message appears
   And Click on Add Quote by Purchase Officer Button
   And I set the quote date in the datepicker

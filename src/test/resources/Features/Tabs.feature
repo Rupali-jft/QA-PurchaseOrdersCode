@@ -36,7 +36,6 @@ Feature:Different tabs functionality
     Then The file will be displayed in the Attachments grid
     Then I verify that delete button is enabled
     And I delete the attachments
-    And I click the "confirm" button
     Then I verify that "Deleted Successfully" validation  message appears
     And I click the "ok" button
     Then The file will not be displayed in the Attachments grid
@@ -248,8 +247,7 @@ Feature:Different tabs functionality
       | QuoteTitle | QuoteVendor | QuotedPrice |
       | keyboard   | Apple       | 9000        |
     And I click the "Total Price" box
-    And I click the "Submit" button
-    And I click the "confirm" button
+    And I click the "Submit" and "confirm" button
     And I Click on user icon
     And I click Logout button
     Given I log into the Purchase Orders app as an "Initiator"
@@ -303,8 +301,7 @@ Feature:Different tabs functionality
       | QuoteTitle | QuoteVendor | QuotedPrice |
       | keyboard   | Apple       | 9000        |
     And I click the "Total Price" box
-    And I click the "Submit" button
-    And I click the "confirm" button
+    And I click the "Submit" and "confirm" button
     And I Click on user icon
     And I click Logout button
     Given I log into the Purchase Orders app as an "Approver"
@@ -337,8 +334,7 @@ Feature:Different tabs functionality
       | Item / Service Name | Description              | Quantity |
       | Test                | Test Item <current date> | 1        |
     And I submit the new request
-    And I click the "Confirm" button
-    And I click the "Yes" button
+    And I click on "Confirm" and "Yes" button
     And I Click on user icon
     And I click Logout button
     Given I log into the Purchase Orders app as an "Approver"
@@ -396,8 +392,7 @@ Feature:Different tabs functionality
     And I click the eye icon
     And I update "6000" in the "Quoted Price" field
     And I click the "Total Price" box
-    And I click the "Submit" button
-    And I click the "confirm" button
+    And I click the "Submit" and "confirm" button to complete the updation
     Then Verify that Quote is updated successfully.
 
   @1904
@@ -431,8 +426,7 @@ Feature:Different tabs functionality
       | QuoteTitle | QuoteVendor | QuotedPrice |
       | keyboard   | Apple       | 9000        |
     And I click the "Total Price" box
-    And I click the "Submit" button
-    And I click the "confirm" button
+    And I click the "Submit" and "confirm" button
     And I Click on user icon
     And I click Logout button
     Given I log into the Purchase Orders app as an "Purchaseofficer"

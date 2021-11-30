@@ -8,10 +8,12 @@ import io.cucumber.java.en.Given;
 import io.cucumber.java.en.Then;
 import io.cucumber.java.en.When;
 import org.openqa.selenium.*;
+import org.openqa.selenium.chrome.ChromeOptions;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
 import org.testng.Assert;
 
+import java.io.File;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.*;
@@ -89,6 +91,7 @@ public class POSteps extends BaseUtil {
     public void iClickTheEyeIcon() {
         ((JavascriptExecutor) driver).executeScript("scroll(0,2000);");
         wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("//tbody/tr[1]/td[6]/center[1]"))).click();
+        login.waitForMiliseconds(2000);
     }
 
     @And("I approve the request")
@@ -189,6 +192,8 @@ public class POSteps extends BaseUtil {
     @And("I delete the attachments")
     public void iDeleteTheAttachments() {
         driver.findElement(By.xpath("//tbody/tr[1]/td[5]/center[1]/button[1]")).click();
+        wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("//button[contains(text(),'confirm')]")));
+        commonForm.commonButton("confirm");
     }
 
     @Then("I verify that {string} validation  message appears")
@@ -203,9 +208,7 @@ public class POSteps extends BaseUtil {
         commonForm.commonButton("RAISE PO");
         pageLoaded();
         commonForm.commonButton("confirm");
-        //wait.until(ExpectedConditions.visibilityOfElementLocated(By.id("po_succ_msg")));
-        //wait.until(ExpectedConditions.invisibilityOfElementLocated(By.id("po_succ_msg")));
-        //wait.until(ExpectedConditions.visibilityOfElementLocated(By.id("po_close")));
+        login.waitForMiliseconds(5000);
         pageLoaded();
     }
 
@@ -214,7 +217,6 @@ public class POSteps extends BaseUtil {
         commonForm.commonButton("Close PO");
         pageLoaded();
         commonForm.commonButton("Yes");
-        wait.until(ExpectedConditions.visibilityOfElementLocated(By.id("po_close_msg")));
     }
 
     @Then("I verify that Reject button {string} displayed")
@@ -399,10 +401,18 @@ public class POSteps extends BaseUtil {
     @And("I click the {string} and {string} button")
     public void iClickTheAndButton(String subBtn, String cnfrmBtn) {
         commonForm.commonButton(subBtn);
-        wait.until(ExpectedConditions.visibilityOfElementLocated(By.linkText("")));
+        wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("//button[contains(text(),'confirm')]")));
         commonForm.commonButton(cnfrmBtn);
         wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("//div[contains(text(),'Quote Successfully Added')]")));
         pageLoaded();
+    }
+
+
+    @And("I click on {string} and {string} button")
+    public void iClickOnAndButton(String cnfrm, String btn_Yes) {
+        commonForm.commonButton(cnfrm);
+        wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("//button[text()='Yes']")));
+        commonForm.commonButton(btn_Yes);
     }
 
     @Then("^Enter Purchase Order confirmation Details$")
@@ -557,7 +567,7 @@ public class POSteps extends BaseUtil {
     public void iUseTheBackButton() {
         driver.navigate().back();
         pageLoaded();
-        login.waitForMiliseconds(10000);
+        login.waitForMiliseconds(5000);
     }
 
     @And("I click on {string} button")
@@ -566,7 +576,7 @@ public class POSteps extends BaseUtil {
         commonForm.commonButton(submit_Next_Btn);
         wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("//button[text()='confirm']")));
         commonForm.commonButton("confirm");
-        login.waitForMiliseconds(2000);
+        login.waitForMiliseconds(3000);
     }
 
     @And("I confirm the raised work order")
@@ -646,7 +656,7 @@ public class POSteps extends BaseUtil {
 
     @And("I update {string} into {string} field")
     public void iUpdateIntoField(String value, String field) {
-        driver.findElement(By.xpath("//input[@id='qty']")).sendKeys(Keys.chord(Keys.CONTROL, "a"), value);
+        driver.findElement(By.name("qty0")).sendKeys(Keys.chord(Keys.CONTROL, "a"), value);
         System.out.println("Entering the " + value + " in the " + field + " field");
     }
 
@@ -695,6 +705,8 @@ public class POSteps extends BaseUtil {
     public void iClickTheDeleteIcon() {
         driver.findElement(By.xpath("//i[contains(text(),'\uE872')]")).click();
         System.out.println("Deleted Successfully");
+        wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("//button[text()='Yes']")));
+        commonForm.commonButton("Yes");
     }
 
     @Then("Verify that item is deleted successfully and shouldn't display in the grid.")
@@ -756,8 +768,10 @@ public class POSteps extends BaseUtil {
 
     @Then("Verify that PDF is downloading successfully")
     public void verifyThatPDFIsDownloadingSuccessfully() {
-        String getLatestFile = attachPath("PurchaseOrder-7370.pdf");
-        String currentFile = "C:\\Users\\userf\\IdeaProjects\\QA-PurchaseOrdersMainBranchlatest\\PurchaseOrder-7370.pdf";
+        File file = new File("PurchaseOrder.pdf");
+        String getLatestFile = file.getName();
+        System.out.println(getLatestFile);
+        String currentFile = "PurchaseOrder.pdf";
         Assert.assertTrue(getLatestFile.equals(currentFile), "Downloaded file name is not matching with expected file name");
         System.out.println("Downloaded file name is matched with expected file name");
     }
@@ -769,6 +783,43 @@ public class POSteps extends BaseUtil {
         for (WebElement h : heads) {
             System.out.println(h.getText());
         }
+    }
+
+    @When("I select {string}")
+    public void iSelect(String value) {
+        new WebDriverWait(driver,5).until(ExpectedConditions.visibilityOfElementLocated(By.xpath("//thead/tr[1]/th[3]/span[1]/div[1]/ul[1]/li[55]/a[1]/label[1]/input[1]"))).click();
+    }
+
+    @Then("Verify that Quote is updated successfully.")
+    public void verifyThatQuoteIsUpdatedSuccessfully() {
+        login.waitForMiliseconds(5000);
+        String updated_quote="6000";
+        String actual_quote=driver.findElement(By.xpath("//body[1]/div[1]/div[1]/div[1]/div[2]/div[1]/div[1]/div[5]/div[1]/div[1]/div[2]/table[1]/tbody[1]/tr[1]/td[4]")).getText();
+   Assert.assertTrue(actual_quote.equals(updated_quote),"Quote has not been updated");
+   System.out.println("Quote has been updated successfully");
+    }
+
+    @And("I update {string} in the {string} field")
+    public void iUpdateInTheField(String value, String field) {
+        driver.findElement(By.xpath("//input[@id='quotedprice0']")).sendKeys(Keys.chord(Keys.CONTROL, "a"), value);
+        System.out.println("Entering the " + value + " in the " + field + " field");
+    }
+
+    @And("I clicked {string} button")
+    public void iClickedButton(String btn_Reject) {
+            pageLoaded();
+            commonForm.commonButton(btn_Reject);
+            wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("//button[text()='confirm']")));
+            commonForm.commonButton("confirm");
+    }
+
+    @And("I click the {string} and {string} button to complete the updation")
+    public void iClickTheAndButtonToCompleteTheUpdation(String subBtn, String cnfrmBtn) {
+            commonForm.commonButton(subBtn);
+            wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("//button[contains(text(),'confirm')]")));
+            commonForm.commonButton(cnfrmBtn);
+            wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("//div[contains(text(),'Quote Successfully Updated')]")));
+            pageLoaded();
     }
 }
 

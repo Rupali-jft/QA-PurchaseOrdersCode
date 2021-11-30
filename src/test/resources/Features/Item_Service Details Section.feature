@@ -28,6 +28,5 @@ Feature: Item/Service Details Section
   @1908
   Scenario: Delete the Item/Service
     And I click the delete icon
-    And I click the "Yes" button
     Then Verify that item is deleted successfully and shouldn't display in the grid.
 

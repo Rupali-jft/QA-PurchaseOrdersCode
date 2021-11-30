@@ -17,6 +17,7 @@
         <dev.url>http://login.dev.patracloud.net/auth</dev.url>
         <prod.url>https://apps.patracorp.net/auth</prod.url>
         <cloud.url>http://login.dev.patracloud.net/auth</cloud.url>
+        <release.url>http://login.release.patracloud.net/auth/login</release.url>
     </properties>
 
     <build>

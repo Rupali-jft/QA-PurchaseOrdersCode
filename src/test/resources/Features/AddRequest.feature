@@ -77,7 +77,7 @@ Feature: Tests involving the creation of a request
     And I set the quote date in the datepicker
     Then Input values in the Quotes pop-up
       | QuoteTitle | QuoteVendor | QuotedPrice |
-      | keyboard   | Apple       | 900         |
+      | keyboard   | Apple       | 9000        |
     And I click the "Total Price" box
     And I click the "Submit" button
     And I click the "confirm" button
@@ -139,10 +139,9 @@ Feature: Tests involving the creation of a request
     And I set the quote date in the datepicker
     Then Input values in the Quotes pop-up
       | QuoteTitle | QuoteVendor | QuotedPrice |
-      | keyboard   | Apple       | 900         |
+      | keyboard   | Apple       | 9000        |
     And I click the "Total Price" box
-    And I click the "Submit" button
-    And I click the "confirm" button
+    And I click the "Submit" and "confirm" button
     And I Click on user icon
     And I click Logout button
     Given I log into the Purchase Orders app as an "Procurementmanager"
@@ -201,10 +200,9 @@ Feature: Tests involving the creation of a request
     And I set the quote date in the datepicker
     Then Input values in the Quotes pop-up
       | QuoteTitle | QuoteVendor | QuotedPrice |
-      | keyboard   | Apple       | 900         |
+      | keyboard   | Apple       | 9000        |
     And I click the "Total Price" box
-    And I click the "Submit" button
-    And I click the "confirm" button
+    And I click the "Submit" and "confirm" button
     And I Click on user icon
     And I click Logout button
     Given I log into the Purchase Orders app as an "Procurementmanager"

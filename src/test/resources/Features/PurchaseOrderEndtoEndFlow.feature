@@ -147,8 +147,7 @@ Scenario: Verify PO is raised for <5k Quotes
     | keyboard   | Apple       | 600     |
   And I click the "Total Price" box
     ###----------------Submit the quote 1--------------------####
-  And I click the "Submit" button
-  And I click the "confirm" button
+  And I click the "Submit" and "confirm" button
   Then I verify that "Quote Successfully Added" validation  message appears
   And Click on Add Quote by Purchase Officer Button
   And I set the quote date in the datepicker
@@ -159,26 +158,6 @@ Scenario: Verify PO is raised for <5k Quotes
      ###----------------Submit the quote 2--------------------####
   And I click the "Submit" and "confirm" button
   Then I verify that "Quote Successfully Added" validation  message appears
-    ###----------------Verify the quote status--------------------####
-  Then I verify the selected status is "Quote Pending Proc. Mgr." for the dropdown "Status"
-  And Verify the approval status on Quotes Tab for 1st Quote
-  And Verify the approval status on Quotes Tab for 2nd Quote
-  And I Click on user icon
-  And I click Logout button
-
-###------------Procurement Manager - Login Functionality-------------###
-  Given I log into the Purchase Orders app as an "Procurementmanager"
-
-###----------------------Get the Work Order ID-----------------------###
-  And I open the created WO
-  Then I verify the selected status is "Quote Pending Proc. Mgr." for the dropdown "Status"
-  And I click on the "Quotes" link
-  Then I check if "Approval Status" is "Pending for Approval"
-  And I click the eye icon
-
-###------------Approve any one of the quotes by Proc Mgr-------------###
-  And I click the "Approve" button
-  And I click the "confirm" button
     ###----------------Verify the quote status--------------------####
   Then I verify the selected status is "Quote Pending Approver" for the dropdown "Status"
   And Verify the approval status on Quotes Tab for 1st Quote
@@ -191,7 +170,7 @@ Scenario: Verify PO is raised for <5k Quotes
     ###---------------Get the Work order number and search in grid--------------###
   And I open the created WO
   And I click on the "Quotes" link
-  Then I check if "Approval Status" is "Partially Approved"
+  Then I check if "Approval Status" is "Pending for Approval"
   And I click the eye icon
 ###---------------Approves the same quote by Approver---------------###
   And I click the "Approve" button

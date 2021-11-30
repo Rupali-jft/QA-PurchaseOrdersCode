@@ -242,7 +242,7 @@ public class Login extends BaseUtil {
     }
 
     public void ClickLogOut() {
-        wait.until(ExpectedConditions.elementToBeClickable(logOutBtn));
+        wait.until(ExpectedConditions.visibilityOf(logOutBtn));
         logOutBtn.click();
     }
 

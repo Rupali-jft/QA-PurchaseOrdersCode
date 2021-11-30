@@ -36,7 +36,6 @@ Feature:Different tabs functionality
     Then The file will be displayed in the Attachments grid
     Then I verify that delete button is enabled
     And I delete the attachments
-    And I click the "confirm" button
     Then I verify that "Deleted Successfully" validation  message appears
     And I click the "ok" button
     Then The file will not be displayed in the Attachments grid
@@ -106,7 +105,7 @@ Feature:Different tabs functionality
     And I click the "Print PDF" button
 
 ###-----------Quotes Tab in Request Details Page--------###
-  @1353 @1357
+  @1353
   Scenario:Quotes Tab in Request Details Page-Purchase Officer Role
   ####--------------------happy path-----------------#####
     Given I log into the Purchase Orders app as an "Initiator"
@@ -139,6 +138,29 @@ Feature:Different tabs functionality
     And I click the "Total Price" box
     And I click the "Submit" button
     And I click the "confirm" button
+    When I go to "Quotes" tab.
+    And set the tab to "Quotes"
+    Then Verify the following headers are present
+      | Quote Date     |
+      | Quote Title    |
+      | Vendor         |
+      | Quoted Price   |
+      | Quote Selected |
+      | View quote     |
+    And I click the eye icon
+    Then verify that Quote page is opened.
+    And I click the "Total Price" box
+    And I click the "Submit" button
+    And I click the "confirm" button
+    Then I verify that "Quote Successfully Updated" validation  message appears
+
+  @1357
+  Scenario:Add Quote in Request details Page-Purchase Officer Role
+  ####--------------------happy path-----------------#####
+    Given I log into the Purchase Orders app as an "Purchaseofficer"
+    And I select "Quote Pending Proc. Mgr." from the "Status" header in the grid
+    And I navigate to the "Requests" tab
+    And I click on the top work order link
     When I go to "Quotes" tab.
     And set the tab to "Quotes"
     Then Verify the following headers are present
@@ -225,8 +247,7 @@ Feature:Different tabs functionality
       | QuoteTitle | QuoteVendor | QuotedPrice |
       | keyboard   | Apple       | 9000        |
     And I click the "Total Price" box
-    And I click the "Submit" button
-    And I click the "confirm" button
+    And I click the "Submit" and "confirm" button
     And I Click on user icon
     And I click Logout button
     Given I log into the Purchase Orders app as an "Initiator"
@@ -280,8 +301,7 @@ Feature:Different tabs functionality
       | QuoteTitle | QuoteVendor | QuotedPrice |
       | keyboard   | Apple       | 9000        |
     And I click the "Total Price" box
-    And I click the "Submit" button
-    And I click the "confirm" button
+    And I click the "Submit" and "confirm" button
     And I Click on user icon
     And I click Logout button
     Given I log into the Purchase Orders app as an "Approver"
@@ -301,7 +321,81 @@ Feature:Different tabs functionality
     Then verify that Quote page is opened.
     And I verify that buttons are disabled
 
-  @1904 @1902
+  @1902
+  Scenario: Delete Quote
+   ####--------------------happy path-----------------#####
+    Given I log into the Purchase Orders app as an "Initiator"
+    And I click the "Add Request" button
+    And I enter the following information into the form
+      | WO Title   | Test <current date> |
+      | Location   | Vizag TH            |
+      | Department | IT                  |
+    And I add the following into the "Item / Service Details" table
+      | Item / Service Name | Description              | Quantity |
+      | Test                | Test Item <current date> | 1        |
+    And I submit the new request
+    And I click on "Confirm" and "Yes" button
+    And I Click on user icon
+    And I click Logout button
+    Given I log into the Purchase Orders app as an "Approver"
+    And I navigate to the "Pending Approval" tab
+    And I open the created WO
+    And I approve the request
+    And I Click on user icon
+    And I click Logout button
+    Given I log into the Purchase Orders app as an "Purchaseofficer"
+    And I open the created WO
+    And Click on Add Quote by Purchase Officer Button
+    And I set the quote date in the datepicker
+    Then Input values in the Quotes pop-up
+      | QuoteTitle | QuoteVendor | QuotedPrice |
+      | keyboard   | Apple       | 9000        |
+    And I click the "Total Price" box
+    And I click the "Submit" and "confirm" button
+    When I go to "Quotes" tab.
+    And set the tab to "Quotes"
+    And I delete the Quote
+
+  @1903
+  Scenario: Edit and Submit Quote in Quotes Tab
+    Given I log into the Purchase Orders app as an "Initiator"
+    And I click the "Add Request" button
+    And I enter the following information into the form
+      | WO Title   | Test <current date> |
+      | Location   | Vizag TH            |
+      | Department | IT                  |
+    And I add the following into the "Item / Service Details" table
+      | Item / Service Name | Description              | Quantity |
+      | Test                | Test Item <current date> | 1        |
+    And I submit the new request
+    And I click the "Confirm" button
+    And I click the "Yes" button
+    And I Click on user icon
+    And I click Logout button
+    Given I log into the Purchase Orders app as an "Approver"
+    And I navigate to the "Pending Approval" tab
+    And I open the created WO
+    And I approve the request
+    And I Click on user icon
+    And I click Logout button
+    Given I log into the Purchase Orders app as an "Purchaseofficer"
+    And I open the created WO
+    And Click on Add Quote by Purchase Officer Button
+    And I set the quote date in the datepicker
+    Then Input values in the Quotes pop-up
+      | QuoteTitle | QuoteVendor | QuotedPrice |
+      | keyboard   | Apple       | 9000        |
+    And I click the "Total Price" box
+    And I click the "Submit" and "confirm" button
+    And I click on the "Quotes" link
+    Then I check if "Approval Status" is "Pending for Approval"
+    And I click the eye icon
+    And I update "6000" in the "Quoted Price" field
+    And I click the "Total Price" box
+    And I click the "Submit" and "confirm" button to complete the updation
+    Then Verify that Quote is updated successfully.
+
+  @1904
   Scenario: Deleting a Quote
    ####--------------------happy path-----------------#####
     Given I log into the Purchase Orders app as an "Initiator"
@@ -332,8 +426,7 @@ Feature:Different tabs functionality
       | QuoteTitle | QuoteVendor | QuotedPrice |
       | keyboard   | Apple       | 9000        |
     And I click the "Total Price" box
-    And I click the "Submit" button
-    And I click the "confirm" button
+    And I click the "Submit" and "confirm" button
     And I Click on user icon
     And I click Logout button
     Given I log into the Purchase Orders app as an "Purchaseofficer"

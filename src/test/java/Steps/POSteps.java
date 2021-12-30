@@ -14,6 +14,7 @@ import org.openqa.selenium.support.ui.WebDriverWait;
 import org.testng.Assert;
 
 import java.io.File;
+import java.sql.Struct;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.*;
@@ -787,16 +788,16 @@ public class POSteps extends BaseUtil {
 
     @When("I select {string}")
     public void iSelect(String value) {
-        new WebDriverWait(driver,5).until(ExpectedConditions.visibilityOfElementLocated(By.xpath("//thead/tr[1]/th[3]/span[1]/div[1]/ul[1]/li[55]/a[1]/label[1]/input[1]"))).click();
+        new WebDriverWait(driver, 5).until(ExpectedConditions.visibilityOfElementLocated(By.xpath("//thead/tr[1]/th[3]/span[1]/div[1]/ul[1]/li[55]/a[1]/label[1]/input[1]"))).click();
     }
 
     @Then("Verify that Quote is updated successfully.")
     public void verifyThatQuoteIsUpdatedSuccessfully() {
         login.waitForMiliseconds(5000);
-        String updated_quote="6000";
-        String actual_quote=driver.findElement(By.xpath("//body[1]/div[1]/div[1]/div[1]/div[2]/div[1]/div[1]/div[5]/div[1]/div[1]/div[2]/table[1]/tbody[1]/tr[1]/td[4]")).getText();
-   Assert.assertTrue(actual_quote.equals(updated_quote),"Quote has not been updated");
-   System.out.println("Quote has been updated successfully");
+        String updated_quote = "6000";
+        String actual_quote = driver.findElement(By.xpath("//body[1]/div[1]/div[1]/div[1]/div[2]/div[1]/div[1]/div[5]/div[1]/div[1]/div[2]/table[1]/tbody[1]/tr[1]/td[4]")).getText();
+        Assert.assertTrue(actual_quote.equals(updated_quote), "Quote has not been updated");
+        System.out.println("Quote has been updated successfully");
     }
 
     @And("I update {string} in the {string} field")
@@ -807,19 +808,33 @@ public class POSteps extends BaseUtil {
 
     @And("I clicked {string} button")
     public void iClickedButton(String btn_Reject) {
-            pageLoaded();
-            commonForm.commonButton(btn_Reject);
-            wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("//button[text()='confirm']")));
-            commonForm.commonButton("confirm");
+        pageLoaded();
+        commonForm.commonButton(btn_Reject);
+        wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("//button[text()='confirm']")));
+        commonForm.commonButton("confirm");
     }
 
     @And("I click the {string} and {string} button to complete the updation")
     public void iClickTheAndButtonToCompleteTheUpdation(String subBtn, String cnfrmBtn) {
-            commonForm.commonButton(subBtn);
-            wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("//button[contains(text(),'confirm')]")));
-            commonForm.commonButton(cnfrmBtn);
-            wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("//div[contains(text(),'Quote Successfully Updated')]")));
-            pageLoaded();
+        commonForm.commonButton(subBtn);
+        wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("//button[contains(text(),'confirm')]")));
+        commonForm.commonButton(cnfrmBtn);
+        wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("//div[contains(text(),'Quote Successfully Updated')]")));
+        pageLoaded();
+    }
+
+    @Then("Verify the {string} Address for Patra {string} location")
+    public void verifyTheAddressForPatraLocation(String add, String loc) {
+        windowsHandling();
+        String exp_Address = "PATRA INDIA BPO SERVICES PVT. LTD\n" +
+                "Falak Tower, 4/11\n" +
+                "Priyadarshini Parisar (East), G.E. Road,\n" +
+                "Bhilai\n" +
+                "Chhattisgarh, 490023\n" +
+                "INDIA";
+        String actual_Address = driver.findElement(By.xpath("/html[1]/body[1]/div[1]/form[1]/h5[2]")).getText();
+        Assert.assertTrue(actual_Address.contains(exp_Address), "Wrong" + add + " Address is displayed for " + loc);
+        System.out.println(add + " Address for " + loc + " location has been updated: " + actual_Address);
     }
 }
 

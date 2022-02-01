@@ -65,6 +65,10 @@ public class PurchaseOrder {
     private WebElement department;
     @FindBy(how = How.XPATH, using = "//tbody/tr[1]/td[5]/center[1]/button[1]")
     private WebElement deleteBtn;
+    @FindBy(how = How.XPATH, using = "//tbody/tr[1]/td[7]/center[1]/button[1]")
+    private WebElement deleteButton;
+    @FindBy(how = How.XPATH, using = "//tbody/tr[2]/td[7]/center[1]/button[1]")
+    public WebElement deleteButton1;
     @FindBy(how = How.XPATH, using = "//button[@id='quotes_approve']")
     private WebElement approveBtn;
     @FindBy(how = How.XPATH, using = "//button[@id='quotes_send_back']")
@@ -565,6 +569,22 @@ public class PurchaseOrder {
 //      Performing the mouse hover action on the target element.
         action.moveToElement(ele).perform();
         return ele.getAttribute("title");
+    }
+
+    public boolean verifyDeleteButtonUnderQuote() {
+        try {
+            return deleteButton1.isEnabled();
+        } catch (Exception e) {
+        }
+        return false;
+    }
+
+    public boolean verifyDeleteButtonUnderQuoteHeader() {
+        try {
+            return deleteButton.isEnabled();
+        } catch (Exception e) {
+        }
+        return false;
     }
 }
 

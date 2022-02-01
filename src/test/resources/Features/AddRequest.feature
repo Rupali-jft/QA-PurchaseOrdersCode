@@ -290,3 +290,24 @@ Feature: Tests involving the creation of a request
       | Title | Test <current date> |
     And I click the Comment_Submit button
     Then I see error warning "Please enter description" is displayed
+
+  @14750
+  Scenario: Department Dropdown options
+    Given I log into the Purchase Orders app as an "Initiator"
+    And I click the "Add Request" button
+    Then The following elements exist
+      | Submit         |
+      | Cancel Changes |
+      | Close          |
+    And I fetch the value for the "Department" drop down
+    And I enter the following information into the form
+      | WO Title   | Test <current date> |
+      | Location   | Bangalore           |
+      | Department | Security            |
+    And I add the following into the "Item / Service Details" table
+      | Item / Service Name | Description              | Quantity |
+      | Test                | Test Item <current date> | 1        |
+    And I submit the new request
+    And I click on "Confirm" and "Yes" button
+    And I click the "Close" button
+    And I get the "Department" for "row 1" of the grid

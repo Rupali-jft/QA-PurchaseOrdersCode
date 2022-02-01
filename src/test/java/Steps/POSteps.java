@@ -10,11 +10,13 @@ import io.cucumber.java.en.When;
 import org.openqa.selenium.*;
 import org.openqa.selenium.chrome.ChromeOptions;
 import org.openqa.selenium.support.ui.ExpectedConditions;
+import org.openqa.selenium.support.ui.Select;
 import org.openqa.selenium.support.ui.WebDriverWait;
 import org.testng.Assert;
 
 import java.io.File;
 import java.sql.Struct;
+import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.*;
@@ -554,7 +556,7 @@ public class POSteps extends BaseUtil {
     @Then("I verify that {string} button is displayed")
     public void iVerifyThatButtonIsDisplayed(String btn) {
         Assert.assertTrue(commonForm.commonButtonGet(btn).isDisplayed(), btn + " button is not present");
-        System.out.println(btn + " button is visible");
+        System.out.println(btn + " button is visible and enabled");
     }
 
     @Then("The next WO is displayed")
@@ -577,7 +579,7 @@ public class POSteps extends BaseUtil {
         commonForm.commonButton(submit_Next_Btn);
         wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("//button[text()='confirm']")));
         commonForm.commonButton("confirm");
-        login.waitForMiliseconds(3000);
+        login.waitForMiliseconds(2000);
     }
 
     @And("I confirm the raised work order")
@@ -835,6 +837,72 @@ public class POSteps extends BaseUtil {
         String actual_Address = driver.findElement(By.xpath("/html[1]/body[1]/div[1]/form[1]/h5[2]")).getText();
         Assert.assertTrue(actual_Address.contains(exp_Address), "Wrong" + add + " Address is displayed for " + loc);
         System.out.println(add + " Address for " + loc + " location has been updated: " + actual_Address);
+    }
+
+    @Then("I verify that {string} button is disabled")
+    public void iVerifyThatButtonIsDisabled(String btn) {
+        Assert.assertFalse(purchaseOrder.verifyApproveButtonDisabled(), "Approve button is not disabled");
+        System.out.println("Good Approve button disabled");
+    }
+
+    @Then("I verify delete button present under delete quote header")
+    public void iVerifyDeleteButtonPresentUnderDeleteQuoteHeader() {
+        purchaseOrder.verifyDeleteButtonUnderQuote();
+        Assert.assertTrue(purchaseOrder.verifyDeleteButtonUnderQuote(), "Delete icon does not show up under delete quote header");
+        System.out.println("Delete Icon Shows up under under delete quote header ");
+    }
+
+    @Then("I verify Delete button under {string} header")
+    public void iVerifyDeleteButtonUnderHeader(String deleteBox) {
+        Assert.assertTrue(purchaseOrder.verifyDeleteButtonUnderQuoteHeader(), "Delete icon does not show up under delete quote header");
+        System.out.println("Delete Icon Shows up under under " + deleteBox);
+    }
+
+    @And("Delete greater than {int}K quote")
+    public void deleteGreaterThanKQuote(int quotePrice) {
+        wait.until(ExpectedConditions.visibilityOf(purchaseOrder.deleteButton1)).click();
+        wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("//button[contains(text(),'Yes')]")));
+        commonForm.commonButton("Yes");
+        System.out.println("Greater Than 5K quote has been removed successfully");
+    }
+
+    @And("I fetch the value for the {string} drop down")
+    public void iFetchTheValueForTheDropDown(String dDown) {
+        Select dropdown = new Select(driver.findElement(By.xpath("//select[@id='request_Department']")));
+
+        //Get all options
+        List<WebElement> dd = dropdown.getOptions();
+
+        //Get the length
+        System.out.println(dd.size());
+
+        // Loop to print one by one
+        for (int j = 0; j < dd.size(); j++) {
+            System.out.println(dDown + " options : " + dd.get(j).getText());
+
+        }
+    }
+
+    @Then("Verify PO Date Pre-populates the current date")
+    public void verifyPODatePrePopulatesTheCurrentDate() {
+        DateFormat dateFormat = new SimpleDateFormat("MM/dd/yyyy ");
+        //get current date time with Date()
+        Date date = new Date();
+        // Now format the date
+        String date1 = dateFormat.format(date);
+        String date2 = date1.trim();
+        String value = driver.findElement(By.id("po_date")).getAttribute("value");
+        System.out.println("value is " + value);
+        Assert.assertEquals(date2, value);
+        System.out.println("Verified PO Date Pre-populates the current date");
+    }
+
+    @Then("Verify Future dates are disabled")
+    public void verifyFutureDatesAreDisabled() {
+        driver.findElement(By.id("po_date")).click();
+        boolean condition = driver.findElement(By.xpath("//body[1]/div[7]/div[1]/table[1]/tbody[1]/tr[1]/td[4]")).isDisplayed();
+        Assert.assertTrue(condition, "Future dates are not disabled");
+        System.out.println("Future dates are disabled");
     }
 }
 

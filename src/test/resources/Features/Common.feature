@@ -49,17 +49,17 @@ Feature:Purchase Order Grid Common test cases
 
     And I select "multiselect-all" from the "Status" header in the grid
     Then I check if the following items are selected in the "Status" header
-      |Pending Quotes|Pending Purchase Order|Pending Request Approval|Purchase Order Closed|Purchase Order Raised|Quote Pending Approver|Quote Pending Approver|Quote Pending Approver|Work Order Closed|Work Order Raised|
+      | Pending Quotes | Pending Purchase Order | Pending Request Approval | Purchase Order Closed | Purchase Order Raised | Quote Pending Approver | Quote Pending Approver | Quote Pending Approver | Work Order Closed | Work Order Raised |
     And The number of records in the "Requests" tab is "the same"
     And I click the Reset button in the grid header
     And I select "multiselect-all" from the "Location" header in the grid
     Then I check if the following items are selected in the "Location" header
-      |Bangalore|Bhilai|Coimbatore|Hyderabad|Raipur|Vizag TH|Vizag VP|
+      | Bangalore | Bhilai | Coimbatore | Hyderabad | Raipur | Vizag TH | Vizag VP |
     And The number of records in the "Requests" tab is "the same"
     And I click the Reset button in the grid header
     And I select "multiselect-all" from the "Department" header in the grid
     Then I check if the following items are selected in the "Department" header
-      |IT|HR|Legal|Admin|Facility|Finance|
+      | IT | HR | Legal | Admin | Facility | Finance |
     And The number of records in the "Requests" tab is "the same"
 
   @1303
@@ -88,7 +88,7 @@ Feature:Purchase Order Grid Common test cases
     And I select "Purchase Order Closed" from the "Status" header in the grid
     And I select "Work Order Closed" from the "Status" header in the grid
     Then I check if the following items are selected in the "Status" header
-      | Purchase Order Raised | Purchase Order Closed| Work Order Closed|
+      | Purchase Order Raised | Purchase Order Closed | Work Order Closed |
     And The number of records in the "Requests" tab is "increased"
     And I get the number of records in the "Requests" tab
 
@@ -96,13 +96,13 @@ Feature:Purchase Order Grid Common test cases
     When I get the number of records in the "Requests" tab
     And I select "Coimbatore" from the "Location" header in the grid
     Then I check if the following items are selected in the "Location" header
-      | Coimbatore|
+      | Coimbatore |
     And The number of records in the "Requests" tab is "decreased"
     When I get the number of records in the "Requests" tab
     And I select "Bhilai" from the "Location" header in the grid
     And I select "Hyderabad" from the "Location" header in the grid
     Then I check if the following items are selected in the "Location" header
-      | Coimbatore | Bhilai| Hyderabad|
+      | Coimbatore | Bhilai | Hyderabad |
     And The number of records in the "Requests" tab is "increased"
     And I get the number of records in the "Requests" tab
 
@@ -110,15 +110,31 @@ Feature:Purchase Order Grid Common test cases
     When I get the number of records in the "Requests" tab
     And I select "Facility" from the "Department" header in the grid
     Then I check if the following items are selected in the "Department" header
-      | Facility|
+      | Facility |
     And The number of records in the "Requests" tab is "decreased"
     When I get the number of records in the "Requests" tab
     And I select "Legal" from the "Department" header in the grid
     And I select "Admin" from the "Department" header in the grid
     Then I check if the following items are selected in the "Department" header
-      |Facility| Legal| Admin|
+      | Facility | Legal | Admin |
     And The number of records in the "Requests" tab is "increased"
     And I get the number of records in the "Requests" tab
+
+  @C1299
+  Scenario: Grid- Verify Enter text that will give unique result
+    When I get the "WO Title" for "row 4" of the grid
+    And I enter that information into the grid header
+    Then The information in the first row of the grid will match what was entered
+
+  @C1300
+  Scenario:Grid- Verify Enter text that will give multiple results
+    When I enter "18" into the "WO Title" grid header
+    Then I get the number of records in the "Requests" tab
+
+  @C1301
+  Scenario: Grid- Verify Enter text that will give zero(0) results
+    When I enter "00000000dss" into the "WO Title" grid header
+    Then There is no data in the grid
 
 
 

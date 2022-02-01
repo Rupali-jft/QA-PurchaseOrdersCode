@@ -352,9 +352,11 @@ Feature:Different tabs functionality
       | keyboard   | Apple       | 9000        |
     And I click the "Total Price" box
     And I click the "Submit" and "confirm" button
+    Then I verify the selected status is "Quotes Pending Proc Mgr" for the dropdown "Status"
     When I go to "Quotes" tab.
     And set the tab to "Quotes"
     And I delete the Quote
+    Then I verify the selected status is "Pending Quotes" for the dropdown "Status"
 
   @1903
   Scenario: Edit and Submit Quote in Quotes Tab

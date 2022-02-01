@@ -487,6 +487,73 @@ Feature: Quote Approval Process for all Roles
     Then I verify the selected status is "Quote Pending Approver" for the dropdown "Status"
     Then I check if "Approval Status" is "Rejected"
 
+  @1890
+  Scenario: Verify the Quotes added with Total Price >5k and SEND BACK by Approver and REJECT by Proc Mgr.
+    Given I log into the Purchase Orders app as an "Approver"
+    And I navigate to the "Pending Approval" tab
+    And I open the created WO
+    And I approve the request
+    Then I Verify that request got approved successfully BY APPROVER
+    And I Click on user icon
+    And I click Logout button
+
+    ###------------Purchase Officer - Login Functionality-------------###
+    Given I log into the Purchase Orders app as an "Purchaseofficer"
+    And I open the created WO
+    Then I verify the selected status is "Pending Quotes" for the dropdown "Status"
+    ###------------Add a quote from Purchase officer role which is >5K-------------###
+    And Click on Add Quote by Purchase Officer Button
+    And I set the quote date in the datepicker
+    Then Input values in the Quotes pop-up
+      | QuoteTitle | QuoteVendor | QuotedPrice |
+      | keyboard   | Apple       | 6000        |
+    And I click the "Total Price" box
+    And I click the "Submit" button
+    And I click the "confirm" button
+    Then I verify that "Quote Successfully Added" validation  message appears
+    Then I verify that Reject button "is" displayed
+    And I Click on user icon
+    And I click Logout button
+
+###------------Procurement Manager role - Login Functionality-------------###
+    Given I log into the Purchase Orders app as an "Procurementmanager"
+    And I open the created WO
+    Then I verify the selected status is "Quote Pending Proc. Mgr." for the dropdown "Status"
+    And I click on the "Quotes" link
+    Then I check if "Approval Status" is "Pending for Approval"
+    And I click the eye icon
+    And I click the "Approve" button
+    And I click the "confirm" button
+    Then I verify the selected status is "Quote Pending Approver" for the dropdown "Status"
+    Then I check if "Approval Status" is "Partially Approved"
+
+###------------Approver role - Login Functionality-------------###
+    Given I log into the Purchase Orders app as an "Approver"
+    And I open the created WO
+    And I click on the "Quotes" link
+    Then I check if "Approval Status" is "Partially Approved"
+    And I click the eye icon
+    And I click the "Send back" button
+    And I click the "confirm" button
+    Then I verify that "Quote Sent Back By Manager to Procurement Manager" validation  message appears
+    Then I verify that buttons are disabled
+    Then I check if "Approval Status" is "Not Approved"
+    And I verify the selected status is "Quotes Pending Proc Mgr" for the dropdown "Status"
+
+    ###------------Procurement Manager role - Login Functionality-------------###
+    Given I log into the Purchase Orders app as an "Procurementmanager"
+    And I open the created WO
+    Then I verify the selected status is "Quote Pending Proc. Mgr." for the dropdown "Status"
+    And I click on the "Quotes" link
+    Then I check if "Approval Status" is "Quote Sent Back by Approver"
+    And I click the eye icon
+    And I click the "Reject" button
+    And I click the "confirm" button
+    Then I verify that "Quote Rejected" validation  message appears
+    Then I verify that buttons are disabled
+    Then I verify the selected status is "Pending Quotes" for the dropdown "Status"
+    Then I check if "Approval Status" is "Rejected"
+
   @1891
   Scenario: Verify that multiple quotes are added and approved.
     Given I log into the Purchase Orders app as an "Approver"

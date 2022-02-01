@@ -168,3 +168,15 @@ Feature: Add Purchase Order Test-Cases
     Then I verify that "Add Purchase Order" button "is" displayed
     And I Click on user icon
     And I click Logout button
+
+  @14806
+  Scenario: User not allowed to select future date when raising Purchase order
+    Given I log into the Purchase Orders app as an "Purchaseofficer"
+    And I select "Pending Purchase Order" from the "Status" header in the grid
+    And I navigate to the "Requests" tab
+    And I click on the top work order link
+    And I click the "Add Purchase Order" button
+    Then Verify that Purchase order page opens
+    Then Verify PO Date Pre-populates the current date
+    Then Verify Future dates are disabled
+

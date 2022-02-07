@@ -902,6 +902,7 @@ public class POSteps extends BaseUtil {
         boolean condition = driver.findElement(By.xpath("//body[1]/div[7]/div[1]/table[1]/tbody[1]/tr[1]/td[4]")).isDisplayed();
         Assert.assertTrue(condition, "Future dates are not disabled");
         System.out.println("Future dates are disabled");
+
     }
 }
 

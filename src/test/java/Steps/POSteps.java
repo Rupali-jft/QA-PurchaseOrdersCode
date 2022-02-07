@@ -555,7 +555,7 @@ public class POSteps extends BaseUtil {
 
     @Then("I verify that {string} button is displayed")
     public void iVerifyThatButtonIsDisplayed(String btn) {
-        Assert.assertTrue(commonForm.commonButtonGet(btn).isDisplayed(), btn + " button is not present");
+        Assert.assertNotNull(commonForm.commonButtonGet(btn), btn + " button is not present");
         System.out.println(btn + " button is visible and enabled");
     }
 
@@ -885,15 +885,14 @@ public class POSteps extends BaseUtil {
 
     @Then("Verify PO Date Pre-populates the current date")
     public void verifyPODatePrePopulatesTheCurrentDate() {
-        DateFormat dateFormat = new SimpleDateFormat("MM/dd/yyyy ");
+        DateFormat dateFormat = new SimpleDateFormat("MM/dd/yyyy");
         //get current date time with Date()
         Date date = new Date();
         // Now format the date
         String date1 = dateFormat.format(date);
-        String date2 = date1.trim();
         String value = driver.findElement(By.id("po_date")).getAttribute("value");
         System.out.println("value is " + value);
-        Assert.assertEquals(date2, value);
+        Assert.assertEquals(date1, value);
         System.out.println("Verified PO Date Pre-populates the current date");
     }
 
